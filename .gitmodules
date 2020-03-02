@@ -1,0 +1,3 @@
+[submodule "dependencies/glad"]
+	path = dependencies/glad
+	url = https://github.com/Dav1dde/glad.git
