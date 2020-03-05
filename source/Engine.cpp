@@ -2,15 +2,20 @@
 
 #include <iostream>
 #include <string>
+#include <windows.h>
+#undef AddJob
 
+Engine::Engine(){}
 
-Engine::Engine()
+Engine::~Engine(){}
+
+auto job = []() -> bool
 {
-}
+	DWORD i = 10000;
+	Sleep(i);
 
-Engine::~Engine()
-{
-}
+	return true;
+};
 
 bool Engine::Init()
 {
@@ -20,31 +25,24 @@ bool Engine::Init()
 
 void Engine::Update()
 {
-	auto job = []() -> bool{
-		for (int i = 0; i < 100; i++)
-		{
-			std::cout << "hello there!" << std::endl;
-		}
-		return true;
-	};
+	js.AddJob(job);
+	js.AddJob(job);
+	js.AddJob(job);
+	js.AddJob(job);
+	js.AddJob(job);
+	js.AddJob(job);
+	js.AddJob(job);
+	js.AddJob(job);	
+	js.AddJob(job);
+	js.AddJob(job);
+	js.AddJob(job);
+	js.AddJob(job);
+	js.Terminate();
 
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
+	return;
 }
 
 void Engine::Terminate()
 {
+	js.Terminate();
 }

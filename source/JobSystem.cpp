@@ -1,4 +1,5 @@
 #include "JobSystem.h"
+#include "Timer.h"
 
 JobSystem::JobSystem(){}
 
@@ -6,6 +7,7 @@ JobSystem::~JobSystem(){}
 
 bool JobSystem::Init()
 {
+	// Leave one thread open for the OS (common decentcy).
 	myThreadCount = std::thread::hardware_concurrency() - 1;
 	myJobs.reserve(myThreadCount);
 	for (unsigned int i = 0; i < myThreadCount; ++i)
@@ -13,13 +15,18 @@ bool JobSystem::Init()
 		myJobs.emplace_back();
 	}
 
-	CollectAllThreads();
+	// TOMDO Assert: No jobbing when no job when no thread.
+	if (myThreadCount <= 0)
+	{
+		std::cout << "No jobs or invalid jobs found!";
+	}
+
 	return true;
 }
 
-bool JobSystem::AddJob(std::function<bool()> f)
+bool JobSystem::AddJob(const std::function<bool()> f)
 {
-	int id = CollectOneThread();
+	const int id = CollectOneThread();
 	std::packaged_task<bool()> package(f);
 	myJobs[id].myFuture = package.get_future();
 	myJobs[id].myThread = std::thread(std::move(package));
@@ -27,37 +34,60 @@ bool JobSystem::AddJob(std::function<bool()> f)
 	return true;
 }
 
+void JobSystem::Terminate()
+{
+	CollectAllThreads();
+}
+
 bool JobSystem::CollectAllThreads()
 {
-	for (unsigned int i = 0; i < myJobs.size(); ++i)
+	for (Job& job : myJobs)
 	{
 		// If future is valid, so is the task.
-		if (myJobs[i].myFuture.valid() && myJobs[i].myThread.joinable())
+		if (job.myFuture.valid())
 		{
-			myJobs[i].myFuture.wait();
+			job.myFuture.wait();
+			if (job.myThread.joinable())
+			{
+				job.myThread.join();
+			}
 		}
-		myJobs[i].myThread.join();
 	}
+	
 	return true;
 }
 
 int JobSystem::CollectOneThread()
 {
-	std::chrono::milliseconds sec(1);
 	// Wait for a thread to open up.
-	while (true)
+	const size_t jobCount = myJobs.size();
+	const bool hasJobs = jobCount != 0;
+	std::chrono::nanoseconds waitForThreadTime(1);
+
+	Timer expireTimer;
+	expireTimer.Start();
+
+	while (hasJobs)
 	{
-		for (size_t i = 0; i < myJobs.capacity(); ++i)
+		for (size_t i = 0; i < jobCount; ++i)
 		{
 			if (!myJobs[i].myFuture.valid())
 			{
 				return static_cast<int>(i);
 			}
-			if (myJobs[i].myFuture.wait_for(sec) == std::future_status::ready)
+			if (myJobs[i].myFuture.wait_for(waitForThreadTime) == std::future_status::ready)
 			{
 				myJobs[i].myThread.join();
 				return static_cast<int>(i);
 			}
 		}
+		if (expireTimer.GetCurrentTime() > myMaximumExpirationTime)
+		{
+			// TOMDO Add assert for the threads all being locked permanently.
+			std::cout << "Threads all being locked for a long time. Consider closing the engine.";
+		}
 	}
+
+	// TOMDO Add assert for when the list is uninitialized. SHOULD NEVER HAPPEN.
+	return -1;
 }

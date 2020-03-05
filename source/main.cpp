@@ -3,12 +3,22 @@
 #include <iostream>
 
 #include "Engine.h"
+#include "Timer.h"
 
 int main(int argc, char** argv)
 {
-	Engine engine;
-	engine.Init();
-	engine.Update();
-	engine.Terminate();
+
+	Timer t;
+	t.Start();
+	{
+		Engine engine;
+		engine.Init();
+		engine.Update();
+		engine.Terminate();
+	}
+
+	t.Stop();
+	t.Print();
+
 	return 0;
 }
