@@ -20,30 +20,30 @@ auto job = []() -> bool
 
 bool Engine::Init()
 {
-	js.Init();
+	myJobSystem.Init();
 	return false;
 }
 
 void Engine::Update()
 {
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);	
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.Terminate();
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);	
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.Terminate();
 
 	return;
 }
 
 void Engine::Terminate()
 {
-	js.Terminate();
+	myJobSystem.Terminate();
 }

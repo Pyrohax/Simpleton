@@ -11,5 +11,5 @@ public:
 	void Update();
 	void Terminate();
 
-	JobSystem js;
+	JobSystem myJobSystem;
 };
