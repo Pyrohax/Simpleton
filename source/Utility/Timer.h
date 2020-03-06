@@ -25,6 +25,10 @@ public:
 	{
 		std::cout << "\nThis took " << std::to_string(GetCurrentTime()) << " seconds.\n";
 	};
+	void Reset()
+	{
+		myStartTime = std::chrono::high_resolution_clock::now();
+	};
 
 private:
 	std::chrono::steady_clock::time_point myStartTime;
