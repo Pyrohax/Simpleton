@@ -5,7 +5,7 @@ on: [push]
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - name: Setup Python environment
@@ -14,5 +14,11 @@ jobs:
         python-version: '3.x'
         architecture: 'x64'
     - uses: actions/checkout@v2
-    - name: Run a one-line script
-      run: echo Hello, world!
+    - name: submodules-init
+      uses: snickerbockers/submodules-init@v4
+    - name: CMake
+    - uses: jrl-umi3218/github-actions/build-cmake-project@master
+      with:
+        compiler: clang
+        build-type: Debug
+        options: -DCMAKE_CXX_FLAGS="-Werror"
