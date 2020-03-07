@@ -24,6 +24,12 @@
     <ClCompile Include="..\source\JobSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\source\Element\Component.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\source\Subsystem\EntityComponentSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\Engine.h">
@@ -36,6 +42,15 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="..\source\Utility\Timer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Subsystem\EntityComponentSystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Element\Entity.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Element\Component.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

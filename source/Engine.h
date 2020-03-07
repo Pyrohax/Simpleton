@@ -1,6 +1,7 @@
 #pragma once
 
 #include "JobSystem.h"
+#include "Subsystem/EntityComponentSystem.h"
 
 class Engine {
 public:
@@ -12,4 +13,5 @@ public:
 	void Terminate();
 
 	JobSystem myJobSystem;
+	EntityComponentSystem myEntityComponentSystem;
 };
