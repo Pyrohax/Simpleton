@@ -12,7 +12,7 @@ Engine::~Engine(){}
 
 auto job = []() -> bool
 {
-	DWORD i = 10000;
+	DWORD i = 100;
 	Sleep(i);
 
 	return true;
@@ -20,30 +20,45 @@ auto job = []() -> bool
 
 bool Engine::Init()
 {
-	js.Init();
+	myJobSystem.Init();
+	myEntityComponentSystem.Init();
 	return false;
 }
 
 void Engine::Update()
 {
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);	
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.AddJob(job);
-	js.Terminate();
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);	
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.AddJob(job);
+	myJobSystem.Terminate();
+
+	myEntityComponentSystem.CreateEntity("New entity 1");
+	myEntityComponentSystem.CreateEntity("New entity 2");
+	myEntityComponentSystem.CreateEntity("New entity 3");
+	myEntityComponentSystem.CreateEntity("New entity 4");
+	myEntityComponentSystem.CreateEntity("New entity 5");
+	myEntityComponentSystem.CreateEntity("New entity 6");
+	myEntityComponentSystem.CreateEntity("New entity 7");
+	myEntityComponentSystem.CreateEntity("New entity 8");
+	myEntityComponentSystem.CreateEntity("New entity 9");
+
+
+	myEntityComponentSystem.Update(0.016667);
 
 	return;
 }
 
 void Engine::Terminate()
 {
-	js.Terminate();
+	myJobSystem.Terminate();
+	myEntityComponentSystem.Terminate();
 }

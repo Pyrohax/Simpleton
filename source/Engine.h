@@ -1,6 +1,7 @@
 #pragma once
 
 #include "JobSystem.h"
+#include "Subsystem/EntityComponentSystem.h"
 
 class Engine {
 public:
@@ -11,5 +12,6 @@ public:
 	void Update();
 	void Terminate();
 
-	JobSystem js;
+	JobSystem myJobSystem;
+	EntityComponentSystem myEntityComponentSystem;
 };
