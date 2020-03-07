@@ -20,6 +20,8 @@ out/
 mono_crash.*
 
 # Build results
+[Bb]in/
+[Bb]uild/
 [Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/

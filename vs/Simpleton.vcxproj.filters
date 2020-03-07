@@ -32,7 +32,10 @@
     <ClInclude Include="..\source\JobSystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\Timer.h">
+    <ClInclude Include="..\source\Utility\Assert.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\source\Utility\Timer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
