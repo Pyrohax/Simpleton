@@ -63,6 +63,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/
 add_project_filters(${SRC_DIR} SRC Source)
 add_project_filters(${SRC_DIR} INC Include)
 
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+
+enable_testing()
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
+
 # Debugging
 message(STATUS "This is the BINARY dir " ${PROJECT_BINARY_DIR})
 message(STATUS "This is the SOURCE dir " ${PROJECT_SOURCE_DIR})
