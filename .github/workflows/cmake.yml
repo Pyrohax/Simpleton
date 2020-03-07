@@ -14,6 +14,10 @@ jobs:
         python-version: '3.x'
         architecture: 'x64'
     - uses: actions/checkout@v2
+    - name: Checkout submodules
+      uses: srt32/git-actions@v0.0.3
+      with:
+        args: git submodule update --init --recursive
     - uses: jrl-umi3218/github-actions/build-cmake-project@master
       with:
         compiler: clang
