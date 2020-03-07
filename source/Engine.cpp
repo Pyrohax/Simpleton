@@ -6,7 +6,9 @@
 
 #undef AddJob
 
-Engine::Engine(){}
+Engine::Engine() : myEntityComponentSystem(this)
+{
+}
 
 Engine::~Engine(){}
 
@@ -27,21 +29,7 @@ bool Engine::Init()
 
 void Engine::Update()
 {
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);	
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.Terminate();
-
-	myEntityComponentSystem.CreateEntity("New entity 1");
+	Entity* testEntity = myEntityComponentSystem.CreateEntity("New entity 1");
 	myEntityComponentSystem.CreateEntity("New entity 2");
 	myEntityComponentSystem.CreateEntity("New entity 3");
 	myEntityComponentSystem.CreateEntity("New entity 4");
@@ -51,7 +39,17 @@ void Engine::Update()
 	myEntityComponentSystem.CreateEntity("New entity 8");
 	myEntityComponentSystem.CreateEntity("New entity 9");
 
+	Component* testComponent = myEntityComponentSystem.CreateComponent<TransformComponent>(testEntity);
+	myEntityComponentSystem.AddComponent(testComponent);
 
+	myEntityComponentSystem.Update(0.016667);
+	myEntityComponentSystem.Update(0.016667);
+	myEntityComponentSystem.Update(0.016667);
+	myEntityComponentSystem.Update(0.016667);
+	myEntityComponentSystem.Update(0.016667);
+	myEntityComponentSystem.Update(0.016667);
+	myEntityComponentSystem.Update(0.016667);
+	myEntityComponentSystem.Update(0.016667);
 	myEntityComponentSystem.Update(0.016667);
 
 	return;

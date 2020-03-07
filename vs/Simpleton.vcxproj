@@ -101,6 +101,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -143,10 +144,15 @@
     <ClCompile Include="..\source\Engine.cpp" />
     <ClCompile Include="..\source\JobSystem.cpp" />
     <ClCompile Include="..\source\main.cpp" />
+    <ClCompile Include="..\source\Subsystem\EntityComponentSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\source\Component\TransformComponent.h" />
+    <ClInclude Include="..\source\Element\Component.h" />
+    <ClInclude Include="..\source\Element\Entity.h" />
     <ClInclude Include="..\source\Engine.h" />
     <ClInclude Include="..\source\JobSystem.h" />
+    <ClInclude Include="..\source\Subsystem\EntityComponentSystem.h" />
     <ClInclude Include="..\source\Utility\Assert.h" />
     <ClInclude Include="..\source\Utility\Timer.h" />
   </ItemGroup>

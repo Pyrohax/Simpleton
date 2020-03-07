@@ -1,5 +1,7 @@
 #include "EntityComponentSystem.h"
 
+#include "../Engine.h"
+
 #include <algorithm>
 
 bool EntityComponentSystem::Init()
@@ -9,6 +11,13 @@ bool EntityComponentSystem::Init()
 
 void EntityComponentSystem::Update(double dt)
 {
+	for (auto& i : myTransformComponents)
+	{
+		// Theoretical example on how we'd run specific functions multithreaded.
+		auto func = std::bind(&TransformComponent::Update, i);
+		myEngine->myJobSystem.AddJob(func);
+	}
+
 	CleanRemovedEntities();
 }
 

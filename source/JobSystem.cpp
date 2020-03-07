@@ -48,6 +48,7 @@ bool JobSystem::CollectAllThreads()
 			if (job.myThread.joinable())
 			{
 				job.myThread.join();
+				job = Job();
 			}
 		}
 	}

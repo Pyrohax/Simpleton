@@ -37,5 +37,5 @@ public:
 private:
 	std::chrono::steady_clock::time_point myStartTime;
 	std::chrono::steady_clock::time_point myEndTime;
-	double myDeltaTime;
+	double myDeltaTime = 0.f;
 };
