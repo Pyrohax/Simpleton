@@ -1,5 +1,8 @@
 #include "JobSystem.h"
-#include "Timer.h"
+#include "Engine.h"
+
+#include "Utility/Timer.h"
+#include "Utility/Assert.h"
 
 JobSystem::JobSystem(){}
 
@@ -15,11 +18,7 @@ bool JobSystem::Init()
 		myJobs.emplace_back();
 	}
 
-	// TOMDO Assert: No jobbing when no job when no thread.
-	if (myThreadCount <= 0)
-	{
-		std::cout << "No jobs or invalid jobs found!";
-	}
+	Assert(myThreadCount <= 0, "Hardware concurrency is invalid. Unsupported architecture?");
 
 	return true;
 }
@@ -83,11 +82,12 @@ int JobSystem::CollectOneThread()
 		}
 		if (expireTimer.GetCurrentTime() > myMaximumExpirationTime)
 		{
-			// TOMDO Add assert for the threads all being locked permanently.
-			std::cout << "Threads all being locked for a long time. Consider closing the engine.";
+			expireTimer.Reset();
+			std::cout << "\nThreads all being locked for a long time. Consider closing the engine. \n";
 		}
 	}
 
-	// TOMDO Add assert for when the list is uninitialized. SHOULD NEVER HAPPEN.
+	Assert(true, "Job count is zero! This should never happen!");
+
 	return -1;
 }
