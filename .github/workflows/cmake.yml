@@ -13,11 +13,12 @@ jobs:
       with:
         python-version: '3.x'
         architecture: 'x64'
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
     - name: submodules-init
       uses: snickerbockers/submodules-init@v4
     - name: CMake
-    - uses: jrl-umi3218/github-actions/build-cmake-project@master
+      uses: jrl-umi3218/github-actions/build-cmake-project@master
       with:
         compiler: clang
         build-type: Debug
