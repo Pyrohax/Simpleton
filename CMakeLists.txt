@@ -1,5 +1,5 @@
 # Minimum CMake version
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.2)
 
 # Custom macro function to add project filters
 macro(add_project_filters path input_list prepend)
@@ -54,12 +54,19 @@ add_executable(${PROJECT_NAME} ${SRC} ${INC})
 # GLAD
 set(GLAD_DIR "${LIB_DIR}/glad")
 add_subdirectory("${GLAD_DIR}")
-target_link_libraries(${PROJECT_NAME} "glad" "${GLAD_LIBRARIES}")
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/glad/include")
+
+# GLM
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/glm")
 
 # Add project filters to VS
 add_project_filters(${SRC_DIR} SRC Source)
 add_project_filters(${SRC_DIR} INC Include)
+
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+
+enable_testing()
+add_test(NAME ${PROJECT_NAME} COMMAND ${PROJECT_NAME})
 
 # Debugging
 message(STATUS "This is the BINARY dir " ${PROJECT_BINARY_DIR})
