@@ -5,7 +5,7 @@ on: [push]
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: Setup Python environment
@@ -13,12 +13,7 @@ jobs:
       with:
         python-version: '3.x'
         architecture: 'x64'
-    - uses: actions/checkout@v2
-    - name: submodules-init
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Checkout submodules
       uses: snickerbockers/submodules-init@v4
-    - name: CMake
-    - uses: jrl-umi3218/github-actions/build-cmake-project@master
-      with:
-        compiler: clang
-        build-type: Debug
-        options: -DCMAKE_CXX_FLAGS="-Werror"
