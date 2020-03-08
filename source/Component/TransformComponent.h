@@ -11,5 +11,11 @@ public:
 	bool Update() { return true; };
 	void Destroy() {};
 
+	glm::vec3 GetPos();
+	void SetPos(glm::vec3 aPosition);
+
+	glm::vec3 GetForward();
+	
+private:
 	glm::mat4x4 myTransform;
 };
