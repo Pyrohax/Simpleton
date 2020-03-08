@@ -1,19 +1,15 @@
 #include "Engine.h"
-
-#include <iostream>
-#include <string>
 #include <windows.h>
 
 #undef AddJob
 
-Engine::Engine(){}
+Engine::Engine() : myEntityComponentSystem(this) {}
 
-Engine::~Engine(){}
+Engine::~Engine() {}
 
-auto job = []() -> bool
+auto exampleJob = []() -> bool
 {
-	DWORD i = 100;
-	Sleep(i);
+	Sleep(100);
 
 	return true;
 };
@@ -27,32 +23,17 @@ bool Engine::Init()
 
 void Engine::Update()
 {
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);	
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.Terminate();
+	// Leaving this in to show as a good example.
+	Entity* e = myEntityComponentSystem.CreateEntity("Test Entity.");
+	Component* ca = myEntityComponentSystem.CreateComponent<TransformComponent>(e);
+	myEntityComponentSystem.AddComponent(ca);
+	myEntityComponentSystem.DestroyComponent(ca);
 
-	myEntityComponentSystem.CreateEntity("New entity 1");
-	myEntityComponentSystem.CreateEntity("New entity 2");
-	myEntityComponentSystem.CreateEntity("New entity 3");
-	myEntityComponentSystem.CreateEntity("New entity 4");
-	myEntityComponentSystem.CreateEntity("New entity 5");
-	myEntityComponentSystem.CreateEntity("New entity 6");
-	myEntityComponentSystem.CreateEntity("New entity 7");
-	myEntityComponentSystem.CreateEntity("New entity 8");
-	myEntityComponentSystem.CreateEntity("New entity 9");
+	Component* cb = myEntityComponentSystem.CreateComponent<TransformComponent>(e);
+	myEntityComponentSystem.DestroyComponent(cb);
 
-
-	myEntityComponentSystem.Update(0.016667);
+	Component* n = nullptr;
+	myEntityComponentSystem.DestroyComponent(n);
 
 	return;
 }

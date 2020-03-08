@@ -5,9 +5,9 @@ class Component
 {
 public:
 	Component(Entity* anOwner) : myOwner(anOwner) {};
-
+	virtual ~Component() {};
 	Entity* myOwner;
 
-	virtual void Update() = 0;
+	virtual bool Update() = 0;
 	virtual void Destroy() = 0;
 };

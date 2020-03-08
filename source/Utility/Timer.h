@@ -1,7 +1,7 @@
 #pragma once
 #include <chrono>
-#include <iostream>
-#include <string>
+
+#include "Logger.h"
 
 class Timer
 {
@@ -26,7 +26,7 @@ public:
 
 	void Print()
 	{
-		std::cout << "\nThis took " << std::to_string(GetCurrentTime()) << " seconds.\n";
+		Log::Print(std::string("This took %s %s").append(std::to_string(GetCurrentTime())).append(" seconds.\n"));
 	};
 
 	void Reset()
@@ -37,5 +37,5 @@ public:
 private:
 	std::chrono::steady_clock::time_point myStartTime;
 	std::chrono::steady_clock::time_point myEndTime;
-	double myDeltaTime;
+	double myDeltaTime = 0.f;
 };
