@@ -26,6 +26,7 @@ public:
 	template<class T>
 	Component* CreateComponent(Entity* aEntity)
 	{
+		static_assert(std::is_base_of<Component, T>::value, "Trying to add a component that does not inherit from the Component class.");
 		Component* componentToAdd = static_cast<Component*>(new T(aEntity));
 		aEntity->myComponents.push_back(componentToAdd);
 		return componentToAdd;
@@ -39,6 +40,8 @@ public:
 			
 		//if(/*new type*/component = dynamic_cast</*new type*/>(aComponent))
 		//	/*new type list*/.push_back</*new type*/*>(aComponent);
+		
+		return;
 	}
 	
 	void DestroyComponent(Component* aComponent)

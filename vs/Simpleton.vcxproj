@@ -141,6 +141,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\source\Component\TransformComponent.cpp" />
     <ClCompile Include="..\source\Engine.cpp" />
     <ClCompile Include="..\source\JobSystem.cpp" />
     <ClCompile Include="..\source\main.cpp" />
