@@ -1,11 +1,12 @@
 #pragma once
-#include <iostream>
+
+#include "Logger.h"
 
 static void Assert(bool aBehaviorIsFaulty, const char* aErrorMessage = "Undefined error.")
 {
 	if (aBehaviorIsFaulty)
 	{
-		std::cout << "\n" << aErrorMessage << "\n";
+		Log::Print(aErrorMessage, LogType::PROBLEM);
 		abort();
 	}
 }

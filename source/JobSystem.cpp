@@ -1,6 +1,7 @@
 #include "JobSystem.h"
 
 #include "Utility/Timer.h"
+#include "Utility/Logger.h"
 #include "Utility/Assert.h"
 
 JobSystem::JobSystem(){}
@@ -83,7 +84,7 @@ int JobSystem::CollectOneThread()
 		if (expireTimer.GetCurrentTime() > myMaximumExpirationTime)
 		{
 			expireTimer.Reset();
-			std::cout << "\nThreads all being locked for a long time. Consider closing the engine. \n";
+			Log::Print("Threads all being locked for a long time. If unintended, consider closing the engine.");
 		}
 	}
 

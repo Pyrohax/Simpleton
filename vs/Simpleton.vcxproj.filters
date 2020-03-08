@@ -53,5 +53,8 @@
     <ClInclude Include="..\source\Subsystem\EntityComponentSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\source\Utility\Logger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

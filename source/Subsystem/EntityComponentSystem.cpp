@@ -9,7 +9,7 @@ bool EntityComponentSystem::Init()
 	return true;
 }
 
-void EntityComponentSystem::Update(double dt)
+void EntityComponentSystem::Update(double aDeltaTime)
 {
 	for (auto& i : myTransformComponents)
 	{
@@ -31,6 +31,7 @@ void EntityComponentSystem::Terminate()
 		entity = nullptr;
 		entity;
 	}
+
 	CleanRemovedEntities();
 }
 

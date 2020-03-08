@@ -154,6 +154,7 @@
     <ClInclude Include="..\source\JobSystem.h" />
     <ClInclude Include="..\source\Subsystem\EntityComponentSystem.h" />
     <ClInclude Include="..\source\Utility\Assert.h" />
+    <ClInclude Include="..\source\Utility\Logger.h" />
     <ClInclude Include="..\source\Utility\Timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

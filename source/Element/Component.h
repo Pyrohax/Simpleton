@@ -5,7 +5,7 @@ class Component
 {
 public:
 	Component(Entity* anOwner) : myOwner(anOwner) {};
-	~Component() {};
+	virtual ~Component() {};
 	Entity* myOwner;
 
 	virtual bool Update() = 0;
