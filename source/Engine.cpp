@@ -1,11 +1,19 @@
 #include "Engine.h"
+#include "Renderer/Yellowstone.h"
+
 #include <windows.h>
 
 #undef AddJob
 
-Engine::Engine() : myEntityComponentSystem(this) {}
+Engine::Engine()
+	: myEntityComponentSystem(this)
+	, myYellowstone(nullptr)
+{
+}
 
-Engine::~Engine() {}
+Engine::~Engine()
+{
+}
 
 auto exampleJob = []() -> bool
 {
@@ -16,6 +24,10 @@ auto exampleJob = []() -> bool
 
 bool Engine::Init()
 {
+	myYellowstone = new Yellowstone();
+	myYellowstone->CreatePlateau();
+	myYellowstone->CheckExtensions();
+
 	myJobSystem.Init();
 	myEntityComponentSystem.Init();
 	return false;
@@ -23,8 +35,12 @@ bool Engine::Init()
 
 void Engine::Update()
 {
+	while (!glfwWindowShouldClose(myYellowstone->GetWindow()))
+	{
+		glfwPollEvents();
+	}
 	// Leaving this in to show as a good example.
-	Entity* e = myEntityComponentSystem.CreateEntity("Test Entity.");
+	/*Entity* e = myEntityComponentSystem.CreateEntity("Test Entity.");
 	Component* ca = myEntityComponentSystem.CreateComponent<TransformComponent>(e);
 	myEntityComponentSystem.AddComponent(ca);
 	myEntityComponentSystem.DestroyComponent(ca);
@@ -33,13 +49,12 @@ void Engine::Update()
 	myEntityComponentSystem.DestroyComponent(cb);
 
 	Component* n = nullptr;
-	myEntityComponentSystem.DestroyComponent(n);
-
-	return;
+	myEntityComponentSystem.DestroyComponent(n);*/
 }
 
 void Engine::Terminate()
 {
+	myYellowstone->Shutdown();
 	myJobSystem.Terminate();
 	myEntityComponentSystem.Terminate();
 }
