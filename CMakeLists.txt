@@ -1,5 +1,6 @@
 # Minimum CMake version
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+cmake_policy(VERSION 2.8)
 
 # Custom macro function to add project filters
 macro(add_project_filters path input_list prepend)
@@ -33,6 +34,12 @@ project(Simpleton)
 # C++ standard (C++17)
 set(CMAKE_CXX_STANDARD 17)
 
+# Packages
+if (NOT CMAKE_VERSION VERSION_LESS 3.7.0)
+	message(STATUS "Using module to find Vulkan")
+	find_package(Vulkan REQUIRED)
+endif()
+
 # Add filters/folders for the generated projects
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -64,6 +71,9 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE "GLFW_INCLUDE_NONE")
 
 # GLM
 target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/glm")
+
+#Vulkan
+target_link_libraries(${PROJECT_NAME} Vulkan::Vulkan)
 
 # Add project filters to VS
 add_project_filters(${SRC_DIR} SRC Source)
