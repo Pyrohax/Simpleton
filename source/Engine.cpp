@@ -24,16 +24,15 @@ bool Engine::Init()
 void Engine::Update()
 {
 	// Leaving this in to show as a good example.
-	Entity* e = myEntityComponentSystem.CreateEntity("Test Entity.");
-	Component* ca = myEntityComponentSystem.CreateComponent<TransformComponent>(e);
-	myEntityComponentSystem.AddComponent(ca);
-	myEntityComponentSystem.DestroyComponent(ca);
+	Entity* entity = myEntityComponentSystem.CreateEntity("Test Entity.");
+	TransformComponent* component1 = myEntityComponentSystem.AddComponent<TransformComponent>(entity);
+	myEntityComponentSystem.DestroyComponent<TransformComponent>(component1);
 
-	Component* cb = myEntityComponentSystem.CreateComponent<TransformComponent>(e);
-	myEntityComponentSystem.DestroyComponent(cb);
+	Component* component2 = myEntityComponentSystem.AddComponent<Component>(entity);
+	myEntityComponentSystem.DestroyComponent<Component>(component2);
 
-	Component* n = nullptr;
-	myEntityComponentSystem.DestroyComponent(n);
+	Component* component3 = myEntityComponentSystem.AddComponent<TransformComponent>(entity);
+	myEntityComponentSystem.DestroyComponent<TransformComponent>(component1);
 
 	return;
 }

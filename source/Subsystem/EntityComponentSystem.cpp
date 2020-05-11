@@ -76,26 +76,3 @@ void EntityComponentSystem::CleanRemovedEntities()
 	myEntityList.erase(std::remove_if(myEntityList.begin(), myEntityList.end(), [](Entity*& e) -> bool {return e == nullptr;}), myEntityList.end());
 	myEntityList.shrink_to_fit();
 }
-
-void EntityComponentSystem::AddEntity(Entity* aEntity)
-{
-	myEntityList.push_back(aEntity);
-}
-
-Entity* EntityComponentSystem::RemoveEntity(Entity* aEntity)
-{
-	Entity* removedEntity = nullptr;
-	for (Entity* entity : myEntityList)
-	{
-		if (!entity)
-			continue;
-		else if (aEntity->myName == entity->myName)
-		{
-			removedEntity = entity;
-			entity = nullptr;
-			return removedEntity;
-		}
-	}
-	return nullptr;
-}
-

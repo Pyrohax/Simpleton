@@ -26,7 +26,7 @@ public:
 
 	void Print()
 	{
-		Log::Print(std::string("This took %s %s").append(std::to_string(GetCurrentTime())).append(" seconds.\n"));
+		Log::Print(std::string("This took ").append(std::to_string(GetCurrentTime())).append(" seconds.\n"));
 	};
 
 	void Reset()
