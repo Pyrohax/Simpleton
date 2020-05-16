@@ -11,68 +11,25 @@ bool EntityComponentSystem::Init()
 
 void EntityComponentSystem::Update(double aDeltaTime)
 {
-	for (auto& i : myTransformComponents)
-	{
-		// Theoretical example on how we'd run specific functions multithreaded.
-		auto func = std::bind(&TransformComponent::Update, i);
-		myEngine->myJobSystem.AddJob(func);
-	}
+	glm::mat4 m1(2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2);
+	glm::mat4 m2(4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4);
+	glm::mat4 m3(6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6);
+	glm::mat4 m4(8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8);
 
-	CleanRemovedEntities();
+	TransformComponent t1 = AddComponent<TransformComponent>(m1);
+	TransformComponent t2 = AddComponent<TransformComponent>(m2);
+	TransformComponent t3 = AddComponent<TransformComponent>(m3);
+	TransformComponent t4 = AddComponent<TransformComponent>(m4);
+
+	RemoveComponent<TransformComponent>(t2);
+	RemoveComponent<TransformComponent>(t3); 
+	RemoveComponent<TransformComponent>(t1);
+	RemoveComponent<TransformComponent>(t4);
+
+	return;
 }
 
 void EntityComponentSystem::Terminate()
 {
-	for (Entity*& entity : myEntityList)
-	{
-		if (!entity)
-			continue;
-		delete(entity);
-		entity = nullptr;
-		entity;
-	}
 
-	CleanRemovedEntities();
-}
-
-Entity* EntityComponentSystem::CreateEntity(std::string aName)
-{
-	Entity* entity = new Entity();
-	entity->myName = aName;
-
-	myEntityList.push_back(entity);
-
-	return entity;
-}
-
-Entity* EntityComponentSystem::GetEntity(std::string aName)
-{
-	for (Entity*& entity : myEntityList)
-	{
-		if (!entity)
-			continue;
-		else if (aName == entity->myName)
-			return entity;
-	}
-	return nullptr;
-}
-
-void EntityComponentSystem::DestroyEntity(Entity* aEntity)
-{
-	for (Entity*& entity : myEntityList)
-	{
-		if (!entity)
-			continue;
-		else if (aEntity->myName == entity->myName)
-		{
-			delete entity;
-			entity = nullptr;
-		}
-	}
-}
-
-void EntityComponentSystem::CleanRemovedEntities()
-{
-	myEntityList.erase(std::remove_if(myEntityList.begin(), myEntityList.end(), [](Entity*& e) -> bool {return e == nullptr;}), myEntityList.end());
-	myEntityList.shrink_to_fit();
 }

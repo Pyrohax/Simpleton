@@ -1,11 +1,14 @@
 #pragma once
-#include "../Element/Component.h"
 #include "../../dependencies/glm/glm/glm.hpp"
 
-class TransformComponent : public Component
+// Memory aligned component.
+
+class TransformComponent
 {
 public:
-	TransformComponent(Entity* anOwner) : Component(anOwner), myTransform(glm::mat4x4()) {};
+	TransformComponent() : myTransform(glm::mat4x4()) {};
+	TransformComponent(glm::mat4x4 aTransform) : myTransform(aTransform) {};
+
 	~TransformComponent() {};
 
 	bool Update() { return true; };
@@ -16,6 +19,18 @@ public:
 
 	glm::vec3 GetForward();
 	
+	inline bool operator==(const TransformComponent& right)
+	{
+		if (myTransform == right.myTransform)
+			return true;
+		else 
+			return false;
+	}
+	inline bool operator!=(const TransformComponent& right) 
+	{
+		return !(*this == right);
+	}
+
 private:
 	glm::mat4x4 myTransform;
 };

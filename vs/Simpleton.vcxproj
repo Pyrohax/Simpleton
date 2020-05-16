@@ -149,8 +149,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\source\Component\TransformComponent.h" />
-    <ClInclude Include="..\source\Element\Component.h" />
-    <ClInclude Include="..\source\Element\Entity.h" />
     <ClInclude Include="..\source\Engine.h" />
     <ClInclude Include="..\source\JobSystem.h" />
     <ClInclude Include="..\source\Subsystem\EntityComponentSystem.h" />

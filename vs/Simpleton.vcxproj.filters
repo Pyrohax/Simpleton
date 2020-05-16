@@ -47,12 +47,6 @@
     <ClInclude Include="..\source\Component\TransformComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\source\Element\Component.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\source\Element\Entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\source\Subsystem\EntityComponentSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
