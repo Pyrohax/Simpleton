@@ -74,11 +74,12 @@ public:
 
 	void RemoveEntity(UniqueID aUID)
 	{
-		if (!myEntityTable[aUID])
+		Entity*& entity = myEntityTable[aUID];
+		if (!entity)
 			return;
 		
-		delete myEntityTable[aUID];
-		myEntityTable[aUID] = nullptr;
+		delete entity;
+		entity = nullptr;
 	}
 
 protected:
