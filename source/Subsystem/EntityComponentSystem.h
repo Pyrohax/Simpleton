@@ -40,7 +40,6 @@ public:
 		
 		Log::Print("MEMORY LEAK! Wrong type passed into RemoveComponent for the following UID :", LogType::WARNING);
 		Assert(true, aUID);
-		myComponentTable[aUID];
 	}
 
 	template<typename T>
