@@ -4,8 +4,6 @@
 #include "Subsystem/EntityComponentSystem.h"
 #include "Renderer/Yellowstone.h"
 
-class Yellowstone;
-
 class Engine {
 public:
 	Engine();

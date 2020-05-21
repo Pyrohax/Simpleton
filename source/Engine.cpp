@@ -1,5 +1,7 @@
 #include "Engine.h"
 
+#include "Utility/Assert.h"
+
 Engine::Engine()
 	: myEntityComponentSystem(this)
 {
@@ -11,11 +13,10 @@ Engine::~Engine()
 
 bool Engine::Init()
 {
-	myYellowstone.Init();
-	if (myJobSystem.Init() && myEntityComponentSystem.Init())
-		return true;
-	else
-		return false;
+	Assert(!myYellowstone.Init(), "Yellowstone Renderer FAILED to initialize! Cancelling init.");
+	Assert(!myJobSystem.Init(), "Jobsystem FAILED to initialize! Cancelling init.");
+	Assert(!myEntityComponentSystem.Init(), "Entity Component System FAILED to initialize! Cancelling init.");
+	return true;
 }
 
 void Engine::Update()
