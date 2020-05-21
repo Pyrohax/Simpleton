@@ -104,7 +104,7 @@ void Yellowstone::CreatePlateau()
 	glfwInit();
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-	GLFWwindow* test = glfwCreateWindow(1280, 720, "Yellowstone", nullptr, nullptr);
+	myWindow = glfwCreateWindow(1280, 720, "Yellowstone", nullptr, nullptr);
 
 	if (enableValidationLayers && !CheckValidationLayerSupport())
 		throw std::runtime_error("validation layers requested, but not available!");
