@@ -7,9 +7,6 @@ public:
 	ModelComponent() {};
 	~ModelComponent() {};
 
-	bool Update() { return true; };
-	void Destroy() {};
-
 private:
-	
+
 };
