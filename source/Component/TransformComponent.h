@@ -8,9 +8,6 @@ public:
 	TransformComponent() : myTransform(glm::mat4x4()) {};
 	~TransformComponent() {};
 
-	bool Update() { return true; };
-	void Destroy() {};
-
 	glm::vec3 GetPos();
 	void SetPos(glm::vec3 aPosition);
 
