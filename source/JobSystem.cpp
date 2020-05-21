@@ -1,8 +1,17 @@
 #include "JobSystem.h"
 
+#include <chrono>
+
 #include "Utility/Timer.h"
 #include "Utility/Logger.h"
 #include "Utility/Assert.h"
+
+auto exampleJob = []() -> bool
+{
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+	return true;
+};
 
 JobSystem::JobSystem(){}
 

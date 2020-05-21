@@ -42,6 +42,13 @@ Yellowstone::~Yellowstone()
 {
 }
 
+bool Yellowstone::Init()
+{
+	CreatePlateau();
+	CheckExtensions();
+	return true;
+}
+
 bool Yellowstone::CheckValidationLayerSupport()
 {
 	uint32_t layerCount;
@@ -88,6 +95,16 @@ std::vector<const char*> Yellowstone::GetRequiredExtensions()
 		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
 	return extensions;
+}
+
+bool Yellowstone::HasClosedWindow()
+{
+	return glfwWindowShouldClose(myWindow);
+}
+
+void Yellowstone::PollEvents()
+{
+	glfwPollEvents();
 }
 
 void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo)
@@ -171,7 +188,7 @@ void Yellowstone::CheckExtensions()
 		std::cout << "\t" << extension.extensionName << std::endl;
 }
 
-void Yellowstone::Shutdown()
+void Yellowstone::Terminate()
 {
 	if (enableValidationLayers)
 		DestroyDebugUtilsMessengerEXT(myVulkanInstance, myDebugMessenger, nullptr);

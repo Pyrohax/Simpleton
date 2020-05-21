@@ -2,8 +2,7 @@
 
 #include "JobSystem.h"
 #include "Subsystem/EntityComponentSystem.h"
-
-class Yellowstone;
+#include "Renderer/Yellowstone.h"
 
 class Engine {
 public:
@@ -14,13 +13,10 @@ public:
 	void Update();
 	void Terminate();
 
-	Yellowstone* YellowstoneInstance();
-
 	JobSystem myJobSystem;
 	EntityComponentSystem myEntityComponentSystem;
 
 private:
-	Yellowstone* myYellowstone;
-};
+	Yellowstone myYellowstone;
 
-extern Yellowstone* YellowstoneInstance();
+};

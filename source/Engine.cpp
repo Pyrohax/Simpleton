@@ -1,13 +1,9 @@
 #include "Engine.h"
-#include "Renderer/Yellowstone.h"
 
-#include <windows.h>
-
-#undef AddJob
+#include "Utility/Assert.h"
 
 Engine::Engine()
 	: myEntityComponentSystem(this)
-	, myYellowstone(nullptr)
 {
 }
 
@@ -15,46 +11,25 @@ Engine::~Engine()
 {
 }
 
-auto exampleJob = []() -> bool
-{
-	Sleep(100);
-
-	return true;
-};
-
 bool Engine::Init()
 {
-	myYellowstone = new Yellowstone();
-	myYellowstone->CreatePlateau();
-	myYellowstone->CheckExtensions();
-
-	myJobSystem.Init();
-	myEntityComponentSystem.Init();
-	return false;
+	Assert(!myYellowstone.Init(), "Yellowstone Renderer FAILED to initialize! Cancelling init.");
+	Assert(!myJobSystem.Init(), "Jobsystem FAILED to initialize! Cancelling init.");
+	Assert(!myEntityComponentSystem.Init(), "Entity Component System FAILED to initialize! Cancelling init.");
+	return true;
 }
 
 void Engine::Update()
 {
-	while (!glfwWindowShouldClose(myYellowstone->GetWindow()))
+	while (!myYellowstone.HasClosedWindow())
 	{
-		glfwPollEvents();
+		myYellowstone.PollEvents();
 	}
-	// Leaving this in to show as a good example.
-	/*Entity* e = myEntityComponentSystem.CreateEntity("Test Entity.");
-	Component* ca = myEntityComponentSystem.CreateComponent<TransformComponent>(e);
-	myEntityComponentSystem.AddComponent(ca);
-	myEntityComponentSystem.DestroyComponent(ca);
-
-	Component* cb = myEntityComponentSystem.CreateComponent<TransformComponent>(e);
-	myEntityComponentSystem.DestroyComponent(cb);
-
-	Component* n = nullptr;
-	myEntityComponentSystem.DestroyComponent(n);*/
 }
 
 void Engine::Terminate()
 {
-	myYellowstone->Shutdown();
+	myYellowstone.Terminate();
 	myJobSystem.Terminate();
 	myEntityComponentSystem.Terminate();
 }
