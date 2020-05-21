@@ -13,10 +13,6 @@ bool EntityComponentSystem::Init()
 {
 	myComponentTable.reserve(MAX_COMPONENTS);
 	myComponentTypeTable.reserve(MAX_COMPONENTS);
-
-	UniqueID uid1 = AddComponent<TransformComponent>();
-	UniqueID uid2 = AddComponent<ModelComponent>();
-
 	return true;
 }
 
@@ -45,7 +41,7 @@ void EntityComponentSystem::RemoveComponent(UniqueID aUID)
 		return;
 
 	case ComponentType::UNDEFINED:
-		Log::Print(std::string("Double delete. Remove Component called on a already deleted component, UID: ").append(std::to_string(aUID)), LogType::PROBLEM);
+		Log::Print(std::string("Attempting to remove a nonexistent component. UID: ").append(std::to_string(aUID)), LogType::PROBLEM);
 		return;
 
 	default:
