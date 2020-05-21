@@ -11,15 +11,19 @@ public:
 	Yellowstone();
 	~Yellowstone();
 
-	bool CheckValidationLayerSupport();
-	std::vector<const char*> GetRequiredExtensions();
+	bool Init();
 
 	void CreatePlateau();
 	void SetupDebugMessenger();
 	void CheckExtensions();
-	void Shutdown();
+	void PollEvents();
+	void Terminate();
+
+	bool CheckValidationLayerSupport();
+	bool HasClosedWindow();
 
 	GLFWwindow* GetWindow() { return myWindow; }
+	std::vector<const char*> GetRequiredExtensions();
 
 private:
 	GLFWwindow* myWindow;

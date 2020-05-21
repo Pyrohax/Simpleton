@@ -2,6 +2,7 @@
 
 #include "JobSystem.h"
 #include "Subsystem/EntityComponentSystem.h"
+#include "Renderer/Yellowstone.h"
 
 class Yellowstone;
 
@@ -14,13 +15,10 @@ public:
 	void Update();
 	void Terminate();
 
-	Yellowstone* YellowstoneInstance();
-
 	JobSystem myJobSystem;
 	EntityComponentSystem myEntityComponentSystem;
 
 private:
-	Yellowstone* myYellowstone;
-};
+	Yellowstone myYellowstone;
 
-extern Yellowstone* YellowstoneInstance();
+};
