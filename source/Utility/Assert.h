@@ -2,11 +2,14 @@
 
 #include "Logger.h"
 
-static void Assert(bool aBehaviorIsFaulty, const char* aErrorMessage = "Undefined error.")
+template <typename T>
+static void Assert(bool aBehaviorIsFaulty, T aErrorMessage = "Undefined error.")
 {
 	if (aBehaviorIsFaulty)
 	{
 		Log::Print(aErrorMessage, LogType::PROBLEM);
+#ifdef NDEBUG
 		abort();
+#endif
 	}
 }

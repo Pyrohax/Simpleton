@@ -3,9 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# Pyrohax additional ignores
+
+# Pyrohax custom ignores
 out/
-vs/
 
 # User-specific files
 *.rsuser

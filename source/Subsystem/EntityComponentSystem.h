@@ -2,85 +2,56 @@
 
 #include "../Element/Entity.h"
 #include "../Component/TransformComponent.h"
-#include "../Utility/Logger.h"
+#include "../Utility/Assert.h"
 
 #include <string>
 #include <algorithm>
+#include <unordered_map>
 
-class Engine;
+typedef size_t UniqueID;
 
 class EntityComponentSystem
 {
 public:
-	EntityComponentSystem(Engine* aEngine) : myEngine(aEngine) {};
+	EntityComponentSystem() : myComponentCounter(0) {};
 	~EntityComponentSystem() {};
 
 	bool Init();
 	void Update(double aDeltaTime);
 	void Terminate();
 
-	Entity* CreateEntity(std::string aName = "Unnamed Entity");
-	Entity* GetEntity(std::string aName);
-	void DestroyEntity(Entity* aEntity);
-
-	template<class T>
-	Component* CreateComponent(Entity* aEntity)
+	template<typename T>
+	UniqueID AddComponent()
 	{
-		static_assert(std::is_base_of<Component, T>::value, "Trying to add a component that does not inherit from the Component class.");
-		Component* componentToAdd = static_cast<Component*>(new T(aEntity));
-		aEntity->myComponents.push_back(componentToAdd);
-		return componentToAdd;
-	};
-
-	void AddComponent(Component* aComponent)
-	{
-		// Deduce type and add it to the correct component list
-		if (TransformComponent* component = dynamic_cast<TransformComponent*>(aComponent))
-			myTransformComponents.push_back(component);
-			
-		//if(/*new type*/component = dynamic_cast</*new type*/>(aComponent))
-		//	/*new type list*/.push_back</*new type*/*>(aComponent);
-		
-		return;
+		Component* component = new T;
+		myComponentTable.emplace(myComponentCounter, component);
+		myComponentCounter += 1;
+		return myComponentCounter - 1;
 	}
 	
-	void DestroyComponent(Component* aComponent)
+	template<typename T>
+	void RemoveComponent(UniqueID aUID)
 	{
-		if (!aComponent)
+		if constexpr (std::is_same<T, TransformComponent>::value)
 		{
-			Log::Print("Attempted to destroy nullptr component!", LogType::WARNING);
+			delete static_cast<TransformComponent*>(myComponentTable[aUID]);
 			return;
 		}
 		
-		auto isComponentToRemove = [&aComponent](Component* aComponentToCompare) -> bool { return aComponentToCompare == aComponent; };
-		
-		Entity* owner = aComponent->myOwner;
+		Log::Print("MEMORY LEAK! Wrong type passed into RemoveComponent for the following UID :", LogType::WARNING);
+		Assert(true, aUID);
+	}
 
-		if (owner)
-			owner->myComponents.erase(std::remove_if(owner->myComponents.begin(), owner->myComponents.end(), isComponentToRemove), owner->myComponents.end());
+	template<typename T>
+	T* GetComponent(UniqueID aUID)
+	{
+		return static_cast<T*>(myComponentTable[aUID]);
+	}
 
-		if (TransformComponent* component = dynamic_cast<TransformComponent*>(aComponent))
-		{
-			if (aComponent == component)
-			{
-				const size_t componentAmount = myTransformComponents.size();
-				myTransformComponents.erase(std::remove_if(myTransformComponents.begin(), myTransformComponents.end(), isComponentToRemove), myTransformComponents.end());
-				if (componentAmount == myTransformComponents.size())
-					Log::Print("Attempted to delete component never added to their component list! (Forgot to call AddComponent?)", LogType::WARNING);
-				delete aComponent;
-			}
-		}
-	};
-
-	Engine* myEngine;
-	
 protected:
-	void CleanRemovedEntities();
-	void AddEntity(Entity* aEntity);
-	Entity* RemoveEntity(Entity* aEntity);
+	std::unordered_map<UniqueID, Component*> myComponentTable;
 
-	std::vector<Entity*> myEntityList;
-	std::vector<TransformComponent*> myTransformComponents;
+	UniqueID myComponentCounter;
 };
 
 

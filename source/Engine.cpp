@@ -3,7 +3,6 @@
 #include "Utility/Assert.h"
 
 Engine::Engine()
-	: myEntityComponentSystem(this)
 {
 }
 
