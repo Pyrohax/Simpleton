@@ -13,6 +13,7 @@ bool EntityComponentSystem::Init()
 {
 	myComponentTable.reserve(MAX_COMPONENTS);
 	myComponentTypeTable.reserve(MAX_COMPONENTS);
+	
 	return true;
 }
 
@@ -32,13 +33,11 @@ void EntityComponentSystem::RemoveComponent(UniqueID aUID)
 	{
 	case ComponentType::TRANSFORM:
 		delete static_cast<TransformComponent*>(myComponentTable[aUID]);
-		myComponentTypeTable[aUID] = ComponentType::UNDEFINED;
-		return;
+		break;
 
 	case ComponentType::MODEL:
 		delete static_cast<ModelComponent*>(myComponentTable[aUID]);
-		myComponentTypeTable[aUID] = ComponentType::UNDEFINED;
-		return;
+		break;
 
 	case ComponentType::UNDEFINED:
 		Log::Print(std::string("Attempting to remove a nonexistent component. UID: ").append(std::to_string(aUID)), LogType::PROBLEM);
@@ -48,4 +47,7 @@ void EntityComponentSystem::RemoveComponent(UniqueID aUID)
 		Assert(true, std::string("Remove component had invalid type! UID: ").append(std::to_string(aUID)));
 		return;
 	}
+	
+	myComponentTypeTable[aUID] = ComponentType::UNDEFINED;
+	return;
 }
