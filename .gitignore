@@ -6,7 +6,6 @@
 
 # Pyrohax custom ignores
 out/
-vs/
 
 # User-specific files
 *.rsuser
