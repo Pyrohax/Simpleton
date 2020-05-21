@@ -5,15 +5,15 @@
 #include "../Component/ModelComponent.h"
 #include "../Utility/Assert.h"
 
-#include <algorithm>
-
 const size_t MAX_COMPONENTS = 150;
+const size_t MAX_ENTITIES = 150;
 
 bool EntityComponentSystem::Init()
 {
 	myComponentTable.reserve(MAX_COMPONENTS);
 	myComponentTypeTable.reserve(MAX_COMPONENTS);
-	
+	myEntityTable.reserve(MAX_ENTITIES);
+
 	return true;
 }
 
