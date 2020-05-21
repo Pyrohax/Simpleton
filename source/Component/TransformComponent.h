@@ -5,7 +5,7 @@
 class TransformComponent : public Component
 {
 public:
-	TransformComponent(Entity* anOwner) : Component(anOwner), myTransform(glm::mat4x4()) {};
+	TransformComponent() : myTransform(glm::mat4x4()) {};
 	~TransformComponent() {};
 
 	bool Update() { return true; };
