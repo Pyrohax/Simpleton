@@ -19,7 +19,7 @@ JobSystem::~JobSystem(){}
 
 bool JobSystem::Init()
 {
-	// Leave one thread open for the OS (common decentcy).
+	// Leave one thread open for the OS (common decency).
 	myThreadCount = std::thread::hardware_concurrency() - 1;
 	myJobs.reserve(myThreadCount);
 	for (unsigned int i = 0; i < myThreadCount; ++i)
@@ -93,7 +93,7 @@ int JobSystem::CollectOneThread()
 		if (expireTimer.GetCurrentTime() > myMaximumExpirationTime)
 		{
 			expireTimer.Reset();
-			Log::Print("Threads all being locked for a long time. If unintended, consider closing the engine.");
+			Log::Print("Threads all being locked for a long time. If unintended, consider closing the engine.", LogType::WARNING);
 		}
 	}
 
