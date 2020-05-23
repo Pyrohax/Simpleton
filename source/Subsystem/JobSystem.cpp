@@ -2,9 +2,9 @@
 
 #include <chrono>
 
-#include "Utility/Timer.h"
-#include "Utility/Logger.h"
-#include "Utility/Assert.h"
+#include "../Utility/Timer.h"
+#include "../Utility/Logger.h"
+#include "../Utility/Assert.h"
 
 auto exampleJob = []() -> bool
 {
