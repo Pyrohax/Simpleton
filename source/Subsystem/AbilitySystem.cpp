@@ -49,17 +49,17 @@ bool AbilitySystem::AddTag(const AbilityTag aTag, const UniqueID anEntityID)
 		return true;
 	}
 
-	bool alreadyAffected = false;
+	bool alreadyTagged = false;
 	for (auto& i : *abilityTagList)
 	{
 		if (i == aTag)
 		{
-			alreadyAffected = true;
+			alreadyTagged = true;
 			break;
 		}
 	}
 
-	if (alreadyAffected)
+	if (alreadyTagged)
 		return false;
 
 	abilityTagList->push_back(aTag);
