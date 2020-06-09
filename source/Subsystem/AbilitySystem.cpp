@@ -8,15 +8,11 @@ bool AbilitySystem::StartAbilityOnEntity(Ability anAbility, const UniqueID aTarg
 		return false;
 
 	bool affectTagsMatch = false;
+	
 	for (auto tag : anAbility.myAffectTags)
 	{
-		if (HasTag(tag, aTargetEntity))
+		if (tag == AbilityTag::Any || HasTag(tag, aTargetEntity))
 		{
-			if (anAbility.myAffectOverridesIgnore)
-			{
-				anAbility.myEffect();
-				return true;
-			}
 			affectTagsMatch = true;
 			break;
 		}
@@ -24,10 +20,16 @@ bool AbilitySystem::StartAbilityOnEntity(Ability anAbility, const UniqueID aTarg
 
 	if (!affectTagsMatch)
 		return false;
+	
+	if (anAbility.myAffectOverridesIgnore)
+	{
+		anAbility.myEffect();
+		return true;
+	}
 
 	for (auto tag : anAbility.myIgnoreTags)
 	{
-		if (HasTag(tag, aTargetEntity))
+		if (tag == AbilityTag::Any || HasTag(tag, aTargetEntity))
 		{
 			return false;
 		}
