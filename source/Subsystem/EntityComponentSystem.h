@@ -2,11 +2,12 @@
 
 #include "../Element/Component.h"
 #include "../Element/Entity.h"
+#include "../Utility/TypeDefines.h"
+#include "AbilitySystem.h"
 
 #include <string>
 #include <algorithm>
 #include <unordered_map>
-
 
 enum class ComponentType
 {
@@ -15,13 +16,13 @@ enum class ComponentType
 	MODEL = 2
 };
 
-typedef unsigned int UniqueID;
-
 class EntityComponentSystem
 {
 public:
-	EntityComponentSystem() : myUIDCounter(0) {};
+	EntityComponentSystem() : myUIDCounter(0), myAbilitySystem(this) {};
 	~EntityComponentSystem() {};
+
+	AbilitySystem myAbilitySystem;
 
 	bool Init();
 	void Update(double aDeltaTime);
