@@ -1,15 +1,15 @@
 #include "AbilitySystem.h"
 #include "EntityComponentSystem.h"
 
-bool AbilitySystem::StartAbilityOnEntity(Ability anAbility, const UniqueID aTargetEntity)
+bool AbilitySystem::StartAbilityOnEntity(const Ability& anAbility, const UniqueID aTargetEntity)
 {
-	Entity* affectedEntity = myEntityComponentSystem->GetEntity(aTargetEntity);
+	const Entity* affectedEntity = myEntityComponentSystem->GetEntity(aTargetEntity);
 	if (!affectedEntity || !anAbility.myEffect)
 		return false;
 
 	bool affectTagsMatch = false;
 	
-	for (auto tag : anAbility.myAffectTags)
+	for (const AbilityTag tag : anAbility.myAffectTags)
 	{
 		if (tag == AbilityTag::Any || HasTag(tag, aTargetEntity))
 		{
@@ -27,7 +27,7 @@ bool AbilitySystem::StartAbilityOnEntity(Ability anAbility, const UniqueID aTarg
 		return true;
 	}
 
-	for (auto tag : anAbility.myIgnoreTags)
+	for (const AbilityTag tag : anAbility.myIgnoreTags)
 	{
 		if (tag == AbilityTag::Any || HasTag(tag, aTargetEntity))
 		{
@@ -50,9 +50,9 @@ bool AbilitySystem::AddTag(const AbilityTag aTag, const UniqueID anEntityID)
 	}
 
 	bool alreadyTagged = false;
-	for (auto& i : *abilityTagList)
+	for (const AbilityTag tag : *abilityTagList)
 	{
-		if (i == aTag)
+		if (tag == aTag)
 		{
 			alreadyTagged = true;
 			break;
@@ -68,11 +68,10 @@ bool AbilitySystem::AddTag(const AbilityTag aTag, const UniqueID anEntityID)
 
 bool AbilitySystem::HasTag(const AbilityTag aTag, const UniqueID anEntityID)
 {
-	std::vector<AbilityTag>* abilityTagList = myTagsTable[anEntityID];
+	const std::vector<AbilityTag>* abilityTagList = myTagsTable[anEntityID];
 	if (!abilityTagList)
 		return false;
 
-	bool alreadyAffected = false;
 	for (auto& i : *abilityTagList)
 	{
 		if (i == aTag)

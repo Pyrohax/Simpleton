@@ -8,8 +8,8 @@ class EntityComponentSystem;
 
 enum class AbilityTag
 {
-	Any = 0
-	, Player
+	Any = 0,
+	Player
 };
 
 class Ability
@@ -37,7 +37,7 @@ class AbilitySystem
 public:
 	AbilitySystem(EntityComponentSystem* anECS) : myEntityComponentSystem(anECS) {};
 	
-	bool StartAbilityOnEntity(Ability anAbility, const UniqueID aTargetEntity);
+	bool StartAbilityOnEntity(const Ability& anAbility, const UniqueID aTargetEntity);
 
 	bool AddTag(const AbilityTag aTag, const UniqueID anEntityID);
 	bool HasTag(const AbilityTag aTag, const UniqueID anEntityID);
