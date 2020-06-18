@@ -1,64 +1,34 @@
 #include "Engine.h"
 
-#include <iostream>
-#include <string>
-#include <windows.h>
+#include "Utility/Assert.h"
 
-#undef AddJob
-
-Engine::Engine(){}
-
-Engine::~Engine(){}
-
-auto job = []() -> bool
+Engine::Engine()
 {
-	DWORD i = 100;
-	Sleep(i);
+}
 
-	return true;
-};
+Engine::~Engine()
+{
+}
 
 bool Engine::Init()
 {
-	myJobSystem.Init();
-	myEntityComponentSystem.Init();
-	return false;
+	Assert(!myYellowstone.Init(), "Yellowstone Renderer FAILED to initialize! Cancelling init.");
+	Assert(!myJobSystem.Init(), "Jobsystem FAILED to initialize! Cancelling init.");
+	Assert(!myEntityComponentSystem.Init(), "Entity Component System FAILED to initialize! Cancelling init.");
+	return true;
 }
 
 void Engine::Update()
 {
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);	
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.AddJob(job);
-	myJobSystem.Terminate();
-
-	myEntityComponentSystem.CreateEntity("New entity 1");
-	myEntityComponentSystem.CreateEntity("New entity 2");
-	myEntityComponentSystem.CreateEntity("New entity 3");
-	myEntityComponentSystem.CreateEntity("New entity 4");
-	myEntityComponentSystem.CreateEntity("New entity 5");
-	myEntityComponentSystem.CreateEntity("New entity 6");
-	myEntityComponentSystem.CreateEntity("New entity 7");
-	myEntityComponentSystem.CreateEntity("New entity 8");
-	myEntityComponentSystem.CreateEntity("New entity 9");
-
-
-	myEntityComponentSystem.Update(0.016667);
-
-	return;
+	while (!myYellowstone.HasClosedWindow())
+	{
+		myYellowstone.PollEvents();
+	}
 }
 
 void Engine::Terminate()
 {
+	myYellowstone.Terminate();
 	myJobSystem.Terminate();
 	myEntityComponentSystem.Terminate();
 }

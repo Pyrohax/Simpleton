@@ -1,8 +1,18 @@
 #include "JobSystem.h"
 #include "Engine.h"
 
-#include "Utility/Timer.h"
-#include "Utility/Assert.h"
+#include <chrono>
+
+#include "../Utility/Timer.h"
+#include "../Utility/Logger.h"
+#include "../Utility/Assert.h"
+
+auto exampleJob = []() -> bool
+{
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+	return true;
+};
 
 JobSystem::JobSystem(){}
 
@@ -10,7 +20,7 @@ JobSystem::~JobSystem(){}
 
 bool JobSystem::Init()
 {
-	// Leave one thread open for the OS (common decentcy).
+	// Leave one thread open for the OS (common decency).
 	myThreadCount = std::thread::hardware_concurrency() - 1;
 	myJobs.reserve(myThreadCount);
 	for (unsigned int i = 0; i < myThreadCount; ++i)
@@ -49,6 +59,7 @@ bool JobSystem::CollectAllThreads()
 			if (job.myThread.joinable())
 			{
 				job.myThread.join();
+				job = Job();
 			}
 		}
 	}
@@ -83,7 +94,7 @@ int JobSystem::CollectOneThread()
 		if (expireTimer.GetCurrentTime() > myMaximumExpirationTime)
 		{
 			expireTimer.Reset();
-			std::cout << "\nThreads all being locked for a long time. Consider closing the engine. \n";
+			Log::Print("Threads all being locked for a long time. If unintended, consider closing the engine.", LogType::WARNING);
 		}
 	}
 

@@ -12,4 +12,5 @@ public:
 	~Entity() {};
 
 	std::string myName;
+	std::vector<unsigned int> myComponentIDList;
 };

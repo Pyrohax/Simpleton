@@ -1,7 +1,8 @@
 #pragma once
 
-#include "JobSystem.h"
+#include "Subsystem/JobSystem.h"
 #include "Subsystem/EntityComponentSystem.h"
+#include "Renderer/Yellowstone.h"
 
 class Engine {
 public:
@@ -14,4 +15,8 @@ public:
 
 	JobSystem myJobSystem;
 	EntityComponentSystem myEntityComponentSystem;
+
+private:
+	Yellowstone myYellowstone;
+
 };

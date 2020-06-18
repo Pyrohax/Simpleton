@@ -1,11 +1,15 @@
 #pragma once
-#include <iostream>
 
-static void Assert(bool aBehaviorIsFaulty, const char* aErrorMessage = "Undefined error.")
+#include "Logger.h"
+
+template <typename T>
+static void Assert(bool aBehaviorIsFaulty, T aErrorMessage = "Undefined error.")
 {
 	if (aBehaviorIsFaulty)
 	{
-		std::cout << "\n" << aErrorMessage << "\n";
+		Log::Print(aErrorMessage, LogType::PROBLEM);
+#ifdef NDEBUG
 		abort();
+#endif
 	}
 }

@@ -1,91 +1,53 @@
 #include "EntityComponentSystem.h"
 
-#include <algorithm>
+#include "../Engine.h"
+#include "../Component/TransformComponent.h"
+#include "../Component/ModelComponent.h"
+#include "../Utility/Assert.h"
+
+const size_t MAX_COMPONENTS = 150;
+const size_t MAX_ENTITIES = 150;
 
 bool EntityComponentSystem::Init()
 {
+	myComponentTable.reserve(MAX_COMPONENTS);
+	myComponentTypeTable.reserve(MAX_COMPONENTS);
+	myEntityTable.reserve(MAX_ENTITIES);
+
 	return true;
 }
 
-void EntityComponentSystem::Update(double dt)
+void EntityComponentSystem::Update(double aDeltaTime)
 {
-	CleanRemovedEntities();
 }
 
 void EntityComponentSystem::Terminate()
 {
-	for (Entity*& entity : myEntityList)
+	for (auto& i : myComponentTable)
+		RemoveComponent(i.first);
+}
+
+void EntityComponentSystem::RemoveComponent(UniqueID aUID)
+{
+	switch (myComponentTypeTable[aUID])
 	{
-		if (!entity)
-			continue;
-		delete(entity);
-		entity = nullptr;
-		entity;
+	case ComponentType::TRANSFORM:
+		delete static_cast<TransformComponent*>(myComponentTable[aUID]);
+		break;
+
+	case ComponentType::MODEL:
+		delete static_cast<ModelComponent*>(myComponentTable[aUID]);
+		break;
+
+	case ComponentType::UNDEFINED:
+		Log::Print(std::string("Attempting to remove a nonexistent component. UID: ").append(std::to_string(aUID)), LogType::PROBLEM);
+		return;
+
+	default:
+		Assert(true, std::string("Remove component had invalid type! UID: ").append(std::to_string(aUID)));
+		return;
 	}
-	CleanRemovedEntities();
+	
+	myComponentTypeTable[aUID] = ComponentType::UNDEFINED;
+	return;
 }
-
-Entity* EntityComponentSystem::CreateEntity(std::string aName)
-{
-	Entity* entity = new Entity();
-	entity->myName = aName;
-
-	myEntityList.push_back(entity);
-
-	return entity;
-}
-
-Entity* EntityComponentSystem::GetEntity(std::string aName)
-{
-	for (Entity*& entity : myEntityList)
-	{
-		if (!entity)
-			continue;
-		else if (aName == entity->myName)
-			return entity;
-	}
-	return nullptr;
-}
-
-void EntityComponentSystem::DestroyEntity(Entity* aEntity)
-{
-	for (Entity*& entity : myEntityList)
-	{
-		if (!entity)
-			continue;
-		else if (aEntity->myName == entity->myName)
-		{
-			delete entity;
-			entity = nullptr;
-		}
-	}
-}
-
-void EntityComponentSystem::CleanRemovedEntities()
-{
-	myEntityList.erase(std::remove_if(myEntityList.begin(), myEntityList.end(), [](Entity*& e) -> bool {return e == nullptr;}), myEntityList.end());
-	myEntityList.shrink_to_fit();
-}
-
-void EntityComponentSystem::AddEntity(Entity* aEntity)
-{
-	myEntityList.push_back(aEntity);
-}
-
-Entity* EntityComponentSystem::RemoveEntity(Entity* aEntity)
-{
-	Entity* removedEntity = nullptr;
-	for (Entity* entity : myEntityList)
-	{
-		if (!entity)
-			continue;
-		else if (aEntity->myName == entity->myName)
-		{
-			removedEntity = entity;
-			entity = nullptr;
-			return removedEntity;
-		}
-	}
-	return nullptr;
-}
-
