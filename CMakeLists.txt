@@ -17,11 +17,6 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 project(Simpleton)
 
-if (NOT CMAKE_VERSION VERSION_LESS 3.7.0)
-	message(STATUS "Using module to find Vulkan")
-	find_package(Vulkan REQUIRED)
-endif()
-
 set(DEP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies")
 set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Source")
 
@@ -85,8 +80,5 @@ set(GLAD_BIN_DIR "${CMAKE_CURRENT_BINARY_DIR}/glad")
 add_subdirectory("${GLAD_DIR}" glad)
 target_include_directories(${PROJECT_NAME} PRIVATE "${GLAD_BIN_DIR}/include")
 target_link_libraries(${PROJECT_NAME} "glad")
-
-#Vulkan
-target_link_libraries(${PROJECT_NAME} Vulkan::Vulkan)
 
 ADD_PROJECT_FILTERS(${SRC_DIR} SRC Source)
