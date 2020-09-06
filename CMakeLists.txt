@@ -17,11 +17,6 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 project(Simpleton)
 
-if (NOT CMAKE_VERSION VERSION_LESS 3.7.0)
-	message(STATUS "Using module to find Vulkan")
-	find_package(Vulkan REQUIRED)
-endif()
-
 set(DEP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies")
 set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Source")
 
