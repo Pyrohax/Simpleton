@@ -26,7 +26,5 @@ public:
 
 private:
 	GLFWwindow* myWindow;
-	VkInstance myVulkanInstance;
-	VkDebugUtilsMessengerEXT myDebugMessenger;
 	std::vector<const char*> myValidationLayers;
 };
