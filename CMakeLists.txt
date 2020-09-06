@@ -46,7 +46,4 @@ target_link_libraries(${PROJECT_NAME} "glfw")
 set(GLM_DIR "${DEP_DIR}/glm")
 target_include_directories(${PROJECT_NAME} PRIVATE "${GLM_DIR}")
 
-#Vulkan
-target_link_libraries(${PROJECT_NAME} Vulkan::Vulkan)
-
 ADD_PROJECT_FILTERS(${SRC_DIR} SRC Source)
