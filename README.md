@@ -15,7 +15,7 @@ Name | Description
 ## Dependencies
 Name | Description | License
 ------------ | ------------- | -------------
-[Assimp](https://github.com/assimp/assimp) | Open asset importer | [LICENSE](ASSIMP)
+[Assimp](https://github.com/assimp/assimp) | Open asset importer | [ASSIMP](https://github.com/assimp/assimp/blob/master/LICENSE)
 [TinyObjLoader](https://github.com/syoyo/tinyobjloader) | Tiny but powerful single file wavefront obj loader | [MIT](https://github.com/syoyo/tinyobjloader/blob/master/LICENSE)
 [STB](https://github.com/nothings/stb) | Collection of single-file libraries | [MIT](https://github.com/nothings/stb/blob/master/LICENSE)
 [GLM](https://github.com/g-truc/glm) | OpenGL math library | [MIT](https://github.com/g-truc/glm/blob/master/manual.md#section0)
