@@ -4,8 +4,6 @@
 #include <glm/gtx/hash.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
-#include <assimp/vector2.h>
-#include <assimp/vector3.h>
 
 struct Vertex
 {
@@ -34,12 +32,9 @@ namespace std
 	{
 		size_t operator()(Vertex const& aVertex) const
 		{
-			size_t test = 0;
-			CombineHash(test, aVertex.myPosition, aVertex.myTextureCoordinates);
-			return test;
+			size_t seed = 0;
+			CombineHash(seed, aVertex.myPosition, aVertex.myTextureCoordinates);
+			return seed;
 		}
 	};
 }
-
-static inline const glm::vec3& CastToVec3(const aiVector3D& aVector3D) { return glm::vec3(aVector3D.x, aVector3D.y, aVector3D.z); }
-static inline const glm::vec2& CastToVec2(const aiVector2D& aVector2D) { return glm::vec2(aVector2D.x, aVector2D.y); }

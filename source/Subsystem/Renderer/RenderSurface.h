@@ -26,6 +26,8 @@ public:
 
 	double GetDeltaTime() { return myCurrentFrameTime - myLastFrameTime; }
 
+	GLFWwindow* GetWindow() { return myWindow; }
+
 	bool myShouldClose;
 
 private:

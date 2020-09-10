@@ -1,12 +1,12 @@
 #include "Engine.h"
-#include "Subsystem/Yellowstone/Yellowstone.h"
+#include "Subsystem/Renderer/Renderer.h"
 
 #include "Utility/Assert.h"
 
 Engine::Engine()
-	: myYellowstone(nullptr)
+	: myRenderer(nullptr)
 {
-	myYellowstone = new Yellowstone();
+	myRenderer = new Renderer();
 }
 
 Engine::~Engine()
@@ -15,7 +15,7 @@ Engine::~Engine()
 
 bool Engine::Init()
 {
-	Assert(!myYellowstone->Initialize(), "Yellowstone Renderer FAILED to initialize! Cancelling init.");
+	Assert(!myRenderer->Initialize(), "Renderer FAILED to initialize! Cancelling init.");
 	Assert(!myJobSystem.Init(), "Jobsystem FAILED to initialize! Cancelling init.");
 	Assert(!myEntityComponentSystem.Init(), "Entity Component System FAILED to initialize! Cancelling init.");
 	return true;
@@ -23,15 +23,15 @@ bool Engine::Init()
 
 void Engine::Update()
 {
-	while (!myYellowstone->HasClosedWindow())
+	while (!myRenderer->HasClosedWindow())
 	{
-		myYellowstone->Update();
+		myRenderer->Update();
 	}
 }
 
 void Engine::Terminate()
 {
-	myYellowstone->Terminate();
+	myRenderer->Terminate();
 	myJobSystem.Terminate();
 	myEntityComponentSystem.Terminate();
 }

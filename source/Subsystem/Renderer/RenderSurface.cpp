@@ -28,7 +28,7 @@ RenderSurface::RenderSurface()
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
-	myWindow = glfwCreateWindow(1240, 720, "Hello Indices", nullptr, nullptr);
+	myWindow = glfwCreateWindow(1240, 720, "Simpleton Editor", nullptr, nullptr);
 	if (!myWindow)
 	{
 		printf("Failed to open a GLFW window\n");

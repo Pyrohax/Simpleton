@@ -19,6 +19,7 @@ project(Simpleton)
 
 set(DEP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies")
 set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Source")
+set(IMGUI_DIR "${DEP_DIR}/imgui")
 
 file(GLOB_RECURSE SRC CONFIGURE_DEPENDS 
     "${SRC_DIR}/*.cpp"
@@ -26,7 +27,26 @@ file(GLOB_RECURSE SRC CONFIGURE_DEPENDS
     "${SRC_DIR}/*.hpp"
 )
 
-add_executable(${PROJECT_NAME} ${SRC})
+file(GLOB IMGUI
+  "${IMGUI_DIR}/imconfig.h"
+  "${IMGUI_DIR}/imgui.h"
+  "${IMGUI_DIR}/imgui_internal.h"
+  "${IMGUI_DIR}/imstb_rectpack.h"
+  "${IMGUI_DIR}/imstb_textedit.h"
+  "${IMGUI_DIR}/imstb_truetype.h"
+  "${IMGUI_DIR}/examples/imgui_impl_opengl3.h"
+  "${IMGUI_DIR}/examples/imgui_impl_glfw.h"
+  "${IMGUI_DIR}/imgui.cpp"
+  "${IMGUI_DIR}/imgui_draw.cpp"
+  "${IMGUI_DIR}/imgui_demo.cpp"
+  "${IMGUI_DIR}/imgui_widgets.cpp"
+  "${IMGUI_DIR}/examples/imgui_impl_opengl3.cpp"
+  "${IMGUI_DIR}/examples/imgui_impl_glfw.cpp"
+)
+
+add_executable(${PROJECT_NAME} ${SRC} ${IMGUI})
+
+source_group("imgui" FILES ${IMGUI})
 
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "Generate docs" FORCE)
@@ -80,5 +100,8 @@ set(GLAD_BIN_DIR "${CMAKE_CURRENT_BINARY_DIR}/glad")
 add_subdirectory("${GLAD_DIR}" glad)
 target_include_directories(${PROJECT_NAME} PRIVATE "${GLAD_BIN_DIR}/include")
 target_link_libraries(${PROJECT_NAME} "glad")
+
+# IMGUI
+target_include_directories(${PROJECT_NAME} PRIVATE "${IMGUI_DIR}")
 
 ADD_PROJECT_FILTERS(${SRC_DIR} SRC Source)
