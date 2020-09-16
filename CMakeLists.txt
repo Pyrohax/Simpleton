@@ -11,6 +11,7 @@ macro(ADD_PROJECT_FILTERS path input_list prepend)
 endmacro()
 
 set(CMAKE_CXX_STANDARD 17)
+add_definitions(-DUNICODE)
 set_property(GLOBAL PROPERTY CMAKE_CXX_STANDARD_REQUIRED ON)
 set_property(GLOBAL PROPERTY CMAKE_CXX_EXTENSIONS OFF)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -44,7 +45,7 @@ file(GLOB IMGUI
   "${IMGUI_DIR}/examples/imgui_impl_glfw.cpp"
 )
 
-add_executable(${PROJECT_NAME} ${SRC} ${IMGUI})
+add_executable(${PROJECT_NAME} WIN32 ${SRC} ${IMGUI})
 
 source_group("imgui" FILES ${IMGUI})
 
