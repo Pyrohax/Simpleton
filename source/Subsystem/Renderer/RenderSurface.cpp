@@ -1,13 +1,16 @@
 #include "RenderSurface.h"
 
+#include "Texture.h"
+#include "../../Utility/Logger.h"
+
 #include <GLFW/glfw3.h>
 #include <cstdio>
 
 RenderSurface::RenderSurface()
 	: myWindow(nullptr)
-	, myShouldClose(false)
 	, myCurrentFrameTime(0.f)
 	, myLastFrameTime(0.f)
+	, myShouldClose(false)
 	, myWidth(0)
 	, myHeight(0)
 {
@@ -15,7 +18,7 @@ RenderSurface::RenderSurface()
 
 	if (!glfwInit())
 	{
-		printf("Failed to initialize GLFW\n");
+		Log::Print(LogType::PROBLEM, "Failed to initialize GLFW");
 		glfwTerminate();
 		return;
 	}
@@ -31,7 +34,7 @@ RenderSurface::RenderSurface()
 	myWindow = glfwCreateWindow(1240, 720, "Simpleton Editor", nullptr, nullptr);
 	if (!myWindow)
 	{
-		printf("Failed to open a GLFW window\n");
+		Log::Print(LogType::PROBLEM, "Failed to open a GLFW window");
 		glfwTerminate();
 		return;
 	}
@@ -58,7 +61,7 @@ void RenderSurface::PrintDebugInfo()
 {
 	int major, minor, revision;
 	glfwGetVersion(&major, &minor, &revision);
-	printf("GLFW %d.%d.%d\n", major, minor, revision);
+	Log::Print(LogType::MESSAGE, "GLFW %d.%d.%d", major, minor, revision);
 }
 
 void RenderSurface::Tick()
@@ -82,9 +85,18 @@ void RenderSurface::Destroy()
 	glfwTerminate();
 }
 
+void RenderSurface::SetWindowIcon(const Texture& aTexture)
+{
+	GLFWimage processIcon[1];
+	processIcon[0].pixels = aTexture.mySource;
+	processIcon[0].width = aTexture.myWidth;
+	processIcon[0].height = aTexture.myHeight;
+	glfwSetWindowIcon(myWindow, 1, processIcon);
+}
+
 void RenderSurface::ErrorCallback(int anError, const char* aDescription)
 {
-	printf("%i %s\n", anError, aDescription);
+	Log::Print(LogType::MESSAGE, "%i %s", anError, aDescription);
 }
 
 void RenderSurface::KeyCallback(GLFWwindow* aWindow, int aKey, int /*aScancode*/, int anAction, int /*aMode*/)

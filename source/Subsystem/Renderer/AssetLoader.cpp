@@ -7,6 +7,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "VectorUtilities.h"
+#include "../../Utility/Logger.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
@@ -35,7 +36,7 @@ Model* AssetLoader::LoadModel(const std::string& aPath)
 {
     if (!DoesFileExist(aPath))
     {
-        printf("%s does not exist\n", aPath.c_str());
+        Log::Print(LogType::PROBLEM, "File does not exist: %s", aPath.c_str());
         return nullptr;
     }
 
@@ -61,7 +62,7 @@ Shader* AssetLoader::LoadShader(const std::string& aPath, ShaderType aShaderType
 {
     if (!DoesFileExist(aPath))
     {
-        printf("%s does not exist\n", aPath.c_str());
+        Log::Print(LogType::PROBLEM, "File does not exist: %s", aPath.c_str());
         return nullptr;
     }
 
@@ -78,7 +79,7 @@ Texture* AssetLoader::LoadTexture(const std::string& aPath)
 {
     if (!DoesFileExist(aPath))
     {
-        printf("%s does not exist\n", aPath.c_str());
+        Log::Print(LogType::PROBLEM, "File does not exist: %s", aPath.c_str());
         return nullptr;
     }
 
@@ -89,14 +90,14 @@ Texture* AssetLoader::LoadTexture(const std::string& aPath)
     unsigned char* image = stbi_load(aPath.c_str(), &texture->myWidth, &texture->myHeight, &texture->myComponents, STBI_default);
     if (!image)
     {
-        printf("Failed to load texture: %s\n", aPath.c_str());
+        Log::Print(LogType::PROBLEM, "Failed to load texture: %s", aPath.c_str());
         stbi_image_free(image);
         return nullptr;
     }
 
     texture->mySource = image;
 
-    printf("Loaded %s\n", aPath.c_str());
+    Log::Print(LogType::SUCCESS, "Loaded: %s", aPath.c_str());
 
     return texture;
 }
@@ -120,7 +121,7 @@ std::string AssetLoader::ReadFile(const std::string& aPath)
 
     if (!sourceStream.is_open())
     {
-        printf("Failed to read file %s\n", aPath.c_str());
+        Log::Print(LogType::PROBLEM, "File can't be read: %s", aPath.c_str());
         return "";
     }
 
@@ -139,7 +140,7 @@ std::string AssetLoader::GetNameFromPath(const std::string& aPath)
     return aPath.substr(lastSlashIndex + 1, aPath.length() - lastDotIndex);
 }
 
-Model* AssetLoader::LoadOBJ(const std::string aPath, const std::string& aFilename, const std::string aBaseDirectory)
+Model* AssetLoader::LoadOBJ(const std::string& aPath, const std::string& aFilename, const std::string& aBaseDirectory)
 {
     tinyobj::attrib_t attributes;
     std::vector<tinyobj::shape_t> shapes;
@@ -150,18 +151,19 @@ Model* AssetLoader::LoadOBJ(const std::string aPath, const std::string& aFilenam
 
     if (!tinyobj::LoadObj(&attributes, &shapes, &materials, &warning, &error, aPath.c_str(), aBaseDirectory.c_str(), true))
     {
-        printf("Failed to load %s\n", aPath.c_str());
+        Log::Print(LogType::PROBLEM, "Failed to load %s", aPath.c_str());
+
         return nullptr;
     }
 
     if (!warning.empty())
     {
-        printf("%s\n", warning.c_str());
+        Log::Print(LogType::PROBLEM, "%s", warning.c_str());
     }
 
     if (!error.empty())
     {
-        printf("%s\n", error.c_str());
+        Log::Print(LogType::PROBLEM, "%s", error.c_str());
     }
 
     Model* model = new Model();
@@ -169,7 +171,7 @@ Model* AssetLoader::LoadOBJ(const std::string aPath, const std::string& aFilenam
 
     std::unordered_map<Vertex, unsigned int> uniqueVertices = {};
 
-    for (const tinyobj::shape_t shape : shapes)
+    for (const tinyobj::shape_t& shape : shapes)
     {
         Mesh mesh;
 
@@ -180,7 +182,7 @@ Model* AssetLoader::LoadOBJ(const std::string aPath, const std::string& aFilenam
             vertex.myPosition.y = attributes.vertices[3 * index.vertex_index + 1];
             vertex.myPosition.z = attributes.vertices[3 * index.vertex_index + 2];
 
-            if (attributes.texcoords.size())
+            if (attributes.texcoords.size() > 0)
             {
                 vertex.myTextureCoordinates.x = attributes.texcoords[2 * index.texcoord_index + 0];
                 vertex.myTextureCoordinates.y = attributes.texcoords[2 * index.texcoord_index + 1];
@@ -198,19 +200,36 @@ Model* AssetLoader::LoadOBJ(const std::string aPath, const std::string& aFilenam
         model->myMeshes.push_back(mesh);
     }
 
-    for (int materialIndex = 0; materialIndex < materials.size(); ++materialIndex)
+    std::map<std::string, TextureType> textureMap;
+    for (const tinyobj::material_t& material : materials)
     {
-        const tinyobj::material_t& material = materials[materialIndex];
+        auto addTexture = [](std::map<std::string, TextureType>& aTextureMap, const std::string& aTextureName, TextureType aTextureType)
+        {
+            if (!aTextureName.empty())
+            {
+                aTextureMap.insert(std::pair<std::string, TextureType>(aTextureName, aTextureType));
+            }
+        };
 
-        if (!material.diffuse_texname.length())
-            continue;
+        addTexture(textureMap, material.alpha_texname, TextureType::Alpha);
+        addTexture(textureMap, material.ambient_texname, TextureType::Ambient);
+        addTexture(textureMap, material.bump_texname, TextureType::Bump);
+        addTexture(textureMap, material.diffuse_texname, TextureType::Diffuse);
+        addTexture(textureMap, material.displacement_texname, TextureType::Displacement);
+        addTexture(textureMap, material.reflection_texname, TextureType::Reflection);
+        addTexture(textureMap, material.specular_texname, TextureType::Specular);
+        addTexture(textureMap, material.specular_highlight_texname, TextureType::SpecularHighlight);
+    }
 
-        std::string texturePath = aBaseDirectory + material.diffuse_texname;
+    for (const std::pair<std::string, TextureType>& texturePair : textureMap)
+    {
+        std::string texturePath = aBaseDirectory + texturePair.first;
 
         Texture* texture = LoadTexture(texturePath);
         if (!texture)
             continue;
 
+        texture->myType = texturePair.second;
         model->myTextures.push_back(*texture);
     }
 
@@ -222,20 +241,21 @@ Model* AssetLoader::LoadOBJ(const std::string aPath, const std::string& aFilenam
     return model;
 }
 
-Model* AssetLoader::LoadFBX(const std::string aPath, const std::string& aFilename)
+Model* AssetLoader::LoadFBX(const std::string& aPath, const std::string& aFilename)
 {
     Assimp::Importer importer;
 
     unsigned int flags = aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices;
     if (!importer.ValidateFlags(flags))
     {
-        printf("Flags are incompatible\n");
+        Log::Print(LogType::PROBLEM, "Flags are incompatible: %s", aPath.c_str());
+        return nullptr;
     }
 
     const aiScene* scene = importer.ReadFile(aPath.c_str(), flags);
     if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        printf("Failed to load %s %s\n", aPath.c_str(), importer.GetErrorString());
+        Log::Print(LogType::PROBLEM, "Failed to load %s %s", aPath.c_str(), importer.GetErrorString());
         return nullptr;
     }
 
@@ -304,16 +324,16 @@ Model* AssetLoader::LoadFBX(const std::string aPath, const std::string& aFilenam
 
 void AssetLoader::PrintModelInfo(const Model& aModel)
 {
-    printf("Loaded %s\n", aModel.myName.c_str());
-    printf("Number of meshes %i\n", static_cast<int>(aModel.myMeshes.size()));
+    Log::Print(LogType::SUCCESS, "Loaded %s", aModel.myName.c_str());
+    Log::Print(LogType::MESSAGE, "Number of meshes %i", static_cast<int>(aModel.myMeshes.size()));
+    Log::Print(LogType::MESSAGE, "Number of textures %i", static_cast<int>(aModel.myTextures.size()));
     //printf("Number of materials %i\n", static_cast<int>(aModel.myMaterials.size()));
-    printf("Number of textures %i\n", static_cast<int>(aModel.myTextures.size()));
 
     for (int meshIndex = 0; meshIndex < aModel.myMeshes.size(); ++meshIndex)
     {
         const Mesh& mesh = aModel.myMeshes[meshIndex];
-        printf("Number of vertices %i in mesh %i\n", static_cast<int>(mesh.myVertices.size()), meshIndex);
-        printf("Number of indices %i in mesh %i\n", static_cast<int>(mesh.myIndices.size()), meshIndex);
-        printf("Number of triangles %i in mesh %i\n", static_cast<int>(mesh.myVertices.size() / 3), meshIndex);
+        Log::Print(LogType::MESSAGE, "Number of vertices %i in mesh %i", static_cast<int>(mesh.myVertices.size()), meshIndex);
+        Log::Print(LogType::MESSAGE, "Number of indices %i in mesh %i", static_cast<int>(mesh.myIndices.size()), meshIndex);
+        Log::Print(LogType::MESSAGE, "Number of triangles %i in mesh %i", static_cast<int>(mesh.myVertices.size() / 3), meshIndex);
     }
 }

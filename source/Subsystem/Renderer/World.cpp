@@ -3,6 +3,7 @@
 #include "AssetLoader.h"
 #include "ShaderLibrary.h"
 #include "TextureLibrary.h"
+#include "../../Utility/Logger.h"
 
 World::World()
 	: myAssetLoader(nullptr)
@@ -24,7 +25,7 @@ void World::LoadDummyData()
 	Model* model = myAssetLoader->LoadModel("../Data/Models/Planet/Planet.obj");
 	if (!model)
 	{
-		printf("Error loading dummy data");
+		Log::Print(LogType::PROBLEM, "Error loading dummy data");
 		return;
 	}
 
@@ -38,7 +39,7 @@ void World::LoadDummyData()
 
 	if (!vertexShader || !fragmentShader)
 	{
-		printf("Error loading dummy data");
+		Log::Print(LogType::PROBLEM, "Error loading dummy data");
 		return;
 	}
 

@@ -1,10 +1,8 @@
 #pragma once
 
+#include "../../Utility/Logger.h"
+
 #include <glad/glad.h>
-
-#include <cstdio>
-
-#define ASSERT(x) if (!(x)) __debugbreak();
 
 static inline void CheckGLError()
 {
@@ -43,12 +41,12 @@ static inline void CheckGLError()
                 break;
         }
 
-        printf("%s\n", errorString);
+        Log::Print(LogType::PROBLEM, "%s", errorString);
     }
 }
 
 static void GLAPIENTRY ErrorCallback(GLenum aSource, GLenum aType, GLuint anID, GLenum aSeverity, GLsizei /*aLength*/, const GLchar* aMessage, const void* /*aUserParam*/)
 {
-    printf("Message from OpenGL:\nSource: 0x%x\nType: 0x%x\n Id: 0x%x\nSeverity: 0x%x\n", aSource, aType, anID, aSeverity);
-    printf("%s\n", aMessage);
+    Log::Print(LogType::PROBLEM, "Message from OpenGL: Source: 0x%x Type: 0x%x Id: 0x%x Severity: 0x%x", aSource, aType, anID, aSeverity);
+    Log::Print(LogType::PROBLEM, "%s", aMessage);
 }

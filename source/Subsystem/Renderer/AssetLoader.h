@@ -18,8 +18,8 @@ public:
 	Texture* LoadTexture(const std::string& aPath);
 
 private:
-	Model* LoadOBJ(const std::string aPath, const std::string& aFilename, const std::string aBaseDirectory);
-	Model* LoadFBX(const std::string aPath, const std::string& aFilename);
+	Model* LoadOBJ(const std::string& aPath, const std::string& aFilename, const std::string& aBaseDirectory);
+	Model* LoadFBX(const std::string& aPath, const std::string& aFilename);
 	bool DoesFileExist(const std::string& aPath);
 	std::string ReadFile(const std::string& aPath);
 	std::string GetNameFromPath(const std::string& aPath);

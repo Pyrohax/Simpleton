@@ -1,6 +1,7 @@
 #pragma once
 
 struct GLFWwindow;
+struct Texture;
 
 class RenderSurface
 {
@@ -9,31 +10,26 @@ public:
 	~RenderSurface();
 
 	void PrintDebugInfo();
-
 	void Tick();
-
 	void Destroy();
 
-	static void ErrorCallback(int anError, const char* aDescription);
+	void SetWindowIcon(const Texture& aTexture);
 
+	static void ErrorCallback(int anError, const char* aDescription);
 	static void KeyCallback(GLFWwindow* aWindow, int aKey, int aScancode, int anAction, int aMode);
 
-	int GetScreenWidth() { return myWidth; }
-
-	int GetScreenHeight() { return myHeight; }
-
-	float GetScreenRatio() { return myWidth / (float)myHeight; }
-
-	double GetDeltaTime() { return myCurrentFrameTime - myLastFrameTime; }
-
-	GLFWwindow* GetWindow() { return myWindow; }
-
-	bool myShouldClose;
+	int GetScreenWidth() const { return myWidth; }
+	int GetScreenHeight() const { return myHeight; }
+	float GetScreenRatio() const { return myWidth / (float)myHeight; }
+	double GetDeltaTime() const { return myCurrentFrameTime - myLastFrameTime; }
+	GLFWwindow* GetWindow() const { return myWindow; }
+	bool GetShouldClose() const { return myShouldClose; }
 
 private:
 	GLFWwindow* myWindow;
 	double myCurrentFrameTime;
 	double myLastFrameTime;
+	bool myShouldClose;
 	int myWidth;
 	int myHeight;
 };

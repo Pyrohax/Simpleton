@@ -18,7 +18,7 @@ RenderContext::RenderContext()
 {
 	if (!gladLoadGL())
 	{
-		printf("Failed to load GLAD, because GL_VERSION returned NULL or function prototypes could not be loaded.\n");
+		Log::Print(LogType::PROBLEM, "Failed to load GLAD, because GL_VERSION returned NULL or function prototypes could not be loaded");
 		return;
 	}
 
@@ -47,8 +47,8 @@ RenderContext::~RenderContext()
 
 void RenderContext::PrintDebugInfo()
 {
-	printf("OpenGL %s\n", glGetString(GL_VERSION));
-	printf("GLSL %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	Log::Print(LogType::MESSAGE, "OpenGL %s", glGetString(GL_VERSION));
+	Log::Print(LogType::MESSAGE, "GLSL %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 }
 
 void RenderContext::CreateCamera()
@@ -99,7 +99,7 @@ void RenderContext::Render(const std::vector<Model>& aModels, const ShaderLibrar
 		glClearColor(0.7f, 0.9f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		if (model.myTextures.size())
+		if (model.myTextures.size() > 0)
 		{
 			glActiveTexture(GL_TEXTURE0 + model.myTextureUnit);
 			glUniform1i(glGetUniformLocation(aShaderLibrary.GetProgramID(), "textureSampler"), model.myTextureUnit);

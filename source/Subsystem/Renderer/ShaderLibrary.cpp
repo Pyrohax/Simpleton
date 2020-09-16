@@ -1,4 +1,5 @@
 #include "ShaderLibrary.h"
+
 #include "GLError.h"
 
 #include <glad/glad.h>
@@ -28,7 +29,7 @@ void ShaderLibrary::CreateProgram()
 
 void ShaderLibrary::CompileShader(Shader& aShader)
 {
-    printf("Compiling %s\n", aShader.myName.c_str());
+    Log::Print(LogType::MESSAGE, "Compiling %s", aShader.myName.c_str());
 
     aShader.myType = GetShaderType(aShader.myShaderType);
     aShader.myID = glCreateShader(aShader.myType);
@@ -48,17 +49,17 @@ void ShaderLibrary::CompileShader(Shader& aShader)
         {
             std::vector<GLchar> infoLog(maxInfoLength);
             glGetShaderInfoLog(aShader.myID, maxInfoLength, &maxInfoLength, &infoLog[0]);
-            printf("%s\n", &infoLog[0]);
+            Log::Print(LogType::PROBLEM, "%s", &infoLog[0]);
         }
     }
     
-    printf("Compiled %s\n", aShader.myName.c_str());
+    Log::Print(LogType::SUCCESS, "Compiled %s", aShader.myName.c_str());
 }
 
 void ShaderLibrary::AttachShaders(const Shader& aVertexShader, const Shader& aFragmentShader)
 {
-    printf("Linking program [%i] to %s\n", myProgramID, aVertexShader.myName.c_str());
-    printf("Linking program [%i] to %s\n", myProgramID, aFragmentShader.myName.c_str());
+    Log::Print(LogType::MESSAGE, "Linking program [%i] to %s", myProgramID, aVertexShader.myName.c_str());
+    Log::Print(LogType::MESSAGE, "Linking program [%i] to %s", myProgramID, aFragmentShader.myName.c_str());
 
     const unsigned int vertexShaderID = aVertexShader.myID;
     const unsigned int fragmentShaderID = aFragmentShader.myID;
@@ -72,7 +73,7 @@ void ShaderLibrary::AttachShaders(const Shader& aVertexShader, const Shader& aFr
     {
         GLchar infoLog[512];
         glGetProgramInfoLog(myProgramID, 512, nullptr, infoLog);
-        printf("%s\n", infoLog);
+        Log::Print(LogType::PROBLEM, "%s", infoLog);
     }
 
     glDetachShader(myProgramID, vertexShaderID);

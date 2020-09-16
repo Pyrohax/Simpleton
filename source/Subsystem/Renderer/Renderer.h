@@ -22,4 +22,5 @@ private:
 	RenderSurface* myRenderSurface;
 	World* myWorld;
 	ImguiWrapper* myImguiWrapper;
+	bool myShowConsole;
 };

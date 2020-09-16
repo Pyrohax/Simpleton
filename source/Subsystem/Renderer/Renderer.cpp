@@ -5,11 +5,14 @@
 #include "World.h"
 #include "ShaderLibrary.h"
 #include "ImguiWrapper.h"
+#include "AssetLoader.h"
+#include "Console.h"
 
 Renderer::Renderer()
 	: myRenderContext(nullptr)
 	, myRenderSurface(nullptr)
 	, myImguiWrapper(nullptr)
+	, myShowConsole(true)
 {
 	myRenderSurface = new RenderSurface();
 	myRenderContext = new RenderContext();
@@ -31,6 +34,12 @@ bool Renderer::Initialize()
 	myRenderContext->CreateBuffers(myWorld->myModels);
 	myImguiWrapper->Initialize(myRenderSurface->GetWindow());
 
+	if (Texture* icon = myWorld->GetAssetLoader().LoadTexture("../Data/Icons/Editor.png"))
+	{
+		myRenderSurface->SetWindowIcon(*icon);
+		free(icon);
+	}
+
 	return true;
 }
 
@@ -38,6 +47,7 @@ void Renderer::Update()
 {
 	myWorld->GetShaderLibrary().BindShaders();
 	myImguiWrapper->CreateFrame();
+	Console::GetInstance().Draw("Console", &myShowConsole);
 	myImguiWrapper->Render();
 	myRenderContext->Render(myWorld->myModels, myWorld->GetShaderLibrary(), myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight());
 	myImguiWrapper->Draw();
@@ -54,5 +64,5 @@ void Renderer::Terminate()
 
 bool Renderer::HasClosedWindow()
 {
-	return myRenderSurface->myShouldClose;
+	return myRenderSurface->GetShouldClose();
 }

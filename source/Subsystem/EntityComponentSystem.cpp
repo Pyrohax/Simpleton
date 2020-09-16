@@ -5,6 +5,8 @@
 #include "../Component/ModelComponent.h"
 #include "../Utility/Assert.h"
 
+#include <string>
+
 const size_t MAX_COMPONENTS = 150;
 const size_t MAX_ENTITIES = 150;
 
@@ -40,11 +42,11 @@ void EntityComponentSystem::RemoveComponent(UniqueID aUID)
 		break;
 
 	case ComponentType::UNDEFINED:
-		Log::Print(std::string("Attempting to remove a nonexistent component. UID: ").append(std::to_string(aUID)), LogType::PROBLEM);
+		Log::Print(LogType::PROBLEM, "Attempting to remove a nonexistent component. UID: ", std::to_string(aUID));
 		return;
 
 	default:
-		Assert(true, std::string("Remove component had invalid type! UID: ").append(std::to_string(aUID)));
+		Assert(true, "Remove component had invalid type! UID: ", std::to_string(aUID));
 		return;
 	}
 	

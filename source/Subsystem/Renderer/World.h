@@ -19,6 +19,7 @@ public:
 	void Destroy();
 
 	ShaderLibrary& GetShaderLibrary() { return *myShaderLibrary; }
+	AssetLoader& GetAssetLoader() { return *myAssetLoader; }
 
 public:
 	std::vector<Model> myModels;
