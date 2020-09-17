@@ -2,17 +2,27 @@
 
 #include "Texture.h"
 #include "../../Utility/Logger.h"
+#include "InputManager.h"
 
 #include <GLFW/glfw3.h>
 #include <cstdio>
+#include <map>
 
 RenderSurface::RenderSurface()
 	: myWindow(nullptr)
 	, myCurrentFrameTime(0.f)
 	, myLastFrameTime(0.f)
 	, myShouldClose(false)
-	, myWidth(0)
-	, myHeight(0)
+	, myWidth(1240)
+	, myHeight(720)
+{
+}
+
+RenderSurface::~RenderSurface()
+{
+}
+
+void RenderSurface::Initialize()
 {
 	glfwSetErrorCallback(ErrorCallback);
 
@@ -31,7 +41,7 @@ RenderSurface::RenderSurface()
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
-	myWindow = glfwCreateWindow(1240, 720, "Simpleton Editor", nullptr, nullptr);
+	myWindow = glfwCreateWindow(myWidth, myHeight, "Simpleton Editor", nullptr, nullptr);
 	if (!myWindow)
 	{
 		Log::Print(LogType::PROBLEM, "Failed to open a GLFW window");
@@ -40,11 +50,9 @@ RenderSurface::RenderSurface()
 	}
 
 	glfwMakeContextCurrent(myWindow);
-
+	glfwSetWindowUserPointer(myWindow, this);
 	glfwSetKeyCallback(myWindow, KeyCallback);
-
 	glfwSetInputMode(myWindow, GLFW_STICKY_KEYS, GL_TRUE);
-
 	glfwSwapInterval(1);
 
 	PrintDebugInfo();
@@ -53,19 +61,13 @@ RenderSurface::RenderSurface()
 	myLastFrameTime = myCurrentFrameTime;
 }
 
-RenderSurface::~RenderSurface()
-{
-}
-
-void RenderSurface::PrintDebugInfo()
-{
-	int major, minor, revision;
-	glfwGetVersion(&major, &minor, &revision);
-	Log::Print(LogType::MESSAGE, "GLFW %d.%d.%d", major, minor, revision);
-}
-
 void RenderSurface::Tick()
 {
+	if (InputManager::GetInstance().GetIsKeyDown(GLFW_KEY_ESCAPE))
+	{
+		glfwSetWindowShouldClose(myWindow, true);
+	}
+
 	if (glfwWindowShouldClose(myWindow))
 		myShouldClose = true;
 
@@ -73,9 +75,9 @@ void RenderSurface::Tick()
 	myLastFrameTime = myCurrentFrameTime;
 
 	glfwGetFramebufferSize(myWindow, &myWidth, &myHeight);
-
 	glfwSwapBuffers(myWindow);
 
+	InputManager::GetInstance().Clear();
 	glfwPollEvents();
 }
 
@@ -94,13 +96,20 @@ void RenderSurface::SetWindowIcon(const Texture& aTexture)
 	glfwSetWindowIcon(myWindow, 1, processIcon);
 }
 
+void RenderSurface::PrintDebugInfo()
+{
+	int major, minor, revision;
+	glfwGetVersion(&major, &minor, &revision);
+	Log::Print(LogType::MESSAGE, "GLFW %d.%d.%d", major, minor, revision);
+	Log::Print(LogType::MESSAGE, "Window size %ix%i", myWidth, myHeight);
+}
+
 void RenderSurface::ErrorCallback(int anError, const char* aDescription)
 {
 	Log::Print(LogType::MESSAGE, "%i %s", anError, aDescription);
 }
 
-void RenderSurface::KeyCallback(GLFWwindow* aWindow, int aKey, int /*aScancode*/, int anAction, int /*aMode*/)
+void RenderSurface::KeyCallback(GLFWwindow* aWindow, int aKey, int aScancode, int anAction, int aMode)
 {
-	if (aKey == GLFW_KEY_ESCAPE && anAction == GLFW_PRESS)
-		glfwSetWindowShouldClose(aWindow, GL_TRUE);
+	InputManager::GetInstance().OnKeyAction(aKey, aScancode, anAction != GLFW_RELEASE, aMode);
 }

@@ -11,6 +11,7 @@ public:
 	RenderContext();
 	~RenderContext();
 
+	void Initialize();
 	void CreateBuffers(std::vector<Model>& aModels);
 	void Render(const std::vector<Model>& aModels, const ShaderLibrary& aShaderLibrary, int aWidth, int aHeight);
 	void Destroy(const std::vector<Model>& aModels);

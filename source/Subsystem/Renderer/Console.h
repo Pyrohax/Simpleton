@@ -1,12 +1,12 @@
 #pragma once
 
-#include "imgui.h"
-//#include "examples/imgui_impl_opengl3.h"
-//#include "examples/imgui_impl_glfw.h"
-
 #include <ctype.h>
 #include <cstdlib>
 #include <stdio.h>
+#include <vector>
+
+struct ImGuiInputTextCallbackData;
+struct ImGuiTextFilter;
 
 struct Console
 {
@@ -21,26 +21,25 @@ public:
     void operator=(Console const&) = delete;
 
     void ClearLog();
-    void AddLog(const char* fmt, ...);
-    void Draw(const char* title, bool* p_open);
+    void AddLog(const char* aFormat, ...);
+    void Draw(const char* aTitle, bool* aShouldOpen);
 
 private:
     Console();
     ~Console();
 
-    void ExecCommand(const char* command_line);
-    static int TextEditCallbackStub(ImGuiInputTextCallbackData* data);
-    int TextEditCallback(ImGuiInputTextCallbackData* data);
+    void ExecuteCommand(const char* aCommand);
+    int TextEditCallback(ImGuiInputTextCallbackData* aData);
 
     static void Strtrim(char* s) { char* str_end = s + strlen(s); while (str_end > s && str_end[-1] == ' ') str_end--; *str_end = 0; }
 
 private:
-    char myInputBuf[256];
-    ImVector<char*> myItems;
-    ImVector<const char*> myCommands;
-    ImVector<char*> myHistory;
-    int myHistoryPos;    // -1: new line, 0..History.Size-1 browsing history.
-    ImGuiTextFilter myFilter;
+    char myInputBuffer[256];
+    std::vector<char*> myItems;
+    std::vector<const char*> myCommands;
+    std::vector<char*> myHistory;
+    int myHistoryPosition;    // -1: new line, 0..History.Size-1 browsing history.
+    ImGuiTextFilter* myFilter;
     bool myAutoScroll;
     bool myScrollToBottom;
 };

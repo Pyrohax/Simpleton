@@ -1,13 +1,16 @@
 #include "Console.h"
 
+#include "imgui.h"
+
 #define ERROR_PREFIX "(P)"
 #define SUCCES_PREFIX "(S)"
 
 Console::Console()
 {
 	ClearLog();
-	memset(myInputBuf, 0, sizeof(myInputBuf));
-    myHistoryPos = -1;
+	memset(myInputBuffer, 0, sizeof(myInputBuffer));
+    myHistoryPosition = -1;
+    myFilter = new ImGuiTextFilter();
 
 	// "CLASSIFY" is here to provide the test case where "C"+[tab] completes to "CL" and display multiple matches.
     myCommands.push_back("HELP");
@@ -21,33 +24,44 @@ Console::Console()
 Console::~Console()
 {
 	ClearLog();
-	for (int i = 0; i < myHistory.Size; i++)
-		free(myHistory[i]);
+
+    for (int i = 0; i < myHistory.size(); i++)
+    {
+        free(myHistory[i]);
+    }
+
+    delete myFilter;
 }
 
 void Console::ClearLog()
 {
-    for (int i = 0; i < myItems.Size; i++)
+    for (int i = 0; i < myItems.size(); i++)
+    {
         free(myItems[i]);
+    }
+
     myItems.clear();
 }
 
-void Console::AddLog(const char* fmt, ...)
+void Console::AddLog(const char* aFormat, ...)
 {
-    // FIXME-OPT
-    char buf[1024];
-    va_list args;
-    va_start(args, fmt);
-    vsnprintf(buf, IM_ARRAYSIZE(buf), fmt, args);
-    buf[IM_ARRAYSIZE(buf) - 1] = 0;
-    va_end(args);
-    myItems.push_back(strdup(buf));
+    va_list argumentLeft, argumentRight;
+    va_start(argumentLeft, aFormat);
+    va_copy(argumentRight, argumentLeft);
+    int size = _vscprintf(aFormat, argumentRight) + 1;
+    va_end(argumentRight);
+
+    char* buffer = new char[size];
+    vsnprintf(buffer, size, aFormat, argumentLeft);
+    va_end(argumentLeft);
+
+    myItems.push_back(_strdup(buffer));
 }
 
-void Console::Draw(const char* title, bool* p_open)
+void Console::Draw(const char* aTitle, bool* aShouldOpen)
 {
     ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
-    if (!ImGui::Begin(title, p_open))
+    if (!ImGui::Begin(aTitle, aShouldOpen))
     {
         ImGui::End();
         return;
@@ -59,7 +73,7 @@ void Console::Draw(const char* title, bool* p_open)
     if (ImGui::BeginPopupContextItem())
     {
         if (ImGui::MenuItem("Close Console"))
-            *p_open = false;
+            *aShouldOpen = false;
         ImGui::EndPopup();
     }
 
@@ -86,7 +100,7 @@ void Console::Draw(const char* title, bool* p_open)
     if (ImGui::Button("Options"))
         ImGui::OpenPopup("Options");
     ImGui::SameLine();
-    myFilter.Draw("Filter (\"incl,-excl\") (\"error\")", 180);
+    myFilter->Draw("Filter (\"incl,-excl\") (\"error\")", 180);
     ImGui::Separator();
 
     // Reserve enough left-over height for 1 separator + 1 input text
@@ -124,10 +138,10 @@ void Console::Draw(const char* title, bool* p_open)
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1)); // Tighten spacing
     if (copy_to_clipboard)
         ImGui::LogToClipboard();
-    for (int i = 0; i < myItems.Size; i++)
+    for (int i = 0; i < myItems.size(); i++)
     {
         const char* item = myItems[i];
-        if (!myFilter.PassFilter(item))
+        if (!myFilter->PassFilter(item))
             continue;
 
         // Normally you would store more information in your item than just a string.
@@ -157,13 +171,22 @@ void Console::Draw(const char* title, bool* p_open)
     // Command-line
     bool reclaim_focus = false;
     ImGuiInputTextFlags input_text_flags = ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_CallbackCompletion | ImGuiInputTextFlags_CallbackHistory;
-    if (ImGui::InputText("Input", myInputBuf, IM_ARRAYSIZE(myInputBuf), input_text_flags, &TextEditCallbackStub, (void*)this))
+
+    auto textEditCallback = [](ImGuiInputTextCallbackData* aData)
     {
-        char* s = myInputBuf;
-        Strtrim(s);
-        if (s[0])
-            ExecCommand(s);
-        strcpy(s, "");
+        Console* console = (Console*)aData->UserData;
+        return console->TextEditCallback(aData);
+    };
+
+    if (ImGui::InputText("Input", myInputBuffer, IM_ARRAYSIZE(myInputBuffer), input_text_flags, textEditCallback, (void*)this))
+    {
+        char* inputBuffer = myInputBuffer;
+        Strtrim(inputBuffer);
+
+        if (inputBuffer[0])
+            ExecuteCommand(inputBuffer);
+
+        strcpy_s(inputBuffer, sizeof(inputBuffer), "");
         reclaim_focus = true;
     }
 
@@ -175,68 +198,61 @@ void Console::Draw(const char* title, bool* p_open)
     ImGui::End();
 }
 
-void Console::ExecCommand(const char* command_line)
+void Console::ExecuteCommand(const char* aCommand)
 {
-    AddLog("# %s\n", command_line);
+    AddLog("# %s\n", aCommand);
 
     // Insert into history. First find match and delete it so it can be pushed to the back.
     // This isn't trying to be smart or optimal.
-    myHistoryPos = -1;
-    for (int i = myHistory.Size - 1; i >= 0; i--)
-        if (strcmp(myHistory[i], command_line) == 0)
+    myHistoryPosition = -1;
+    for (int i = myHistory.size() - 1; i >= 0; i--)
+        if (strcmp(myHistory[i], aCommand) == 0)
         {
             free(myHistory[i]);
             myHistory.erase(myHistory.begin() + i);
             break;
         }
-    myHistory.push_back(strdup(command_line));
+    myHistory.push_back(_strdup(aCommand));
 
     // Process command
-    if (strcmp(command_line, "CLEAR") == 0)
+    if (strcmp(aCommand, "CLEAR") == 0)
     {
         ClearLog();
     }
-    else if (strcmp(command_line, "HELP") == 0)
+    else if (strcmp(aCommand, "HELP") == 0)
     {
         AddLog("Commands:");
-        for (int i = 0; i < myCommands.Size; i++)
+        for (int i = 0; i < myCommands.size(); i++)
             AddLog("- %s", myCommands[i]);
     }
-    else if (strcmp(command_line, "HISTORY") == 0)
+    else if (strcmp(aCommand, "HISTORY") == 0)
     {
-        int first = myHistory.Size - 10;
-        for (int i = first > 0 ? first : 0; i < myHistory.Size; i++)
+        int first = myHistory.size() - 10;
+        for (int i = first > 0 ? first : 0; i < myHistory.size(); i++)
             AddLog("%3d: %s\n", i, myHistory[i]);
     }
     else
     {
-        AddLog("Unknown command: '%s'\n", command_line);
+        AddLog("Unknown command: '%s'\n", aCommand);
     }
 
     // On command input, we scroll to bottom even if AutoScroll==false
     myScrollToBottom = true;
 }
 
-// In C++11 you'd be better off using lambdas for this sort of forwarding callbacks
-int Console::TextEditCallbackStub(ImGuiInputTextCallbackData* data)
-{
-    Console* console = (Console*)data->UserData;
-    return console->TextEditCallback(data);
-}
-
-int Console::TextEditCallback(ImGuiInputTextCallbackData* data)
+int Console::TextEditCallback(ImGuiInputTextCallbackData* aData)
 {
     //AddLog("cursor: %d, selection: %d-%d", data->CursorPos, data->SelectionStart, data->SelectionEnd);
-    switch (data->EventFlag)
+    switch (aData->EventFlag)
     {
         case ImGuiInputTextFlags_CallbackCompletion:
         {
             // Example of TEXT COMPLETION
 
             // Locate beginning of current word
-            const char* word_end = data->Buf + data->CursorPos;
+            const char* word_end = aData->Buf + aData->CursorPos;
             const char* word_start = word_end;
-            while (word_start > data->Buf)
+            while (word_start > aData->Buf)
             {
                 const char c = word_start[-1];
                 if (c == ' ' || c == '\t' || c == ',' || c == ';')
@@ -246,7 +262,7 @@ int Console::TextEditCallback(ImGuiInputTextCallbackData* data)
 
             // Build a list of candidates
             ImVector<const char*> candidates;
-            for (int i = 0; i < myCommands.Size; i++)
+            for (int i = 0; i < myCommands.size(); i++)
                 if (strncmp(myCommands[i], word_start, (int)(word_end - word_start)) == 0)
                     candidates.push_back(myCommands[i]);
 
@@ -258,9 +274,9 @@ int Console::TextEditCallback(ImGuiInputTextCallbackData* data)
             else if (candidates.Size == 1)
             {
                 // Single match. Delete the beginning of the word and replace it entirely so we've got nice casing.
-                data->DeleteChars((int)(word_start - data->Buf), (int)(word_end - word_start));
-                data->InsertChars(data->CursorPos, candidates[0]);
-                data->InsertChars(data->CursorPos, " ");
+                aData->DeleteChars((int)(word_start - aData->Buf), (int)(word_end - word_start));
+                aData->InsertChars(aData->CursorPos, candidates[0]);
+                aData->InsertChars(aData->CursorPos, " ");
             }
             else
             {
@@ -283,8 +299,8 @@ int Console::TextEditCallback(ImGuiInputTextCallbackData* data)
 
                 if (match_len > 0)
                 {
-                    data->DeleteChars((int)(word_start - data->Buf), (int)(word_end - word_start));
-                    data->InsertChars(data->CursorPos, candidates[0], candidates[0] + match_len);
+                    aData->DeleteChars((int)(word_start - aData->Buf), (int)(word_end - word_start));
+                    aData->InsertChars(aData->CursorPos, candidates[0], candidates[0] + match_len);
                 }
 
                 // List matches
@@ -298,27 +314,27 @@ int Console::TextEditCallback(ImGuiInputTextCallbackData* data)
         case ImGuiInputTextFlags_CallbackHistory:
         {
             // Example of HISTORY
-            const int prev_history_pos = myHistoryPos;
-            if (data->EventKey == ImGuiKey_UpArrow)
+            const int prev_history_pos = myHistoryPosition;
+            if (aData->EventKey == ImGuiKey_UpArrow)
             {
-                if (myHistoryPos == -1)
-                    myHistoryPos = myHistory.Size - 1;
-                else if (myHistoryPos > 0)
-                    myHistoryPos--;
+                if (myHistoryPosition == -1)
+                    myHistoryPosition = myHistory.size() - 1;
+                else if (myHistoryPosition > 0)
+                    myHistoryPosition--;
             }
-            else if (data->EventKey == ImGuiKey_DownArrow)
+            else if (aData->EventKey == ImGuiKey_DownArrow)
             {
-                if (myHistoryPos != -1)
-                    if (++myHistoryPos >= myHistory.Size)
-                        myHistoryPos = -1;
+                if (myHistoryPosition != -1)
+                    if (++myHistoryPosition >= myHistory.size())
+                        myHistoryPosition = -1;
             }
 
             // A better implementation would preserve the data on the current input line along with cursor position.
-            if (prev_history_pos != myHistoryPos)
+            if (prev_history_pos != myHistoryPosition)
             {
-                const char* history_str = (myHistoryPos >= 0) ? myHistory[myHistoryPos] : "";
-                data->DeleteChars(0, data->BufTextLen);
-                data->InsertChars(0, history_str);
+                const char* history_str = (myHistoryPosition >= 0) ? myHistory[myHistoryPosition] : "";
+                aData->DeleteChars(0, aData->BufTextLen);
+                aData->InsertChars(0, history_str);
             }
         }
     }

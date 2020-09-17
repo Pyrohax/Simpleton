@@ -7,6 +7,7 @@
 #include "Mesh.h"
 #include "Vertex.h"
 #include "Texture.h"
+#include "InputManager.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
@@ -15,6 +16,31 @@
 
 RenderContext::RenderContext()
 	: myCamera(nullptr)
+{
+}
+
+RenderContext::~RenderContext()
+{
+}
+
+void RenderContext::PrintDebugInfo()
+{
+	Log::Print(LogType::MESSAGE, "OpenGL %s", glGetString(GL_VERSION));
+	Log::Print(LogType::MESSAGE, "GLSL %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+}
+
+void RenderContext::CreateCamera()
+{
+	myCamera = new Camera();
+	myCamera->myProjection = glm::perspective(glm::radians(45.0f), 1240.0f / 720.0f, 0.1f, 100.0f);
+	myCamera->myPosition = glm::vec3(4, 3, 3);
+	myCamera->myFront = glm::vec3(0, 0, -1);
+	myCamera->myRight = glm::vec3(1, 0, 0);
+	myCamera->myUp = glm::vec3(0, 1, 0);
+	myCamera->myView = glm::lookAt(myCamera->myPosition, myCamera->myPosition + myCamera->myFront, myCamera->myUp);
+}
+
+void RenderContext::Initialize()
 {
 	if (!gladLoadGL())
 	{
@@ -39,23 +65,6 @@ RenderContext::RenderContext()
 	CheckGLError();
 
 	CreateCamera();
-}
-
-RenderContext::~RenderContext()
-{
-}
-
-void RenderContext::PrintDebugInfo()
-{
-	Log::Print(LogType::MESSAGE, "OpenGL %s", glGetString(GL_VERSION));
-	Log::Print(LogType::MESSAGE, "GLSL %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
-}
-
-void RenderContext::CreateCamera()
-{
-	myCamera = new Camera();
-	myCamera->myProjection = glm::perspective(glm::radians(45.0f), 1240.0f / 720.0f, 0.1f, 100.0f);
-	myCamera->myView = glm::lookAt(glm::vec3(4, 3, 3), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 }
 
 void RenderContext::CreateBuffers(std::vector<Model>& aModels)
@@ -87,6 +96,26 @@ void RenderContext::CreateBuffers(std::vector<Model>& aModels)
 
 void RenderContext::Render(const std::vector<Model>& aModels, const ShaderLibrary& aShaderLibrary, int aWidth, int aHeight)
 {
+	if (InputManager::GetInstance().GetIsKeyDown(87))
+		myCamera->myPosition += 0.05f * myCamera->myFront;
+
+	if (InputManager::GetInstance().GetIsKeyDown(65))
+		myCamera->myPosition -= 0.05f * myCamera->myRight;
+
+	if (InputManager::GetInstance().GetIsKeyDown(83))
+		myCamera->myPosition -= 0.05f * myCamera->myFront;
+
+	if (InputManager::GetInstance().GetIsKeyDown(68))
+		myCamera->myPosition += 0.05f * myCamera->myRight;
+
+	if (InputManager::GetInstance().GetIsKeyDown(32))
+		myCamera->myPosition += 0.05f * myCamera->myUp;
+
+	if (InputManager::GetInstance().GetIsKeyDown(340))
+		myCamera->myPosition -= 0.05f * myCamera->myUp;
+
+	myCamera->Update();
+	
 	for (const Model& model : aModels)
 	{
 		glm::mat4 mvp = myCamera->myProjection * myCamera->myView * model.myModelMatrix;
@@ -108,7 +137,7 @@ void RenderContext::Render(const std::vector<Model>& aModels, const ShaderLibrar
 
 		glBindVertexArray(model.myVertexArrayObject);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model.myElementBufferObject);
-		glDrawElements(GL_TRIANGLES, model.myMeshes[0].myIndices.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(model.myMeshes[0].myIndices.size()), GL_UNSIGNED_INT, 0);
 
 		glBindVertexArray(0);
 

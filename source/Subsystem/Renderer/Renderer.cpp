@@ -30,6 +30,8 @@ Renderer::~Renderer()
 
 bool Renderer::Initialize()
 {
+	myRenderSurface->Initialize();
+	myRenderContext->Initialize();
 	myWorld->LoadDummyData();
 	myRenderContext->CreateBuffers(myWorld->myModels);
 	myImguiWrapper->Initialize(myRenderSurface->GetWindow());
