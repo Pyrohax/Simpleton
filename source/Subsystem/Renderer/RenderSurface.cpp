@@ -63,7 +63,7 @@ void RenderSurface::Initialize()
 
 void RenderSurface::Tick()
 {
-	if (InputManager::GetInstance().GetIsKeyDown(GLFW_KEY_ESCAPE))
+	if (InputManager::GetInstance().GetIsKeyDown(Keys::Escape))
 	{
 		glfwSetWindowShouldClose(myWindow, true);
 	}
@@ -76,8 +76,6 @@ void RenderSurface::Tick()
 
 	glfwGetFramebufferSize(myWindow, &myWidth, &myHeight);
 	glfwSwapBuffers(myWindow);
-
-	InputManager::GetInstance().Clear();
 	glfwPollEvents();
 }
 

@@ -200,37 +200,25 @@ Model* AssetLoader::LoadOBJ(const std::string& aPath, const std::string& aFilena
         model->myMeshes.push_back(mesh);
     }
 
-    std::map<std::string, TextureType> textureMap;
     for (const tinyobj::material_t& material : materials)
     {
-        auto addTexture = [](std::map<std::string, TextureType>& aTextureMap, const std::string& aTextureName, TextureType aTextureType)
+        auto addTexturePair = [model, aBaseDirectory](const std::string& aTextureName, TextureType aTextureType)
         {
             if (!aTextureName.empty())
             {
-                aTextureMap.insert(std::pair<std::string, TextureType>(aTextureName, aTextureType));
+                std::string texturePath = aBaseDirectory + aTextureName;
+                model->myTextureMap.insert(std::pair<std::string, TextureType>(texturePath, aTextureType));
             }
         };
 
-        addTexture(textureMap, material.alpha_texname, TextureType::Alpha);
-        addTexture(textureMap, material.ambient_texname, TextureType::Ambient);
-        addTexture(textureMap, material.bump_texname, TextureType::Bump);
-        addTexture(textureMap, material.diffuse_texname, TextureType::Diffuse);
-        addTexture(textureMap, material.displacement_texname, TextureType::Displacement);
-        addTexture(textureMap, material.reflection_texname, TextureType::Reflection);
-        addTexture(textureMap, material.specular_texname, TextureType::Specular);
-        addTexture(textureMap, material.specular_highlight_texname, TextureType::SpecularHighlight);
-    }
-
-    for (const std::pair<std::string, TextureType>& texturePair : textureMap)
-    {
-        std::string texturePath = aBaseDirectory + texturePair.first;
-
-        Texture* texture = LoadTexture(texturePath);
-        if (!texture)
-            continue;
-
-        texture->myType = texturePair.second;
-        model->myTextures.push_back(*texture);
+        addTexturePair(material.alpha_texname, TextureType::Alpha);
+        addTexturePair(material.ambient_texname, TextureType::Ambient);
+        addTexturePair(material.bump_texname, TextureType::Bump);
+        addTexturePair(material.diffuse_texname, TextureType::Diffuse);
+        addTexturePair(material.displacement_texname, TextureType::Displacement);
+        addTexturePair(material.reflection_texname, TextureType::Reflection);
+        addTexturePair(material.specular_texname, TextureType::Specular);
+        addTexturePair(material.specular_highlight_texname, TextureType::SpecularHighlight);
     }
 
     PrintModelInfo(*model);
@@ -310,7 +298,7 @@ Model* AssetLoader::LoadFBX(const std::string& aPath, const std::string& aFilena
             if (!texture)
                 continue;
 
-            model->myTextures.push_back(*texture);
+            //model->myTextures.push_back(*texture);
         }
     }
 
@@ -326,7 +314,7 @@ void AssetLoader::PrintModelInfo(const Model& aModel)
 {
     Log::Print(LogType::SUCCESS, "Loaded %s", aModel.myName.c_str());
     Log::Print(LogType::MESSAGE, "Number of meshes %i", static_cast<int>(aModel.myMeshes.size()));
-    Log::Print(LogType::MESSAGE, "Number of textures %i", static_cast<int>(aModel.myTextures.size()));
+    //Log::Print(LogType::MESSAGE, "Number of textures %i", static_cast<int>(aModel.myTextures.size()));
     //printf("Number of materials %i\n", static_cast<int>(aModel.myMaterials.size()));
 
     for (int meshIndex = 0; meshIndex < aModel.myMeshes.size(); ++meshIndex)

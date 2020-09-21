@@ -1,7 +1,10 @@
 #pragma once
 
 #include "Mesh.h"
-#include "Texture.h"
+
+#include <map>
+
+enum class TextureType;
 
 class Model
 {
@@ -11,8 +14,7 @@ public:
 
 public:
 	std::vector<Mesh> myMeshes;
-	std::vector<Texture> myTextures;
-	//std::vector<Material*> myMaterials;
+	std::map<std::string, TextureType> myTextureMap;
 	glm::mat4 myModelMatrix;
 	glm::vec3 myPosition;
 	std::string myName;
@@ -20,5 +22,4 @@ public:
 	unsigned int myVertexBufferObject;
 	unsigned int myElementBufferObject;
 	unsigned int myColorBufferObject;
-	unsigned int myTextureUnit;
 };

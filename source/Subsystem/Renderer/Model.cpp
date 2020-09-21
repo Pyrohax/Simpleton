@@ -1,6 +1,6 @@
 #include "Model.h"
 
-#include "Mesh.h"
+#include "Texture.h"
 
 Model::Model()
     : myModelMatrix(1.0f)
@@ -10,7 +10,6 @@ Model::Model()
     , myVertexBufferObject(0)
     , myColorBufferObject(0)
     , myElementBufferObject(0)
-    , myTextureUnit(0)
 {
 }
 

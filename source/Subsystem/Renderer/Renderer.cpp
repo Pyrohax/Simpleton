@@ -6,7 +6,6 @@
 #include "ShaderLibrary.h"
 #include "ImguiWrapper.h"
 #include "AssetLoader.h"
-#include "Console.h"
 
 Renderer::Renderer()
 	: myRenderContext(nullptr)
@@ -49,9 +48,8 @@ void Renderer::Update()
 {
 	myWorld->GetShaderLibrary().BindShaders();
 	myImguiWrapper->CreateFrame();
-	Console::GetInstance().Draw("Console", &myShowConsole);
 	myImguiWrapper->Render();
-	myRenderContext->Render(myWorld->myModels, myWorld->GetShaderLibrary(), myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight());
+	myRenderContext->Render(myWorld->myModels, myWorld->GetTextureLibrary(), myWorld->GetShaderLibrary(), myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight());
 	myImguiWrapper->Draw();
 	myRenderSurface->Tick();
 }

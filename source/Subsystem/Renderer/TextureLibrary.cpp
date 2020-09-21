@@ -12,6 +12,16 @@ TextureLibrary::~TextureLibrary()
 
 void TextureLibrary::CompileTexture(Texture& aTexture)
 {
+	for (const Texture& texture : myTextures)
+	{
+		if (texture.mySource == aTexture.mySource)
+		{
+			free(aTexture.mySource);
+			Log::Print(LogType::MESSAGE, "Texture already exists: %s", aTexture.myName);
+			return;
+		}
+	}
+
 	glGenTextures(1, &aTexture.myID);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 	glBindTexture(GL_TEXTURE_2D, aTexture.myID);

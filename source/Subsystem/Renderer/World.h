@@ -19,6 +19,7 @@ public:
 	void Destroy();
 
 	ShaderLibrary& GetShaderLibrary() { return *myShaderLibrary; }
+	TextureLibrary& GetTextureLibrary() { return *myTextureLibrary; }
 	AssetLoader& GetAssetLoader() { return *myAssetLoader; }
 
 public:

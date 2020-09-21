@@ -10,8 +10,9 @@ public:
 	~Camera();
 
 	void Update();
+	const glm::mat4x4 GetModelViewMatrix() const;
 
-public:
+private:
 	glm::mat4 myProjection;
 	glm::mat4 myView;
 	glm::vec3 myPosition;

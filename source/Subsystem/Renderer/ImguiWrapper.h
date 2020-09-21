@@ -1,6 +1,7 @@
 #pragma once
 
 struct GLFWwindow;
+class ImguiTitleBar;
 
 class ImguiWrapper
 {
@@ -15,5 +16,8 @@ public:
 	void Destroy();
 
 private:
-	bool myShowDemoWindow;
+	ImguiTitleBar* myImguiTitleBar;
+	bool myShowTitleBar;
+	bool myShowConsole;
+	bool myShowDemo;
 };

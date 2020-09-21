@@ -29,8 +29,19 @@ void World::LoadDummyData()
 		return;
 	}
 
-	model->myTextureUnit = 0;
-	myTextureLibrary->CompileTexture(model->myTextures[0]);
+	for (const std::pair<std::string, TextureType> texturePair : model->myTextureMap)
+	{
+		Texture* texture = myAssetLoader->LoadTexture(texturePair.first);
+		if (!texture)
+		{
+			Log::Print(LogType::PROBLEM, "Error loading dummy data");
+			return;
+		}
+
+		texture->myType = texturePair.second;
+		myTextureLibrary->CompileTexture(*texture);
+		myTextureLibrary->myTextures.push_back(*texture);
+	}
 
 	myModels.push_back(*model);
 

@@ -1,5 +1,8 @@
 #include "ImguiWrapper.h"
 
+#include "ImguiTitleBar.h"
+#include "Console.h"
+
 #include "imgui.h"
 #include "examples/imgui_impl_opengl3.h"
 #include "examples/imgui_impl_glfw.h"
@@ -7,8 +10,11 @@
 #include <GLFW/glfw3.h>
 
 ImguiWrapper::ImguiWrapper()
-    : myShowDemoWindow(true)
+    : myShowTitleBar(true)
+    , myShowConsole(false)
+    , myShowDemo(false)
 {
+    myImguiTitleBar = new ImguiTitleBar();
 }
 
 ImguiWrapper::~ImguiWrapper()
@@ -35,8 +41,14 @@ void ImguiWrapper::CreateFrame()
 
 void ImguiWrapper::Render()
 {
-    if (myShowDemoWindow)
-        ImGui::ShowDemoWindow(&myShowDemoWindow);
+    if (myShowTitleBar)
+        myImguiTitleBar->Draw(&myShowConsole, &myShowDemo);
+
+    if (myShowConsole)
+        Console::GetInstance().Draw("Console", &myShowConsole);
+
+    if (myShowDemo)
+        ImGui::ShowDemoWindow(&myShowDemo);
 
     ImGui::Render();
 }

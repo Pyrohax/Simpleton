@@ -2,6 +2,8 @@
 
 #include "Texture.h"
 
+#include <vector>
+
 class TextureLibrary
 {
 public:
@@ -11,5 +13,5 @@ public:
 	void CompileTexture(Texture& aTexture);
 
 public:
-	//std::vector<Texture> myTextures;
+	std::vector<Texture> myTextures;
 };
