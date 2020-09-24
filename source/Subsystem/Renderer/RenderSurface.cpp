@@ -13,7 +13,7 @@ RenderSurface::RenderSurface()
 	, myCurrentFrameTime(0.f)
 	, myLastFrameTime(0.f)
 	, myShouldClose(false)
-	, myWidth(1240)
+	, myWidth(1280)
 	, myHeight(720)
 {
 }
@@ -53,6 +53,11 @@ void RenderSurface::Initialize()
 	glfwSetWindowUserPointer(myWindow, this);
 	glfwSetKeyCallback(myWindow, KeyCallback);
 	glfwSetInputMode(myWindow, GLFW_STICKY_KEYS, GL_TRUE);
+	glfwSetCursorPosCallback(myWindow, CursorCallback);
+	glfwSetInputMode(myWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	if (glfwRawMouseMotionSupported())
+		glfwSetInputMode(myWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+	glfwSetScrollCallback(myWindow, ScrollCallback);
 	glfwSwapInterval(1);
 
 	PrintDebugInfo();
@@ -110,4 +115,14 @@ void RenderSurface::ErrorCallback(int anError, const char* aDescription)
 void RenderSurface::KeyCallback(GLFWwindow* aWindow, int aKey, int aScancode, int anAction, int aMode)
 {
 	InputManager::GetInstance().OnKeyAction(aKey, aScancode, anAction != GLFW_RELEASE, aMode);
+}
+
+void RenderSurface::CursorCallback(GLFWwindow* aWindow, double aXPosition, double aYPosition)
+{
+	InputManager::GetInstance().OnCursorAction(aXPosition, aYPosition);
+}
+
+void RenderSurface::ScrollCallback(GLFWwindow* aWindow, double aXOffset, double aYOffset)
+{
+	InputManager::GetInstance().OnScrollAction(aXOffset, aYOffset);
 }

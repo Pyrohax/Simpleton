@@ -5,6 +5,8 @@
 #include <algorithm>
 
 InputManager::InputManager()
+    : myCursorXPosition(0)
+    , myCursorYPosition(0)
 {
 }
 
@@ -24,6 +26,18 @@ bool InputManager::GetIsKeyDown(Keys aKey) const
 void InputManager::OnKeyAction(int aKey, int /*aScancode*/, bool aIsKeyDown, int /*aMode*/)
 {
     myKeys[GetTranslatedKey(aKey)] = aIsKeyDown;
+}
+
+void InputManager::OnCursorAction(double aXPosition, double aYPosition)
+{
+    myCursorXPosition = aXPosition;
+    myCursorYPosition = aYPosition;
+}
+
+void InputManager::OnScrollAction(double aXOffset, double aYOffset)
+{
+    myScrollXOffset = aXOffset;
+    myScrollYOffset = aYOffset;
 }
 
 Keys InputManager::GetTranslatedKey(int aKey) const

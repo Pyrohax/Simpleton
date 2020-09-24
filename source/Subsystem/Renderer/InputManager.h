@@ -139,6 +139,13 @@ public:
 
     bool GetIsKeyDown(Keys aKey) const;
     void OnKeyAction(int aKey, int, bool aIsKeyDown, int);
+    void OnCursorAction(double aXPosition, double aYPosition);
+    void OnScrollAction(double aXOffset, double aYOffset);
+
+    double myCursorXPosition;
+    double myCursorYPosition;
+    double myScrollXOffset;
+    double myScrollYOffset;
 
 private:
     InputManager();

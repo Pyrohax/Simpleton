@@ -92,7 +92,7 @@ void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibra
 	
 	for (const Model& model : aModels)
 	{
-		glm::mat4 modelViewProjection = myCamera->GetModelViewMatrix() * model.myModelMatrix;
+		glm::mat4 modelViewProjection = myCamera->GetViewProjectionMatrix() * model.myModelMatrix;
 		GLuint matrixID = glGetUniformLocation(aShaderLibrary.GetProgramID(), "MVP");
 		glUniformMatrix4fv(matrixID, 1, GL_FALSE, &modelViewProjection[0][0]);
 

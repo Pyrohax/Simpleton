@@ -10,7 +10,7 @@ public:
 	~Camera();
 
 	void Update();
-	const glm::mat4x4 GetModelViewMatrix() const;
+	const glm::mat4x4 GetViewProjectionMatrix() const;
 
 private:
 	glm::mat4 myProjection;
@@ -19,4 +19,7 @@ private:
 	glm::vec3 myFront;
 	glm::vec3 myRight;
 	glm::vec3 myUp;
+	float myHorizontalAngle;
+	float myVerticalAngle;
+	float myDefaultFieldOfView;
 };
