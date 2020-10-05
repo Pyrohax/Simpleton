@@ -93,7 +93,7 @@ int JobSystem::CollectOneThread()
 		if (expireTimer.GetCurrentTime() > myMaximumExpirationTime)
 		{
 			expireTimer.Reset();
-			Log::Print("Threads all being locked for a long time. If unintended, consider closing the engine.", LogType::WARNING);
+			Log::Print(LogType::WARNING, "Threads all being locked for a long time. If unintended, consider closing the engine");
 		}
 	}
 

@@ -4,3 +4,18 @@
 [submodule "Dependencies/glfw"]
 	path = Dependencies/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "Dependencies/tinyobjloader"]
+	path = Dependencies/tinyobjloader
+	url = https://github.com/tinyobjloader/tinyobjloader.git
+[submodule "Dependencies/stb"]
+	path = Dependencies/stb
+	url = https://github.com/nothings/stb.git
+[submodule "Dependencies/glad"]
+	path = Dependencies/glad
+	url = https://github.com/Dav1dde/glad.git
+[submodule "Dependencies/assimp"]
+	path = Dependencies/assimp
+	url = https://github.com/assimp/assimp.git
+[submodule "Dependencies/imgui"]
+	path = Dependencies/imgui
+	url = https://github.com/ocornut/imgui.git

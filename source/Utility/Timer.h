@@ -1,7 +1,9 @@
 #pragma once
-#include <chrono>
 
 #include "Logger.h"
+
+#include <chrono>
+#include <string>
 
 class Timer
 {
@@ -26,7 +28,7 @@ public:
 
 	void Print()
 	{
-		Log::Print(std::string("This took %s %s").append(std::to_string(GetCurrentTime())).append(" seconds.\n"));
+		Log::Print(LogType::MESSAGE, "This took %s %s", std::to_string(GetCurrentTime()), " seconds");
 	};
 
 	void Reset()
