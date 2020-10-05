@@ -6,6 +6,7 @@
 
 Engine::Engine()
 	: myRenderer(nullptr)
+	, myPreviousTime(0.0f)
 {
 	myRenderer = new Renderer();
 }
