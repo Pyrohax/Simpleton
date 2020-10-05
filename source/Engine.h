@@ -20,4 +20,5 @@ public:
 
 private:
 	Renderer* myRenderer;
+	double myPreviousTime;
 };

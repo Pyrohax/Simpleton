@@ -3,6 +3,7 @@
 
 #include "Utility/Assert.h"
 
+
 Engine::Engine()
 	: myRenderer(nullptr)
 {
@@ -18,6 +19,9 @@ bool Engine::Init()
 	Assert(!myRenderer->Initialize(), "Renderer FAILED to initialize! Cancelling init.");
 	Assert(!myJobSystem.Init(), "Jobsystem FAILED to initialize! Cancelling init.");
 	Assert(!myEntityComponentSystem.Init(), "Entity Component System FAILED to initialize! Cancelling init.");
+
+	myPreviousTime = std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch()).count();
+
 	return true;
 }
 
@@ -25,7 +29,11 @@ void Engine::Update()
 {
 	while (!myRenderer->HasClosedWindow())
 	{
-		myRenderer->Update();
+		double currentTime = std::chrono::duration<double>(std::chrono::system_clock::now().time_since_epoch()).count();
+		double frameTime = currentTime - myPreviousTime;
+		myPreviousTime = currentTime;
+
+		myRenderer->Update(frameTime);
 	}
 }
 

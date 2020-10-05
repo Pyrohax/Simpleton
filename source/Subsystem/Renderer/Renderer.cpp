@@ -44,14 +44,14 @@ bool Renderer::Initialize()
 	return true;
 }
 
-void Renderer::Update()
+void Renderer::Update(double aDeltaTime)
 {
 	myWorld->GetShaderLibrary().BindShaders();
 	myImguiWrapper->CreateFrame();
-	myImguiWrapper->Render();
-	myRenderContext->Render(myWorld->myModels, myWorld->GetTextureLibrary(), myWorld->GetShaderLibrary(), myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight());
+	myImguiWrapper->Render(aDeltaTime);
+	myRenderContext->Render(myWorld->myModels, myWorld->GetTextureLibrary(), myWorld->GetShaderLibrary(), myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight(), aDeltaTime);
 	myImguiWrapper->Draw();
-	myRenderSurface->Tick();
+	myRenderSurface->Tick(aDeltaTime);
 }
 
 void Renderer::Terminate()

@@ -10,8 +10,6 @@
 
 RenderSurface::RenderSurface()
 	: myWindow(nullptr)
-	, myCurrentFrameTime(0.f)
-	, myLastFrameTime(0.f)
 	, myShouldClose(false)
 	, myWidth(1280)
 	, myHeight(720)
@@ -61,12 +59,9 @@ void RenderSurface::Initialize()
 	glfwSwapInterval(1);
 
 	PrintDebugInfo();
-
-	myCurrentFrameTime = glfwGetTime();
-	myLastFrameTime = myCurrentFrameTime;
 }
 
-void RenderSurface::Tick()
+void RenderSurface::Tick(double aDeltaTime)
 {
 	if (InputManager::GetInstance().GetIsKeyDown(Keys::Escape))
 	{
@@ -75,9 +70,6 @@ void RenderSurface::Tick()
 
 	if (glfwWindowShouldClose(myWindow))
 		myShouldClose = true;
-
-	myCurrentFrameTime = glfwGetTime();
-	myLastFrameTime = myCurrentFrameTime;
 
 	glfwGetFramebufferSize(myWindow, &myWidth, &myHeight);
 	glfwSwapBuffers(myWindow);

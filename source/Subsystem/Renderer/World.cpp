@@ -29,7 +29,7 @@ void World::LoadDummyData()
 		return;
 	}
 
-	for (const std::pair<std::string, TextureType> texturePair : model->myTextureMap)
+	for (const std::pair<std::string, TextureType>& texturePair : model->myTextureMap)
 	{
 		Texture* texture = myAssetLoader->LoadTexture(texturePair.first);
 		if (!texture)

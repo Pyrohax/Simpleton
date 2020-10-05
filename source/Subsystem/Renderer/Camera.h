@@ -9,8 +9,11 @@ public:
 	Camera();
 	~Camera();
 
-	void Update();
-	const glm::mat4x4 GetViewProjectionMatrix() const;
+	void Update(double aDeltaTime);
+
+	const glm::mat4x4& GetProjectionMatrix() const { return myProjection; }
+	const glm::mat4x4& GetViewMatrix() const { return myView; }
+	const glm::vec3& GetPositionMatrix() const { return myPosition; }
 
 private:
 	glm::mat4 myProjection;
@@ -22,4 +25,5 @@ private:
 	float myHorizontalAngle;
 	float myVerticalAngle;
 	float myDefaultFieldOfView;
+	float myMouseSensitivity;
 };

@@ -10,7 +10,7 @@ ImguiTitleBar::~ImguiTitleBar()
 {
 }
 
-void ImguiTitleBar::Draw(bool* aShowConsole, bool* aShowDemo)
+void ImguiTitleBar::Draw(bool* aShowConsole, bool* aShowDemo, bool* aShowDebugWidget)
 {
     if (ImGui::BeginMainMenuBar())
     {
@@ -25,6 +25,9 @@ void ImguiTitleBar::Draw(bool* aShowConsole, bool* aShowDemo)
         {
             if (ImGui::Button("Console"))
                 *aShowConsole = true;
+
+            if (ImGui::Button("Debug"))
+                *aShowDebugWidget = true;
 
             ImGui::EndMenu();
         }

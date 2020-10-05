@@ -12,7 +12,7 @@ public:
 	~Renderer();
 
 	bool Initialize();
-	void Update();
+	void Update(double aDeltaTime);
 	void Terminate();
 
 	bool HasClosedWindow();

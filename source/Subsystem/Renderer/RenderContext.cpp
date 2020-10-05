@@ -10,6 +10,8 @@
 #include "InputManager.h"
 #include "TextureLibrary.h"
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include <cstddef>
 
 RenderContext::RenderContext()
@@ -86,15 +88,15 @@ void RenderContext::CreateBuffers(std::vector<Model>& aModels)
 	}
 }
 
-void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, const ShaderLibrary& aShaderLibrary, int aWidth, int aHeight)
+void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, const ShaderLibrary& aShaderLibrary, int aWidth, int aHeight, double aDeltaTime)
 {
-	myCamera->Update();
+	myCamera->Update(aDeltaTime);
 	
 	for (const Model& model : aModels)
 	{
-		glm::mat4 modelViewProjection = myCamera->GetViewProjectionMatrix() * model.myModelMatrix;
+		glm::mat4 modelViewProjection = myCamera->GetProjectionMatrix()  * myCamera->GetViewMatrix() * model.myModelMatrix;
 		GLuint matrixID = glGetUniformLocation(aShaderLibrary.GetProgramID(), "MVP");
-		glUniformMatrix4fv(matrixID, 1, GL_FALSE, &modelViewProjection[0][0]);
+		glUniformMatrix4fv(matrixID, 1, GL_FALSE, glm::value_ptr(modelViewProjection));
 
 		glViewport(0, 0, aWidth, aHeight);
 		glClearColor(0.7f, 0.9f, 0.1f, 1.0f);

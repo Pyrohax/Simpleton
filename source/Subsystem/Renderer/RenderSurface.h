@@ -10,7 +10,7 @@ public:
 	~RenderSurface();
 
 	void Initialize();
-	void Tick();
+	void Tick(double aDeltaTime);
 	void Destroy();
 
 	void SetWindowIcon(const Texture& aTexture);
@@ -18,7 +18,6 @@ public:
 	int GetScreenWidth() const { return myWidth; }
 	int GetScreenHeight() const { return myHeight; }
 	float GetScreenRatio() const { return myWidth / (float)myHeight; }
-	double GetDeltaTime() const { return myCurrentFrameTime - myLastFrameTime; }
 	GLFWwindow* GetWindow() const { return myWindow; }
 	bool GetShouldClose() const { return myShouldClose; }
 
@@ -31,8 +30,6 @@ private:
 
 private:
 	GLFWwindow* myWindow;
-	double myCurrentFrameTime;
-	double myLastFrameTime;
 	bool myShouldClose;
 	int myWidth;
 	int myHeight;

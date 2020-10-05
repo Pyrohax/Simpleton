@@ -6,5 +6,5 @@ public:
 	ImguiTitleBar();
 	~ImguiTitleBar();
 
-	void Draw(bool* aShowConsole, bool* aShowDemo);
+	void Draw(bool* aShowConsole, bool* aShowDemo, bool* aShowDebugWidget);
 };

@@ -1,5 +1,6 @@
 #include "ImguiWrapper.h"
 
+#include "ImguiDebugWidget.h"
 #include "ImguiTitleBar.h"
 #include "Console.h"
 
@@ -13,8 +14,10 @@ ImguiWrapper::ImguiWrapper()
     : myShowTitleBar(true)
     , myShowConsole(false)
     , myShowDemo(false)
+    , myShowDebugWidget(false)
 {
     myImguiTitleBar = new ImguiTitleBar();
+    myDebugWidget = new ImguiDebugWidget();
 }
 
 ImguiWrapper::~ImguiWrapper()
@@ -39,16 +42,19 @@ void ImguiWrapper::CreateFrame()
     ImGui::NewFrame();
 }
 
-void ImguiWrapper::Render()
+void ImguiWrapper::Render(double aDeltaTime)
 {
     if (myShowTitleBar)
-        myImguiTitleBar->Draw(&myShowConsole, &myShowDemo);
+        myImguiTitleBar->Draw(&myShowConsole, &myShowDemo, &myShowDebugWidget);
 
     if (myShowConsole)
         Console::GetInstance().Draw("Console", &myShowConsole);
 
     if (myShowDemo)
         ImGui::ShowDemoWindow(&myShowDemo);
+
+    if (myShowDebugWidget)
+        myDebugWidget->Draw(aDeltaTime);
 
     ImGui::Render();
 }
