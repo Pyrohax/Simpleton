@@ -8,6 +8,8 @@
 struct Vertex
 {
 	glm::vec3 myPosition;
+	glm::vec3 myNormal;
+	glm::vec3 myTangent;
 	glm::vec2 myTextureCoordinates;
 
 	bool operator==(const Vertex& aOther) const
