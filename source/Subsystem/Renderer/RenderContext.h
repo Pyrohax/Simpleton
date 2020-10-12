@@ -5,6 +5,7 @@
 class Camera;
 class ShaderLibrary;
 class TextureLibrary;
+class Light;
 
 class RenderContext
 {
@@ -20,7 +21,9 @@ public:
 private:
 	void PrintDebugInfo();
 	void CreateCamera();
+	void CreateLight();
 
 private:
 	Camera* myCamera;
+	Light* myLight;
 };
