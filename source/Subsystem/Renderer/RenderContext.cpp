@@ -11,8 +11,6 @@
 #include "TextureLibrary.h"
 #include "Light.h"
 
-#include <glm/gtc/type_ptr.hpp>
-
 #include <cstddef>
 
 RenderContext::RenderContext()
@@ -103,17 +101,15 @@ void RenderContext::CreateBuffers(std::vector<Model>& aModels)
 	}
 }
 
-void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, const ShaderLibrary& aShaderLibrary, int aWidth, int aHeight, double aDeltaTime)
+void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, ShaderLibrary& aShaderLibrary, int aWidth, int aHeight, double aDeltaTime)
 {
 	myCamera->Update(aDeltaTime);
-	
+
 	for (const Model& model : aModels)
 	{
 		glm::mat4 modelViewProjection = myCamera->GetProjectionMatrix()  * myCamera->GetViewMatrix() * model.myModelMatrix;
-		GLuint matrixID = glGetUniformLocation(aShaderLibrary.GetProgramID(), "MVP");
-		GLuint modelID = glGetUniformLocation(aShaderLibrary.GetProgramID(), "Model");
-		glUniformMatrix4fv(matrixID, 1, GL_FALSE, glm::value_ptr(modelViewProjection));
-		glUniformMatrix4fv(modelID, 1, GL_FALSE, glm::value_ptr(model.myModelMatrix));
+		aShaderLibrary.SetMatrix4Float("MVP", modelViewProjection);
+		aShaderLibrary.SetMatrix4Float("Model", model.myModelMatrix);
 
 		glViewport(0, 0, aWidth, aHeight);
 		glClearColor(0.7f, 0.9f, 0.1f, 1.0f);
@@ -123,13 +119,10 @@ void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibra
 		{
 			const unsigned int textureID = aTextureLibrary.myTextures[0].myID;
 			glActiveTexture(GL_TEXTURE0 + textureID);
-			glUniform1i(glGetUniformLocation(aShaderLibrary.GetProgramID(), "textureSampler"), textureID);
-			GLuint objectColorID = glGetUniformLocation(aShaderLibrary.GetProgramID(), "objectColor");
-			GLuint lightColorID = glGetUniformLocation(aShaderLibrary.GetProgramID(), "lightColor");
-			GLuint lightPosID = glGetUniformLocation(aShaderLibrary.GetProgramID(), "lightPos");
-			glUniform3fv(objectColorID, 1, glm::value_ptr(glm::vec3(1.0f, 0.5f, 0.31f)));
-			glUniform3fv(lightColorID, 1, glm::value_ptr(myLight->GetColor()));
-			glUniform3fv(lightPosID, 1, glm::value_ptr(myLight->GetPosition()));
+			aShaderLibrary.SetInt("textureSampler", textureID);
+			aShaderLibrary.SetVector3Float("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+			aShaderLibrary.SetVector3Float("lightColor", myLight->GetColor());
+			aShaderLibrary.SetVector3Float("lightPos", myLight->GetPosition());
 			glBindTexture(GL_TEXTURE_2D, textureID);
 		}
 
