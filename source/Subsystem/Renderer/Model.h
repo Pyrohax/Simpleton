@@ -18,6 +18,7 @@ public:
 	glm::mat4 myModelMatrix;
 	glm::vec3 myPosition;
 	std::string myName;
+	std::string myFileExtension;
 	unsigned int myVertexArrayObject;
 	unsigned int myVertexBufferObject;
 	unsigned int myElementBufferObject;
