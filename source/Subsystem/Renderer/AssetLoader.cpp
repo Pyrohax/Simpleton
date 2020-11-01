@@ -321,10 +321,13 @@ Model* AssetLoader::LoadFBX(const std::string& aPath)
 
         for (unsigned int vertexIndex = 0; vertexIndex < aiMesh->mNumVertices; vertexIndex++)
         {
-            const aiVector3D* position = &(aiMesh->mVertices[vertexIndex]);
-
             Vertex vertex;
+
+            const aiVector3D* position = &(aiMesh->mVertices[vertexIndex]);
             vertex.myPosition = CastToVec3(*position);
+
+            const aiVector3D* normal = &(aiMesh->mVertices[vertexIndex]);
+            vertex.myNormal = CastToVec3(*normal);
 
             if (aiMesh->HasTextureCoords(0))
             {

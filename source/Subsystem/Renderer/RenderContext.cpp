@@ -120,11 +120,12 @@ void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibra
 			const unsigned int textureID = aTextureLibrary.myTextures[0].myID;
 			glActiveTexture(GL_TEXTURE0 + textureID);
 			aShaderLibrary.SetInt("textureSampler", textureID);
-			aShaderLibrary.SetVector3Float("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
-			aShaderLibrary.SetVector3Float("lightColor", myLight->GetColor());
-			aShaderLibrary.SetVector3Float("lightPos", myLight->GetPosition());
 			glBindTexture(GL_TEXTURE_2D, textureID);
 		}
+
+		aShaderLibrary.SetVector3Float("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+		aShaderLibrary.SetVector3Float("lightColor", myLight->GetColor());
+		aShaderLibrary.SetVector3Float("lightPos", myLight->GetPosition());
 
 		glBindVertexArray(model.myVertexArrayObject);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model.myElementBufferObject);
