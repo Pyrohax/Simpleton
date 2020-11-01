@@ -46,6 +46,7 @@ file(GLOB IMGUI
 )
 
 add_executable(${PROJECT_NAME} WIN32 ${SRC} ${IMGUI})
+set_property (DIRECTORY PROPERTY VS_STARTUP_PROJECT "Simpleton")
 
 source_group("imgui" FILES ${IMGUI})
 
