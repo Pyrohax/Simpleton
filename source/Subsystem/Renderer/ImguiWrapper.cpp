@@ -5,8 +5,8 @@
 #include "Console.h"
 
 #include "imgui.h"
-#include "examples/imgui_impl_opengl3.h"
-#include "examples/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
+#include "backends/imgui_impl_glfw.h"
 
 #include <GLFW/glfw3.h>
 
@@ -32,7 +32,7 @@ void ImguiWrapper::Initialize(GLFWwindow* aWindow)
     ImGui::StyleColorsDark();
 
     ImGui_ImplGlfw_InitForOpenGL(aWindow, true);
-    ImGui_ImplOpenGL3_Init("#version 130");
+    ImGui_ImplOpenGL3_Init("#version 330");
 }
 
 void ImguiWrapper::CreateFrame()
