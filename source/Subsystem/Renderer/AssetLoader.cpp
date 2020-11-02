@@ -26,6 +26,7 @@
 
 #include <algorithm>
 #include <unordered_map>
+#include <filesystem>
 
 AssetLoader::AssetLoader()
 {
@@ -104,14 +105,8 @@ Texture* AssetLoader::LoadTexture(const std::string& aPath)
 
 bool AssetLoader::DoesFileExist(const std::string& aPath)
 {
-    FILE* file;
-    errno_t error = fopen_s(&file, aPath.c_str(), "rb");
-    if (error != 0)
-    {
-        return false;
-    }
-
-    return true;
+    std::filesystem::file_status fileStatus;
+    return std::filesystem::status_known(fileStatus) ? std::filesystem::exists(fileStatus) : std::filesystem::exists(aPath);
 }
 
 std::string AssetLoader::ReadFile(const std::string& aPath)
