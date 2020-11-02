@@ -4,7 +4,6 @@
 layout(location = 0) in vec3 inVertexPositionModelSpace;
 layout(location = 1) in vec2 inVertexUVs;
 layout(location = 2) in vec3 inNormal;
-layout(location = 3) in vec3 inTangent;
 
 out LightData {
 	vec3 lightColor;

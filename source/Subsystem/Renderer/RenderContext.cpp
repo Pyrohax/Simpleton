@@ -93,9 +93,6 @@ void RenderContext::CreateBuffers(std::vector<Model>& aModels)
 		glEnableVertexAttribArray(2);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, myNormal)));
 
-		glEnableVertexAttribArray(3);
-		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, myTangent)));
-
 		glBindVertexArray(0);
 		
 		CheckGLError();

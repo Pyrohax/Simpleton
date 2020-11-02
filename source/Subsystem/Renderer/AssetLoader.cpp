@@ -224,42 +224,6 @@ Model* AssetLoader::LoadOBJ(const std::string& aPath)
         model->myMeshes.push_back(mesh);
     }
 
-    for (int i = 0; i < model->myMeshes[0].myIndices.size(); i += 3)
-    {
-        Vertex& v0 = model->myMeshes[0].myVertices[model->myMeshes[0].myIndices[i]];
-        Vertex& v1 = model->myMeshes[0].myVertices[model->myMeshes[0].myIndices[i + 1]];
-        Vertex& v2 = model->myMeshes[0].myVertices[model->myMeshes[0].myIndices[i + 2]];
-        
-        glm::vec3 Edge1 = v1.myPosition - v0.myPosition;
-        glm::vec3 Edge2 = v2.myPosition - v0.myPosition;
-
-        float DeltaU1 = v1.myTextureCoordinates.x - v0.myTextureCoordinates.x;
-        float DeltaV1 = v1.myTextureCoordinates.y - v0.myTextureCoordinates.y;
-        float DeltaU2 = v2.myTextureCoordinates.x - v0.myTextureCoordinates.x;
-        float DeltaV2 = v2.myTextureCoordinates.y - v0.myTextureCoordinates.y;
-
-        float f = 1.0f / (DeltaU1 * DeltaV2 - DeltaU2 * DeltaV1);
-
-        glm::vec3 Tangent, Bitangent;
-
-        Tangent.x = f * (DeltaV2 * Edge1.x - DeltaV1 * Edge2.x);
-        Tangent.y = f * (DeltaV2 * Edge1.y - DeltaV1 * Edge2.y);
-        Tangent.z = f * (DeltaV2 * Edge1.z - DeltaV1 * Edge2.z);
-
-        Bitangent.x = f * (-DeltaU2 * Edge1.x - DeltaU1 * Edge2.x);
-        Bitangent.y = f * (-DeltaU2 * Edge1.y - DeltaU1 * Edge2.y);
-        Bitangent.z = f * (-DeltaU2 * Edge1.z - DeltaU1 * Edge2.z);
-
-        v0.myTangent += Tangent;
-        v1.myTangent += Tangent;
-        v2.myTangent += Tangent;
-    }
-
-    for (unsigned int i = 0; i < model->myMeshes[0].myVertices.size(); i++)
-    {
-        model->myMeshes[0].myVertices[i].myTangent = glm::normalize(model->myMeshes[0].myVertices[i].myTangent);
-    }
-
     for (const tinyobj::material_t& material : materials)
     {
         auto addTexturePair = [model, directory](const std::string& aTextureName, TextureType aTextureType)
