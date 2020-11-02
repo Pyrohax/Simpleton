@@ -108,8 +108,8 @@ void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibra
 	for (const Model& model : aModels)
 	{
 		glm::mat4 modelViewProjection = myCamera->GetProjectionMatrix()  * myCamera->GetViewMatrix() * model.myModelMatrix;
-		aShaderLibrary.SetMatrix4Float("MVP", modelViewProjection);
-		aShaderLibrary.SetMatrix4Float("Model", model.myModelMatrix);
+		aShaderLibrary.SetMatrix4Float("modelViewProjectionMatrix", modelViewProjection);
+		aShaderLibrary.SetMatrix4Float("modelMatrix", model.myModelMatrix);
 
 		glViewport(0, 0, aWidth, aHeight);
 		glClearColor(0.7f, 0.9f, 0.1f, 1.0f);
@@ -125,7 +125,7 @@ void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibra
 
 		aShaderLibrary.SetVector3Float("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
 		aShaderLibrary.SetVector3Float("lightColor", myLight->GetColor());
-		aShaderLibrary.SetVector3Float("lightPos", myLight->GetPosition());
+		aShaderLibrary.SetVector3Float("lightPosition", myLight->GetPosition());
 
 		glBindVertexArray(model.myVertexArrayObject);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model.myElementBufferObject);

@@ -1,24 +1,30 @@
+// FRAGMENT SHADER
 #version 330 core
 
-in vec2 textureCoordinates;
-in vec3 objectColorOut;
-in vec3 lightColorOut;
-in vec3 Normal;
-in vec3 lightPosOut;
+in LightData {
+	vec3 objectColor;
+	vec3 lightColor;
+	vec3 lightPosition;
+} inLightData;
 
-out vec3 color;
+in VertexData {
+	vec3 normal;
+	vec2 textureCoordinates;
+} inVertexData;
 
 uniform sampler2D textureSampler;
+
+out vec3 outFragmentColor;
 
 void main()
 {
 	float ambientStrength = 0.1;
-    vec3 ambient = ambientStrength * lightColorOut;
-	vec3 norm = normalize(Normal);
-	vec3 lightDir = normalize(lightPosOut - vec3(1.0, 1.0, 1.0));
-	float diff = max(dot(norm, lightDir), 0.0);
-	vec3 diffuse = diff * lightColorOut;
-	vec3 result = (ambient + diffuse) * objectColorOut;
+    vec3 ambient = ambientStrength * inLightData.lightColor;
+	vec3 normalizedNormal = normalize(inVertexData.normal);
+	vec3 lightDirection = normalize(inLightData.lightPosition - vec3(1.0, 1.0, 1.0));
+	float diffuseFactor = max(dot(normalizedNormal, lightDirection), 0.0);
+	vec3 diffuse = diffuseFactor * inLightData.lightColor;
+	vec3 result = (ambient + diffuse) * inLightData.objectColor;
 
-	color = texture(textureSampler, textureCoordinates).rgb * result;
+	outFragmentColor = texture(textureSampler, inVertexData.textureCoordinates).rgb * result;
 }

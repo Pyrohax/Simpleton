@@ -1,30 +1,35 @@
+// VERTEX SHADER
 #version 330 core
 
-layout(location = 0) in vec3 vertexPosition_modelspace;
-layout(location = 1) in vec2 vertexUVs;
-layout(location = 2) in vec3 aNormal;
-layout(location = 3) in vec3 aTangent;
+layout(location = 0) in vec3 inVertexPositionModelSpace;
+layout(location = 1) in vec2 inVertexUVs;
+layout(location = 2) in vec3 inNormal;
+layout(location = 3) in vec3 inTangent;
 
+out LightData {
+	vec3 objectColor;
+	vec3 lightColor;
+	vec3 lightPosition;
+} outLightData;
+
+out VertexData {
+	vec3 normal;
+	vec2 textureCoordinates;
+} outVertexData;
+
+uniform mat4 modelViewProjectionMatrix;
+uniform mat4 modelMatrix;
 uniform vec3 objectColor;
 uniform vec3 lightColor;
-uniform vec3 lightPos;
-
-out vec2 textureCoordinates;
-out vec3 objectColorOut;
-out vec3 lightColorOut;
-out vec3 Normal;
-out vec3 lightPosOut;
-
-uniform mat4 MVP;
-uniform mat4 Model;
+uniform vec3 lightPosition;
 
 void main()
 {
-	gl_Position = MVP * vec4(vertexPosition_modelspace, 1.0f);
+	gl_Position = modelViewProjectionMatrix * vec4(inVertexPositionModelSpace, 1.0f);
 
-	textureCoordinates = vertexUVs;
-	objectColorOut = objectColor;
-	lightColorOut = lightColor;
-	Normal = mat3(transpose(inverse(Model))) * aNormal;
-	lightPosOut = lightPos;
+	outVertexData.textureCoordinates = inVertexUVs;
+	outLightData.objectColor = objectColor;
+	outLightData.lightColor = lightColor;
+	outVertexData.normal = mat3(transpose(inverse(modelMatrix))) * inNormal;
+	outLightData.lightPosition = lightPosition;
 }
