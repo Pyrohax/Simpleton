@@ -190,21 +190,23 @@ Model* AssetLoader::LoadOBJ(const std::string& aPath)
         for (const tinyobj::index_t& index : shape.mesh.indices)
         {
             Vertex vertex;
-            vertex.myPosition.x = attributes.vertices[3 * index.vertex_index + 0];
-            vertex.myPosition.y = attributes.vertices[3 * index.vertex_index + 1];
-            vertex.myPosition.z = attributes.vertices[3 * index.vertex_index + 2];
+            size_t vertexIndexStride = 3 * static_cast<size_t>(index.vertex_index);
+            vertex.myPosition.x = attributes.vertices[vertexIndexStride + 0];
+            vertex.myPosition.y = attributes.vertices[vertexIndexStride + 1];
+            vertex.myPosition.z = attributes.vertices[vertexIndexStride + 2];
 
             if (attributes.normals.size() > 0)
             {
-                vertex.myNormal.x = attributes.normals[3 * index.vertex_index + 0];
-                vertex.myNormal.y = attributes.normals[3 * index.vertex_index + 1];
-                vertex.myNormal.z = attributes.normals[3 * index.vertex_index + 2];
+                vertex.myNormal.x = attributes.normals[vertexIndexStride + 0];
+                vertex.myNormal.y = attributes.normals[vertexIndexStride + 1];
+                vertex.myNormal.z = attributes.normals[vertexIndexStride + 2];
             }
 
             if (attributes.texcoords.size() > 0)
             {
-                vertex.myTextureCoordinates.x = attributes.texcoords[2 * index.texcoord_index + 0];
-                vertex.myTextureCoordinates.y = attributes.texcoords[2 * index.texcoord_index + 1];
+                size_t textureCoordinatesIndexStride = 2 * static_cast<size_t>(index.texcoord_index);
+                vertex.myTextureCoordinates.x = attributes.texcoords[textureCoordinatesIndexStride + 0];
+                vertex.myTextureCoordinates.y = attributes.texcoords[textureCoordinatesIndexStride + 1];
             }
 
             if (uniqueVertices.count(vertex) == 0)
