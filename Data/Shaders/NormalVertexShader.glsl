@@ -12,6 +12,7 @@ out LightData {
 } outLightData;
 
 out VertexData {
+	vec3 fragPosition;
 	vec3 normal;
 	vec2 textureCoordinates;
 } outVertexData;
@@ -25,8 +26,11 @@ void main()
 {
 	gl_Position = modelViewProjectionMatrix * vec4(inVertexPositionModelSpace, 1.0f);
 
-	outVertexData.textureCoordinates = inVertexUVs;
 	outLightData.lightColor = lightColor;
-	outVertexData.normal = mat3(transpose(inverse(modelMatrix))) * inNormal;
 	outLightData.lightPosition = lightPosition;
+
+	outVertexData.fragPosition = vec3(modelMatrix * vec4(inVertexPositionModelSpace, 1.0f));
+	outVertexData.normal = mat3(transpose(inverse(modelMatrix))) * inNormal;
+	outVertexData.textureCoordinates = inVertexUVs;
 }
+	

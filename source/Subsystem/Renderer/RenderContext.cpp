@@ -38,6 +38,7 @@ void RenderContext::CreateLight()
 {
 	myLight = new Light();
 	myLight->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+	myLight->SetPosition(glm::vec3(-5.f, -2.5f, 7.5f));
 }
 
 void RenderContext::Initialize()
