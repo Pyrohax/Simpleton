@@ -1,6 +1,24 @@
 name: CMake Windows 64-bit
 
-on: [push]
+on:
+  push:
+    branches:
+      - '*'
+    paths-ignore:
+      - '*'
+      - '![Ss]ource/'
+      - '![Dd]ata/'
+      - '![Dd]ependencies/'
+      - '![Ss]cripts/'
+  pull_request:
+    branches: 
+      - '*'
+    paths-ignore:
+      - '*'
+      - '![Ss]ource/'
+      - '![Dd]ata/'
+      - '![Dd]ependencies/'
+      - '![Ss]cripts/'
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
