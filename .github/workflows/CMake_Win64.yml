@@ -5,7 +5,7 @@ on:
     branches:
       - '*'
     paths-ignore:
-      - '*'
+      - '**/'
       - '![Ss]ource/'
       - '![Dd]ata/'
       - '![Dd]ependencies/'
@@ -14,7 +14,7 @@ on:
     branches: 
       - '*'
     paths-ignore:
-      - '*'
+      - '**/'
       - '![Ss]ource/'
       - '![Dd]ata/'
       - '![Dd]ependencies/'
