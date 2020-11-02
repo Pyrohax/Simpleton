@@ -5,6 +5,7 @@
 class Camera;
 class ShaderLibrary;
 class TextureLibrary;
+class Light;
 
 class RenderContext
 {
@@ -14,13 +15,15 @@ public:
 
 	void Initialize();
 	void CreateBuffers(std::vector<Model>& aModels);
-	void Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, const ShaderLibrary& aShaderLibrary, int aWidth, int aHeight, double aDeltaTime);
+	void Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, ShaderLibrary& aShaderLibrary, int aWidth, int aHeight, double aDeltaTime);
 	void Destroy(const std::vector<Model>& aModels);
 
 private:
 	void PrintDebugInfo();
 	void CreateCamera();
+	void CreateLight();
 
 private:
 	Camera* myCamera;
+	Light* myLight;
 };

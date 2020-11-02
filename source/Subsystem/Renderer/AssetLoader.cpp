@@ -21,6 +21,9 @@
 #include <fstream>
 #include <sstream>
 
+#include <glm/vec3.hpp>
+#include <glm/gtx/functions.hpp>
+
 #include <algorithm>
 #include <unordered_map>
 
@@ -40,19 +43,14 @@ Model* AssetLoader::LoadModel(const std::string& aPath)
         return nullptr;
     }
 
-    std::size_t lastSlashIndex = aPath.find_last_of("/\\");
-    std::size_t lastDotIndex = aPath.find_last_of(".");
-    std::string baseDirectory = aPath.substr(0, lastSlashIndex + 1);
-    std::string file = aPath.substr(lastSlashIndex + 1, aPath.length() - lastDotIndex);
-    std::string extension = aPath.substr(lastDotIndex + 1, aPath.length());
-
-    if (extension == "obj")
+    const std::string& fileExtension = GetExtensionFromPath(aPath);
+    if (fileExtension == "obj")
     {
-       return LoadOBJ(aPath, file, baseDirectory);
+       return LoadOBJ(aPath);
     }
-    else if (extension == "fbx")
+    else if (fileExtension == "fbx")
     {
-        return LoadFBX(aPath, file);
+        return LoadFBX(aPath);
     }
 
     return nullptr;
@@ -69,6 +67,7 @@ Shader* AssetLoader::LoadShader(const std::string& aPath, ShaderType aShaderType
     Shader* shader = new Shader();
 
     shader->myName = GetNameFromPath(aPath);
+    shader->myFileExtension = GetExtensionFromPath(aPath);
     shader->myShaderType = aShaderType;
     shader->mySource = ReadFile(aPath);
 
@@ -86,6 +85,7 @@ Texture* AssetLoader::LoadTexture(const std::string& aPath)
     Texture* texture = new Texture();
 
     texture->myName = GetNameFromPath(aPath);
+    texture->myFileExtension = GetExtensionFromPath(aPath);
 
     unsigned char* image = stbi_load(aPath.c_str(), &texture->myWidth, &texture->myHeight, &texture->myComponents, STBI_default);
     if (!image)
@@ -135,12 +135,24 @@ std::string AssetLoader::ReadFile(const std::string& aPath)
 
 std::string AssetLoader::GetNameFromPath(const std::string& aPath)
 {
-    std::size_t lastSlashIndex = aPath.find_last_of("/\\");
-    std::size_t lastDotIndex = aPath.find_last_of(".");
-    return aPath.substr(lastSlashIndex + 1, aPath.length() - lastDotIndex);
+    const std::size_t& nameStartIndex = aPath.find_last_of("/\\") + 1;
+    const std::size_t& extensionStartIndex = aPath.find_last_of(".");
+    return aPath.substr(nameStartIndex, aPath.length() - nameStartIndex - (aPath.length() - extensionStartIndex));
 }
 
-Model* AssetLoader::LoadOBJ(const std::string& aPath, const std::string& aFilename, const std::string& aBaseDirectory)
+std::string AssetLoader::GetExtensionFromPath(const std::string& aPath)
+{
+    const std::size_t& extensionStartIndex = aPath.find_last_of(".") + 1;
+    return aPath.substr(extensionStartIndex, aPath.length() - extensionStartIndex);
+}
+
+std::string AssetLoader::GetDirectoryFromPath(const std::string& aPath)
+{
+    std::size_t lastSlashIndex = aPath.find_last_of("/\\");
+    return aPath.substr(0, lastSlashIndex + 1);
+}
+
+Model* AssetLoader::LoadOBJ(const std::string& aPath)
 {
     tinyobj::attrib_t attributes;
     std::vector<tinyobj::shape_t> shapes;
@@ -149,7 +161,11 @@ Model* AssetLoader::LoadOBJ(const std::string& aPath, const std::string& aFilena
     std::string warning;
     std::string error;
 
-    if (!tinyobj::LoadObj(&attributes, &shapes, &materials, &warning, &error, aPath.c_str(), aBaseDirectory.c_str(), true))
+    const std::string& fileName = GetNameFromPath(aPath);
+    const std::string& directory = GetDirectoryFromPath(aPath);
+    const std::string& fileExtension = GetExtensionFromPath(aPath);
+
+    if (!tinyobj::LoadObj(&attributes, &shapes, &materials, &warning, &error, aPath.c_str(), directory.c_str(), true))
     {
         Log::Print(LogType::PROBLEM, "Failed to load %s", aPath.c_str());
 
@@ -167,7 +183,8 @@ Model* AssetLoader::LoadOBJ(const std::string& aPath, const std::string& aFilena
     }
 
     Model* model = new Model();
-    model->myName = aFilename;
+    model->myName = fileName;
+    model->myFileExtension = fileExtension;
 
     std::unordered_map<Vertex, unsigned int> uniqueVertices = {};
 
@@ -181,6 +198,13 @@ Model* AssetLoader::LoadOBJ(const std::string& aPath, const std::string& aFilena
             vertex.myPosition.x = attributes.vertices[3 * index.vertex_index + 0];
             vertex.myPosition.y = attributes.vertices[3 * index.vertex_index + 1];
             vertex.myPosition.z = attributes.vertices[3 * index.vertex_index + 2];
+
+            if (attributes.normals.size() > 0)
+            {
+                vertex.myNormal.x = attributes.normals[3 * index.vertex_index + 0];
+                vertex.myNormal.y = attributes.normals[3 * index.vertex_index + 1];
+                vertex.myNormal.z = attributes.normals[3 * index.vertex_index + 2];
+            }
 
             if (attributes.texcoords.size() > 0)
             {
@@ -202,11 +226,11 @@ Model* AssetLoader::LoadOBJ(const std::string& aPath, const std::string& aFilena
 
     for (const tinyobj::material_t& material : materials)
     {
-        auto addTexturePair = [model, aBaseDirectory](const std::string& aTextureName, TextureType aTextureType)
+        auto addTexturePair = [model, directory](const std::string& aTextureName, TextureType aTextureType)
         {
             if (!aTextureName.empty())
             {
-                std::string texturePath = aBaseDirectory + aTextureName;
+                std::string texturePath = directory + aTextureName;
                 model->myTextureMap.insert(std::pair<std::string, TextureType>(texturePath, aTextureType));
             }
         };
@@ -229,7 +253,7 @@ Model* AssetLoader::LoadOBJ(const std::string& aPath, const std::string& aFilena
     return model;
 }
 
-Model* AssetLoader::LoadFBX(const std::string& aPath, const std::string& aFilename)
+Model* AssetLoader::LoadFBX(const std::string& aPath)
 {
     Assimp::Importer importer;
 
@@ -247,8 +271,12 @@ Model* AssetLoader::LoadFBX(const std::string& aPath, const std::string& aFilena
         return nullptr;
     }
 
+    const std::string& fileName = GetNameFromPath(aPath);
+    const std::string& fileExtension = GetExtensionFromPath(aPath);
+
     Model* model = new Model();
-    model->myName = aFilename;
+    model->myName = fileName;
+    model->myFileExtension = fileExtension;
 
     for (unsigned int meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex)
     {
@@ -257,10 +285,13 @@ Model* AssetLoader::LoadFBX(const std::string& aPath, const std::string& aFilena
 
         for (unsigned int vertexIndex = 0; vertexIndex < aiMesh->mNumVertices; vertexIndex++)
         {
-            const aiVector3D* position = &(aiMesh->mVertices[vertexIndex]);
-
             Vertex vertex;
+
+            const aiVector3D* position = &(aiMesh->mVertices[vertexIndex]);
             vertex.myPosition = CastToVec3(*position);
+
+            const aiVector3D* normal = &(aiMesh->mVertices[vertexIndex]);
+            vertex.myNormal = CastToVec3(*normal);
 
             if (aiMesh->HasTextureCoords(0))
             {

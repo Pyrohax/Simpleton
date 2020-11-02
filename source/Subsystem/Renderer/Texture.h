@@ -17,6 +17,7 @@ enum class TextureType
 struct Texture
 {
 	std::string myName;
+	std::string myFileExtension;
 	unsigned char* mySource;
 	unsigned int myID;
 	TextureType myType;

@@ -9,13 +9,13 @@
 #include "Texture.h"
 #include "InputManager.h"
 #include "TextureLibrary.h"
-
-#include <glm/gtc/type_ptr.hpp>
+#include "Light.h"
 
 #include <cstddef>
 
 RenderContext::RenderContext()
 	: myCamera(nullptr)
+	, myLight(nullptr)
 {
 }
 
@@ -32,6 +32,13 @@ void RenderContext::PrintDebugInfo()
 void RenderContext::CreateCamera()
 {
 	myCamera = new Camera();
+}
+
+void RenderContext::CreateLight()
+{
+	myLight = new Light();
+	myLight->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
+	myLight->SetPosition(glm::vec3(-5.f, -2.5f, 7.5f));
 }
 
 void RenderContext::Initialize()
@@ -59,6 +66,7 @@ void RenderContext::Initialize()
 	CheckGLError();
 
 	CreateCamera();
+	CreateLight();
 }
 
 void RenderContext::CreateBuffers(std::vector<Model>& aModels)
@@ -77,10 +85,13 @@ void RenderContext::CreateBuffers(std::vector<Model>& aModels)
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, model.myMeshes[0].myIndices.size() * sizeof(unsigned int), &model.myMeshes[0].myIndices.front(), GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, myPosition));
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, myPosition)));
 
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)offsetof(Vertex, myTextureCoordinates));
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, myTextureCoordinates)));
+
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), reinterpret_cast<GLvoid*>(offsetof(Vertex, myNormal)));
 
 		glBindVertexArray(0);
 		
@@ -88,15 +99,15 @@ void RenderContext::CreateBuffers(std::vector<Model>& aModels)
 	}
 }
 
-void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, const ShaderLibrary& aShaderLibrary, int aWidth, int aHeight, double aDeltaTime)
+void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, ShaderLibrary& aShaderLibrary, int aWidth, int aHeight, double aDeltaTime)
 {
 	myCamera->Update(aDeltaTime);
-	
+
 	for (const Model& model : aModels)
 	{
 		glm::mat4 modelViewProjection = myCamera->GetProjectionMatrix()  * myCamera->GetViewMatrix() * model.myModelMatrix;
-		GLuint matrixID = glGetUniformLocation(aShaderLibrary.GetProgramID(), "MVP");
-		glUniformMatrix4fv(matrixID, 1, GL_FALSE, glm::value_ptr(modelViewProjection));
+		aShaderLibrary.SetMatrix4Float("modelViewProjectionMatrix", modelViewProjection);
+		aShaderLibrary.SetMatrix4Float("modelMatrix", model.myModelMatrix);
 
 		glViewport(0, 0, aWidth, aHeight);
 		glClearColor(0.7f, 0.9f, 0.1f, 1.0f);
@@ -106,9 +117,12 @@ void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibra
 		{
 			const unsigned int textureID = aTextureLibrary.myTextures[0].myID;
 			glActiveTexture(GL_TEXTURE0 + textureID);
-			glUniform1i(glGetUniformLocation(aShaderLibrary.GetProgramID(), "textureSampler"), textureID);
+			aShaderLibrary.SetInt("textureSampler", textureID);
 			glBindTexture(GL_TEXTURE_2D, textureID);
 		}
+
+		aShaderLibrary.SetVector3Float("lightColor", myLight->GetColor());
+		aShaderLibrary.SetVector3Float("lightPosition", myLight->GetPosition());
 
 		glBindVertexArray(model.myVertexArrayObject);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model.myElementBufferObject);

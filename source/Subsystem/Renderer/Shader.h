@@ -14,6 +14,7 @@ struct Shader
 {
     std::string mySource;
     std::string myName;
+    std::string myFileExtension;
     ShaderType myShaderType;
     unsigned int myID;
     unsigned int myType;

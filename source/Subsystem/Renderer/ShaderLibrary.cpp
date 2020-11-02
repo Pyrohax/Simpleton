@@ -4,6 +4,8 @@
 
 #include <glad/glad.h>
 
+#include <glm/gtc/type_ptr.hpp>
+
 #include <vector>
 #include <string>
 
@@ -87,6 +89,42 @@ void ShaderLibrary::AttachShaders(const Shader& aVertexShader, const Shader& aFr
 void ShaderLibrary::BindShaders()
 {
     glUseProgram(myProgramID);
+}
+
+void ShaderLibrary::SetInt(const std::string& aName, int aValue)
+{
+    GLint location = glGetUniformLocation(myProgramID, aName.c_str());
+    glUniform1i(location, aValue);
+}
+
+void ShaderLibrary::SetFloat(const std::string& aName, float aValue)
+{
+    GLint location = glGetUniformLocation(myProgramID, aName.c_str());
+    glUniform1f(location, aValue);
+}
+
+void ShaderLibrary::SetVector3Float(const std::string& aName, const glm::vec3& aValue)
+{
+    GLint location = glGetUniformLocation(myProgramID, aName.c_str());
+    glUniform3f(location, aValue.x, aValue.y, aValue.z);
+}
+
+void ShaderLibrary::SetVector4Float(const std::string& aName, const glm::vec4& aValue)
+{
+    GLint location = glGetUniformLocation(myProgramID, aName.c_str());
+    glUniform4f(location, aValue.x, aValue.y, aValue.z, aValue.w);
+}
+
+void ShaderLibrary::SetMatrix3Float(const std::string& aName, const glm::mat3& aValue)
+{
+    GLint location = glGetUniformLocation(myProgramID, aName.c_str());
+    glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(aValue));
+}
+
+void ShaderLibrary::SetMatrix4Float(const std::string& aName, const glm::mat4& aValue)
+{
+    GLint location = glGetUniformLocation(myProgramID, aName.c_str());
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(aValue));
 }
 
 unsigned int ShaderLibrary::GetShaderType(ShaderType aType)

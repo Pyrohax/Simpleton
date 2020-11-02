@@ -35,17 +35,18 @@ file(GLOB IMGUI
   "${IMGUI_DIR}/imstb_rectpack.h"
   "${IMGUI_DIR}/imstb_textedit.h"
   "${IMGUI_DIR}/imstb_truetype.h"
-  "${IMGUI_DIR}/examples/imgui_impl_opengl3.h"
-  "${IMGUI_DIR}/examples/imgui_impl_glfw.h"
+  "${IMGUI_DIR}/backends/imgui_impl_opengl3.h"
+  "${IMGUI_DIR}/backends/imgui_impl_glfw.h"
   "${IMGUI_DIR}/imgui.cpp"
   "${IMGUI_DIR}/imgui_draw.cpp"
   "${IMGUI_DIR}/imgui_demo.cpp"
   "${IMGUI_DIR}/imgui_widgets.cpp"
-  "${IMGUI_DIR}/examples/imgui_impl_opengl3.cpp"
-  "${IMGUI_DIR}/examples/imgui_impl_glfw.cpp"
+  "${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp"
+  "${IMGUI_DIR}/backends/imgui_impl_glfw.cpp"
 )
 
 add_executable(${PROJECT_NAME} WIN32 ${SRC} ${IMGUI})
+set_property (DIRECTORY PROPERTY VS_STARTUP_PROJECT "Simpleton")
 
 source_group("imgui" FILES ${IMGUI})
 

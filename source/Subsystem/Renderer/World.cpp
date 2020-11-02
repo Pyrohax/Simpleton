@@ -45,8 +45,8 @@ void World::LoadDummyData()
 
 	myModels.push_back(*model);
 
-	Shader* vertexShader = myAssetLoader->LoadShader("../Data/Shaders/ModelVertexShader.glsl", ShaderType::Vertex);
-	Shader* fragmentShader = myAssetLoader->LoadShader("../Data/Shaders/ModelFragmentShader.glsl", ShaderType::Fragment);
+	Shader* vertexShader = myAssetLoader->LoadShader("../Data/Shaders/NormalVertexShader.glsl", ShaderType::Vertex);
+	Shader* fragmentShader = myAssetLoader->LoadShader("../Data/Shaders/NormalFragmentShader.glsl", ShaderType::Fragment);
 
 	if (!vertexShader || !fragmentShader)
 	{
