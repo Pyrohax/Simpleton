@@ -7,7 +7,6 @@ layout(location = 2) in vec3 inNormal;
 layout(location = 3) in vec3 inTangent;
 
 out LightData {
-	vec3 objectColor;
 	vec3 lightColor;
 	vec3 lightPosition;
 } outLightData;
@@ -19,7 +18,6 @@ out VertexData {
 
 uniform mat4 modelViewProjectionMatrix;
 uniform mat4 modelMatrix;
-uniform vec3 objectColor;
 uniform vec3 lightColor;
 uniform vec3 lightPosition;
 
@@ -28,7 +26,6 @@ void main()
 	gl_Position = modelViewProjectionMatrix * vec4(inVertexPositionModelSpace, 1.0f);
 
 	outVertexData.textureCoordinates = inVertexUVs;
-	outLightData.objectColor = objectColor;
 	outLightData.lightColor = lightColor;
 	outVertexData.normal = mat3(transpose(inverse(modelMatrix))) * inNormal;
 	outLightData.lightPosition = lightPosition;

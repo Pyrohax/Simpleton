@@ -2,7 +2,6 @@
 #version 330 core
 
 in LightData {
-	vec3 objectColor;
 	vec3 lightColor;
 	vec3 lightPosition;
 } inLightData;
@@ -24,7 +23,7 @@ void main()
 	vec3 lightDirection = normalize(inLightData.lightPosition - vec3(1.0, 1.0, 1.0));
 	float diffuseFactor = max(dot(normalizedNormal, lightDirection), 0.0);
 	vec3 diffuse = diffuseFactor * inLightData.lightColor;
-	vec3 result = (ambient + diffuse) * inLightData.objectColor;
+	vec3 result = (ambient + diffuse);
 
 	outFragmentColor = texture(textureSampler, inVertexData.textureCoordinates).rgb * result;
 }
