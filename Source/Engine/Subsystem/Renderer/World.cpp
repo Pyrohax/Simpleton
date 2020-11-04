@@ -22,7 +22,7 @@ void World::LoadDummyData()
 {
 	myShaderLibrary->CreateProgram();
 
-	Model* model = myAssetLoader->LoadModel("../Data/Models/Planet/Planet.obj");
+	Model* model = myAssetLoader->LoadModel("../../../Data/Models/Planet/Planet.obj");
 	if (!model)
 	{
 		Log::Print(LogType::PROBLEM, "Error loading dummy data");
@@ -45,8 +45,8 @@ void World::LoadDummyData()
 
 	myModels.push_back(*model);
 
-	Shader* vertexShader = myAssetLoader->LoadShader("../Data/Shaders/NormalVertexShader.glsl", ShaderType::Vertex);
-	Shader* fragmentShader = myAssetLoader->LoadShader("../Data/Shaders/NormalFragmentShader.glsl", ShaderType::Fragment);
+	Shader* vertexShader = myAssetLoader->LoadShader("../../../Data/Shaders/NormalVertexShader.glsl", ShaderType::Vertex);
+	Shader* fragmentShader = myAssetLoader->LoadShader("../../../Data/Shaders/NormalFragmentShader.glsl", ShaderType::Fragment);
 
 	if (!vertexShader || !fragmentShader)
 	{

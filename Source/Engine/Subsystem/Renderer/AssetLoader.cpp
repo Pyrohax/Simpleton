@@ -106,6 +106,7 @@ Texture* AssetLoader::LoadTexture(const std::string& aPath)
 bool AssetLoader::DoesFileExist(const std::string& aPath)
 {
     std::filesystem::file_status fileStatus;
+    std::filesystem::path test = std::filesystem::current_path();
     return std::filesystem::status_known(fileStatus) ? std::filesystem::exists(fileStatus) : std::filesystem::exists(aPath);
 }
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../source/Subsystem/Renderer/Console.h"
+#include "../Subsystem/Renderer/Console.h"
 
 #include <fstream>
 #include <string>
