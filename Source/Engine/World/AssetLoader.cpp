@@ -1,13 +1,12 @@
 #include "AssetLoader.h"
 
-#include "Vertex.h"
-#include "GLError.h"
-#include "Texture.h"
-#include "Model.h"
-#include "Mesh.h"
-#include "Shader.h"
-#include "VectorUtilities.h"
-#include "../../Utility/Logger.h"
+#include "../Core/Logger.h"
+#include "../Graphics/Vertex.h"
+#include "../Graphics/Texture.h"
+#include "../Graphics/Model.h"
+#include "../Graphics/Mesh.h"
+#include "../Graphics/Shader.h"
+#include "../Graphics/VectorUtilities.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
@@ -103,7 +102,7 @@ Texture* AssetLoader::LoadTexture(const std::string& aPath)
     return texture;
 }
 
-bool AssetLoader::DoesFileExist(const std::string& aPath)
+bool AssetLoader::DoesFileExist(const std::string& aPath) const
 {
     std::filesystem::file_status fileStatus;
     std::filesystem::path test = std::filesystem::current_path();

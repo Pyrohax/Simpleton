@@ -20,10 +20,10 @@ public:
 private:
 	Model* LoadOBJ(const std::string& aPath);
 	Model* LoadFBX(const std::string& aPath);
-	bool DoesFileExist(const std::string& aPath);
 	std::string ReadFile(const std::string& aPath);
 	std::string GetNameFromPath(const std::string& aPath);
 	std::string GetExtensionFromPath(const std::string& aPath);
 	std::string GetDirectoryFromPath(const std::string& aPath);
+	bool DoesFileExist(const std::string& aPath) const;
 	void PrintModelInfo(const Model& aModel);
 };

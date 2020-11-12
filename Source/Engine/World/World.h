@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Model.h"
+#include "../Graphics/Model.h"
 
 #include <vector>
 

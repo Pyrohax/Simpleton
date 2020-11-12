@@ -1,9 +1,8 @@
 #pragma once
 
+#include "../Core/TypeDefines.h"
 #include "../Element/Component.h"
 #include "../Element/Entity.h"
-#include "../Utility/TypeDefines.h"
-#include "AbilitySystem.h"
 
 #include <string>
 #include <algorithm>
@@ -19,14 +18,15 @@ enum class ComponentType
 class EntityComponentSystem
 {
 public:
-	EntityComponentSystem() : myUIDCounter(0), myAbilitySystem(this) {};
-	~EntityComponentSystem() {};
+	EntityComponentSystem();
+	~EntityComponentSystem();
 
-	AbilitySystem myAbilitySystem;
-
-	bool Init();
+	void Initialize();
 	void Update(double aDeltaTime);
 	void Terminate();
+
+	UniqueID AddEntity();
+	void RemoveEntity(UniqueID aUID);
 
 	template<typename T>
 	UniqueID AddComponent()
@@ -60,35 +60,11 @@ public:
 		return ComponentType::UNDEFINED;
 	}
 
-	UniqueID AddEntity()
-	{
-		Entity* entity = new Entity;
-		myEntityTable.emplace(myUIDCounter, entity);
-		myUIDCounter += 1;
-		return myUIDCounter - 1;
-	}
-
-	Entity* GetEntity(UniqueID aUID)
-	{
-		return myEntityTable[aUID];
-	}
-
-	void RemoveEntity(UniqueID aUID)
-	{
-		Entity*& entity = myEntityTable[aUID];
-		if (!entity)
-			return;
-		
-		delete entity;
-		entity = nullptr;
-	}
+	Entity* GetEntity(UniqueID aUID) { return myEntityTable[aUID]; }
 
 protected:
 	std::unordered_map<UniqueID, Component*> myComponentTable;
 	std::unordered_map<UniqueID, ComponentType> myComponentTypeTable;
 	std::unordered_map<UniqueID, Entity*> myEntityTable;
-
 	UniqueID myUIDCounter;
 };
-
-

@@ -2,14 +2,13 @@
 
 #include "ShaderLibrary.h"
 #include "GLError.h"
-#include "Camera.h"
-#include "Model.h"
-#include "Mesh.h"
-#include "Vertex.h"
-#include "Texture.h"
+#include "../../World/Camera.h"
+#include "../Mesh.h"
+#include "../Vertex.h"
+#include "../Texture.h"
 #include "InputManager.h"
 #include "TextureLibrary.h"
-#include "Light.h"
+#include "../Light.h"
 
 #include <cstddef>
 

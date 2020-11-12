@@ -1,8 +1,9 @@
 #pragma once
+
+#include "../../Core/TypeDefines.h"
+
 #include <unordered_map>
 #include <functional>
-
-#include "../Utility/TypeDefines.h"
 
 class EntityComponentSystem;
 
@@ -46,4 +47,3 @@ private:
 	EntityComponentSystem* myEntityComponentSystem;
 	std::unordered_map<UniqueID, std::vector<AbilityTag>*> myTagsTable;
 };
-

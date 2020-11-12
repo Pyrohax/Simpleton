@@ -5,8 +5,10 @@
 #include <algorithm>
 
 InputManager::InputManager()
-    : myCursorXPosition(0)
-    , myCursorYPosition(0)
+    : myCursorXPosition(0.0f)
+    , myCursorYPosition(0.0f)
+    , myScrollXOffset(0.0f)
+    , myScrollYOffset(0.0f)
 {
 }
 

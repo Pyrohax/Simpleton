@@ -1,7 +1,7 @@
 #include "RenderSurface.h"
 
-#include "Texture.h"
-#include "../../Utility/Logger.h"
+#include "../Texture.h"
+#include "../../Core/Logger.h"
 #include "InputManager.h"
 
 #include <GLFW/glfw3.h>

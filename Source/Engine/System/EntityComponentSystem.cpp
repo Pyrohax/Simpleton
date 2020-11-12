@@ -3,20 +3,27 @@
 #include "../Engine.h"
 #include "../Component/TransformComponent.h"
 #include "../Component/ModelComponent.h"
-#include "../Utility/Assert.h"
+#include "../Core/Assert.h"
 
 #include <string>
 
 const size_t MAX_COMPONENTS = 150;
 const size_t MAX_ENTITIES = 150;
 
-bool EntityComponentSystem::Init()
+EntityComponentSystem::EntityComponentSystem()
+	: myUIDCounter(0)
+{
+}
+
+EntityComponentSystem::~EntityComponentSystem()
+{
+}
+
+void EntityComponentSystem::Initialize()
 {
 	myComponentTable.reserve(MAX_COMPONENTS);
 	myComponentTypeTable.reserve(MAX_COMPONENTS);
 	myEntityTable.reserve(MAX_ENTITIES);
-
-	return true;
 }
 
 void EntityComponentSystem::Update(double aDeltaTime)
@@ -25,8 +32,8 @@ void EntityComponentSystem::Update(double aDeltaTime)
 
 void EntityComponentSystem::Terminate()
 {
-	for (auto& i : myComponentTable)
-		RemoveComponent(i.first);
+	for (auto& component : myComponentTable)
+		RemoveComponent(component.first);
 }
 
 void EntityComponentSystem::RemoveComponent(UniqueID aUID)
@@ -52,4 +59,22 @@ void EntityComponentSystem::RemoveComponent(UniqueID aUID)
 	
 	myComponentTypeTable[aUID] = ComponentType::UNDEFINED;
 	return;
+}
+
+UniqueID EntityComponentSystem::AddEntity()
+{
+	Entity* entity = new Entity;
+	myEntityTable.emplace(myUIDCounter, entity);
+	myUIDCounter += 1;
+	return myUIDCounter - 1;
+}
+
+void EntityComponentSystem::RemoveEntity(UniqueID aUID)
+{
+	Entity*& entity = myEntityTable[aUID];
+	if (!entity)
+		return;
+
+	delete entity;
+	entity = nullptr;
 }

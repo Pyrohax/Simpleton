@@ -1,24 +1,36 @@
 #pragma once
 
-#include "Subsystem/JobSystem.h"
-#include "Subsystem/EntityComponentSystem.h"
-
+class World;
 class Renderer;
 
 class Engine
 {
 public:
-	Engine();
-	~Engine();
+	static Engine& GetInstance()
+	{
+		static Engine instance;
+		return instance;
+	}
 
-	bool Init();
+	Engine(Engine const&) = delete;
+	void operator=(Engine const&) = delete;
+
+	void Init();
 	void Update();
 	void Terminate();
 
-	JobSystem myJobSystem;
-	EntityComponentSystem myEntityComponentSystem;
+	void SetShouldShutdown(bool aShouldShutdown) { myShouldShutdown = aShouldShutdown; }
+	constexpr bool GetShouldShutdown() { return myShouldShutdown; }
+
+	World* GetWorld() const { return myWorld; }
 
 private:
+	Engine();
+	~Engine();
+
+private:
+	World* myWorld;
 	Renderer* myRenderer;
 	double myPreviousTime;
+	bool myShouldShutdown;
 };

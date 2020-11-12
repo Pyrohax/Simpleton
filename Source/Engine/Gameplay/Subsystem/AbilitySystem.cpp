@@ -1,5 +1,5 @@
 #include "AbilitySystem.h"
-#include "EntityComponentSystem.h"
+#include "../../System/EntityComponentSystem.h"
 
 bool AbilitySystem::StartAbilityOnEntity(const Ability& anAbility, const UniqueID aTargetEntity)
 {
@@ -9,7 +9,7 @@ bool AbilitySystem::StartAbilityOnEntity(const Ability& anAbility, const UniqueI
 
 	bool affectTagsMatch = false;
 	
-	for (const AbilityTag tag : anAbility.myAffectTags)
+	for (const AbilityTag& tag : anAbility.myAffectTags)
 	{
 		if (tag == AbilityTag::Any || HasTag(tag, aTargetEntity))
 		{
@@ -27,7 +27,7 @@ bool AbilitySystem::StartAbilityOnEntity(const Ability& anAbility, const UniqueI
 		return true;
 	}
 
-	for (const AbilityTag tag : anAbility.myIgnoreTags)
+	for (const AbilityTag& tag : anAbility.myIgnoreTags)
 	{
 		if (tag == AbilityTag::Any || HasTag(tag, aTargetEntity))
 		{
@@ -50,7 +50,7 @@ bool AbilitySystem::AddTag(const AbilityTag aTag, const UniqueID anEntityID)
 	}
 
 	bool alreadyTagged = false;
-	for (const AbilityTag tag : *abilityTagList)
+	for (const AbilityTag& tag : *abilityTagList)
 	{
 		if (tag == aTag)
 		{
@@ -72,9 +72,9 @@ bool AbilitySystem::HasTag(const AbilityTag aTag, const UniqueID anEntityID)
 	if (!abilityTagList)
 		return false;
 
-	for (auto& i : *abilityTagList)
+	for (const AbilityTag& tag : *abilityTagList)
 	{
-		if (i == aTag)
+		if (tag == aTag)
 		{
 			return true;
 		}

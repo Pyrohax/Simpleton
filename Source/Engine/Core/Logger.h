@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Subsystem/Renderer/Console.h"
+#include "../Graphics/OpenGL/Console.h"
 
 #include <fstream>
 #include <string>

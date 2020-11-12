@@ -2,9 +2,8 @@
 
 #include <chrono>
 
-#include "../Utility/Timer.h"
-#include "../Utility/Logger.h"
-#include "../Utility/Assert.h"
+#include "../Core/Assert.h"
+#include "../Core/Timer.h"
 
 auto exampleJob = []() -> bool
 {
@@ -17,7 +16,7 @@ JobSystem::JobSystem(){}
 
 JobSystem::~JobSystem(){}
 
-bool JobSystem::Init()
+void JobSystem::Initialize()
 {
 	// Leave one thread open for the OS (common decency).
 	myThreadCount = std::thread::hardware_concurrency() - 1;
@@ -28,8 +27,10 @@ bool JobSystem::Init()
 	}
 
 	Assert(myThreadCount <= 0, "Hardware concurrency is invalid. Unsupported architecture?");
+}
 
-	return true;
+void JobSystem::Update(double aDeltaTime)
+{
 }
 
 bool JobSystem::AddJob(const std::function<bool()> f)

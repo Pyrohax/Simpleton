@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Model.h"
+#include "../Model.h"
 
 class Camera;
 class ShaderLibrary;

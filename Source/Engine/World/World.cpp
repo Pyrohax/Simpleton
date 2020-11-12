@@ -1,9 +1,10 @@
 #include "World.h"
 
 #include "AssetLoader.h"
-#include "ShaderLibrary.h"
-#include "TextureLibrary.h"
-#include "../../Utility/Logger.h"
+#include "../Core/Logger.h"
+#include "../Graphics/Texture.h"
+#include "../Graphics/OpenGL/ShaderLibrary.h"
+#include "../Graphics/OpenGL/TextureLibrary.h"
 
 World::World()
 	: myAssetLoader(nullptr)

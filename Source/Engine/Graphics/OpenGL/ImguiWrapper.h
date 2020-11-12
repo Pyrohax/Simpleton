@@ -3,6 +3,10 @@
 struct GLFWwindow;
 class ImguiTitleBar;
 class ImguiDebugWidget;
+class Camera;
+
+#include <functional>
+#include <vector>
 
 class ImguiWrapper
 {
@@ -19,8 +23,11 @@ public:
 private:
 	ImguiTitleBar* myImguiTitleBar;
 	ImguiDebugWidget* myDebugWidget;
+	Camera* myCamera;
 	bool myShowTitleBar;
 	bool myShowConsole;
 	bool myShowDemo;
 	bool myShowDebugWidget;
+	bool myShowCamera;
+	std::vector<std::function<void()>> myBindings;
 };

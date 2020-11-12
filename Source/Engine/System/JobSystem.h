@@ -13,10 +13,7 @@ public:
 	std::future<bool> myFuture;
 
 private:
-	static bool Idle()
-	{
-		return true;
-	};
+	static bool Idle() { return true; }
 };
 
 class JobSystem
@@ -25,10 +22,11 @@ public:
 	JobSystem();
 	~JobSystem();
 
-	bool Init();
-	bool AddJob(const std::function<bool()> f);
+	void Initialize();
+	void Update(double aDeltaTime);
 	void Terminate();
 
+	bool AddJob(const std::function<bool()> f);
 	bool CollectAllThreads();
 
 private:
