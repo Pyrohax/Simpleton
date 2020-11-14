@@ -1,6 +1,9 @@
 #pragma once
-#include "../Element/Component.h"
-#include "../../dependencies/glm/glm/glm.hpp"
+
+#include "Component.h"
+
+#include <glm/mat4x4.hpp>
+#include <glm/vec3.hpp>
 
 class TransformComponent : public Component
 {

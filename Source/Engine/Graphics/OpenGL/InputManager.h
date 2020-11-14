@@ -122,7 +122,15 @@ enum class Keys
     RightControl,
     RightAlt,
     RightSuper,
-    Menu,
+    Menu
+};
+
+enum class MouseButtons
+{
+    Undefined,
+    Left,
+    Right,
+    Middle
 };
 
 class InputManager
@@ -137,22 +145,27 @@ public:
     InputManager(InputManager const&) = delete;
     void operator=(InputManager const&) = delete;
 
-    bool GetIsKeyDown(Keys aKey) const;
     void OnKeyAction(int aKey, int, bool aIsKeyDown, int);
     void OnCursorAction(double aXPosition, double aYPosition);
     void OnScrollAction(double aXOffset, double aYOffset);
+    void OnMouseButtonAction(int aButton, int anAction, int aModifier);
 
-    double myCursorXPosition;
-    double myCursorYPosition;
-    double myScrollXOffset;
-    double myScrollYOffset;
+    bool GetIsKeyDown(Keys aKey) const;
+    bool GetIsMouseButtonDown(MouseButtons aMouseButton) const;
+
+    float myCursorXPosition;
+    float myCursorYPosition;
+    float myScrollXOffset;
+    float myScrollYOffset;
 
 private:
     InputManager();
     ~InputManager();
 
     Keys GetTranslatedKey(int aKey) const;
+    MouseButtons GetTranslatedMouseButton(int aButton) const;
 
 private:
     std::map<Keys, bool> myKeys;
+    std::map<MouseButtons, bool> myMouseButtons;
 };

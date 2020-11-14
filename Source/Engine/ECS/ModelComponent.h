@@ -1,5 +1,6 @@
 #pragma once
-#include "../Element/Component.h"
+
+#include "Component.h"
 
 class ModelComponent : public Component
 {

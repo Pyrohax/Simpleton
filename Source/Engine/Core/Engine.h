@@ -1,7 +1,10 @@
 #pragma once
 
+#include <memory>
+#include <vector>
+
+class EngineContext;
 class World;
-class Renderer;
 
 class Engine
 {
@@ -15,7 +18,7 @@ public:
 	Engine(Engine const&) = delete;
 	void operator=(Engine const&) = delete;
 
-	void Init();
+	void Initialize();
 	void Update();
 	void Terminate();
 
@@ -23,14 +26,15 @@ public:
 	constexpr bool GetShouldShutdown() { return myShouldShutdown; }
 
 	World* GetWorld() const { return myWorld; }
+	auto GetContext() const { return myContext.get(); }
 
 private:
 	Engine();
 	~Engine();
 
 private:
+	std::shared_ptr<EngineContext> myContext;
 	World* myWorld;
-	Renderer* myRenderer;
-	double myPreviousTime;
+	float myPreviousTime;
 	bool myShouldShutdown;
 };

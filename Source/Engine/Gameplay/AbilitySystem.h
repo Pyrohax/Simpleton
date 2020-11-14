@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Core/TypeDefines.h"
+#include "../Core/TypeDefines.h"
 
 #include <unordered_map>
 #include <functional>

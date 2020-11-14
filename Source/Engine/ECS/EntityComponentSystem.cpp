@@ -1,9 +1,9 @@
 #include "EntityComponentSystem.h"
 
-#include "../Engine.h"
-#include "../Component/TransformComponent.h"
-#include "../Component/ModelComponent.h"
 #include "../Core/Assert.h"
+#include "../Core/Engine.h"
+#include "TransformComponent.h"
+#include "ModelComponent.h"
 
 #include <string>
 

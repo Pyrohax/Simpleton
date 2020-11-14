@@ -25,6 +25,15 @@ bool InputManager::GetIsKeyDown(Keys aKey) const
     return iterator->second;
 }
 
+bool InputManager::GetIsMouseButtonDown(MouseButtons aMouseButton) const
+{
+    std::map<MouseButtons, bool>::const_iterator iterator = myMouseButtons.find(aMouseButton);
+    if (iterator == myMouseButtons.end())
+        return false;
+
+    return iterator->second;
+}
+
 void InputManager::OnKeyAction(int aKey, int /*aScancode*/, bool aIsKeyDown, int /*aMode*/)
 {
     myKeys[GetTranslatedKey(aKey)] = aIsKeyDown;
@@ -32,14 +41,19 @@ void InputManager::OnKeyAction(int aKey, int /*aScancode*/, bool aIsKeyDown, int
 
 void InputManager::OnCursorAction(double aXPosition, double aYPosition)
 {
-    myCursorXPosition = aXPosition;
-    myCursorYPosition = aYPosition;
+    myCursorXPosition = static_cast<float>(aXPosition);
+    myCursorYPosition = static_cast<float>(aYPosition);
 }
 
 void InputManager::OnScrollAction(double aXOffset, double aYOffset)
 {
-    myScrollXOffset = aXOffset;
-    myScrollYOffset = aYOffset;
+    myScrollXOffset = static_cast<float>(aXOffset);
+    myScrollYOffset = static_cast<float>(aYOffset);
+}
+
+void InputManager::OnMouseButtonAction(int aButton, int anAction, int /*aModifier*/)
+{
+    myMouseButtons[GetTranslatedMouseButton(aButton)] = anAction;
 }
 
 Keys InputManager::GetTranslatedKey(int aKey) const
@@ -256,5 +270,21 @@ Keys InputManager::GetTranslatedKey(int aKey) const
             return Keys::Menu;
         default:
             return Keys::Undefined;
+    }
+}
+
+MouseButtons InputManager::GetTranslatedMouseButton(int aButton) const
+{
+    switch (aButton)
+    {
+        case GLFW_MOUSE_BUTTON_LEFT:
+            return MouseButtons::Left;
+        case GLFW_MOUSE_BUTTON_RIGHT:
+            return MouseButtons::Right;
+        case GLFW_MOUSE_BUTTON_MIDDLE:
+            return MouseButtons::Middle;
+        default:
+            return MouseButtons::Undefined;
+            break;
     }
 }

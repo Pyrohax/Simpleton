@@ -9,7 +9,7 @@ public:
 	Camera();
 	~Camera();
 
-	void Update(double aDeltaTime);
+	void Update(float aDeltaTime);
 	void DrawDebug();
 
 	const glm::mat4x4& GetProjectionMatrix() const { return myProjection; }
@@ -27,5 +27,7 @@ private:
 	float myVerticalAngle;
 	float myDefaultFieldOfView;
 	float myFieldOfView;
-	float myMouseSensitivity;
+	float myMouseSpeed;
+	float myKeySpeed;
+	float myKeyBoostMultiplier;
 };

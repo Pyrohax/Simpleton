@@ -1,6 +1,6 @@
-#include "OpenGLRenderer.h"
+#include "Yellowstone.h"
 
-#include "../Engine.h"
+#include "../Core/Engine.h"
 #include "../World/World.h"
 #include "../World/AssetLoader.h"
 #include "../Graphics/OpenGL/ImguiWrapper.h"
@@ -8,26 +8,23 @@
 #include "../Graphics/OpenGL/RenderSurface.h"
 #include "../Graphics/OpenGL/ShaderLibrary.h"
 
-OpenGLRenderer::OpenGLRenderer()
-	: myImguiWrapper(nullptr)
-	, myRenderContext(nullptr)
-	, myRenderSurface(nullptr)
-	, myGraphicsAPI(GraphicsAPI::None)
-	, myShowConsole(true)
+Yellowstone::Yellowstone(EngineContext* aContext) : Subsystem(aContext)
 {
 	myRenderSurface = new RenderSurface();
 	myRenderContext = new RenderContext();
 	myImguiWrapper = new ImguiWrapper();
+	myGraphicsAPI = GraphicsAPI::None;
+	myShowConsole = true;
 }
 
-OpenGLRenderer::~OpenGLRenderer()
+Yellowstone::~Yellowstone()
 {
 	delete myRenderContext;
 	delete myRenderSurface;
 	delete myImguiWrapper;
 }
 
-void OpenGLRenderer::Initialize()
+void Yellowstone::Initialize()
 {
 	myRenderSurface->Initialize();
 	myRenderContext->Initialize();
@@ -41,7 +38,7 @@ void OpenGLRenderer::Initialize()
 	}
 }
 
-void OpenGLRenderer::CreateAssetBuffers()
+void Yellowstone::CreateAssetBuffers()
 {
 	Engine& engine = Engine::GetInstance();
 	World& world = *engine.GetWorld();
@@ -49,7 +46,7 @@ void OpenGLRenderer::CreateAssetBuffers()
 	myImguiWrapper->Initialize(myRenderSurface->GetWindow());
 }
 
-void OpenGLRenderer::Update(double aDeltaTime)
+void Yellowstone::Update(float aDeltaTime)
 {
 	Engine& engine = Engine::GetInstance();
 	World& world = *engine.GetWorld();
@@ -59,9 +56,14 @@ void OpenGLRenderer::Update(double aDeltaTime)
 	myRenderContext->Render(world.myModels, world.GetTextureLibrary(), world.GetShaderLibrary(), myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight(), aDeltaTime);
 	myImguiWrapper->Draw();
 	myRenderSurface->Tick(aDeltaTime);
+
+	if (HasClosedWindow())
+	{
+		engine.SetShouldShutdown(true);
+	}
 }
 
-void OpenGLRenderer::Terminate()
+void Yellowstone::Terminate()
 {
 	Engine& engine = Engine::GetInstance();
 	World& world = *engine.GetWorld();
@@ -70,7 +72,7 @@ void OpenGLRenderer::Terminate()
 	myImguiWrapper->Destroy();
 }
 
-bool OpenGLRenderer::HasClosedWindow() const
+bool Yellowstone::HasClosedWindow() const
 {
 	return myRenderSurface->GetShouldClose();
 }

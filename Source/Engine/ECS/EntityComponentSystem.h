@@ -1,8 +1,8 @@
 #pragma once
 
+#include "Component.h"
+#include "Entity.h"
 #include "../Core/TypeDefines.h"
-#include "../Element/Component.h"
-#include "../Element/Entity.h"
 
 #include <string>
 #include <algorithm>

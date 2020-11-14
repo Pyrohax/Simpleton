@@ -98,7 +98,7 @@ void RenderContext::CreateBuffers(std::vector<Model>& aModels)
 	}
 }
 
-void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, ShaderLibrary& aShaderLibrary, int aWidth, int aHeight, double aDeltaTime)
+void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, ShaderLibrary& aShaderLibrary, int aWidth, int aHeight, float aDeltaTime)
 {
 	myCamera->Update(aDeltaTime);
 

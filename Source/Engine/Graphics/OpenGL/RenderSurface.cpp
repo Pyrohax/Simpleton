@@ -56,6 +56,7 @@ void RenderSurface::Initialize()
 	if (glfwRawMouseMotionSupported())
 		glfwSetInputMode(myWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 	glfwSetScrollCallback(myWindow, ScrollCallback);
+	glfwSetMouseButtonCallback(myWindow, MouseButtonCallback);
 	glfwSwapInterval(1);
 
 	PrintDebugInfo();
@@ -117,4 +118,9 @@ void RenderSurface::CursorCallback(GLFWwindow* aWindow, double aXPosition, doubl
 void RenderSurface::ScrollCallback(GLFWwindow* aWindow, double aXOffset, double aYOffset)
 {
 	InputManager::GetInstance().OnScrollAction(aXOffset, aYOffset);
+}
+
+void RenderSurface::MouseButtonCallback(GLFWwindow* aWindow, int aButton, int anAction, int aModifiers)
+{
+	InputManager::GetInstance().OnMouseButtonAction(aButton, anAction, aModifiers);
 }

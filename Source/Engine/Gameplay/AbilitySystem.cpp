@@ -1,5 +1,6 @@
 #include "AbilitySystem.h"
-#include "../../System/EntityComponentSystem.h"
+
+#include "../ECS/EntityComponentSystem.h"
 
 bool AbilitySystem::StartAbilityOnEntity(const Ability& anAbility, const UniqueID aTargetEntity)
 {

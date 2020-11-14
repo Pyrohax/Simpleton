@@ -1,22 +1,24 @@
 #pragma once
 
-#include "Renderer.h"
+#include "../Core/Subsystem.h"
 #include "../Graphics/GraphicsDefines.h"
 
+class EngineContext;
 class ImguiWrapper;
 class RenderContext;
 class RenderSurface;
 
-class OpenGLRenderer : public virtual Renderer
+class Yellowstone : public Subsystem
 {
 public:
-	OpenGLRenderer();
-	~OpenGLRenderer();
+	Yellowstone(EngineContext* aContext);
+	~Yellowstone();
 
 	void Initialize() override;
-	void CreateAssetBuffers();
-	void Update(double aDeltaTime) override;
+	void Update(float aDeltaTime) override;
 	void Terminate() override;
+
+	void CreateAssetBuffers();
 
 	bool HasClosedWindow() const;
 
