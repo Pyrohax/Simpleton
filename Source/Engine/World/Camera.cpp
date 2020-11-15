@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 #include "imgui.h"
-#include "../Graphics/OpenGL/InputManager.h"
+#include "../Core/InputManager.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>

@@ -3,10 +3,10 @@
 #include "ShaderLibrary.h"
 #include "GLError.h"
 #include "../../World/Camera.h"
+#include "../../Core/InputManager.h"
 #include "../Mesh.h"
 #include "../Vertex.h"
 #include "../Texture.h"
-#include "InputManager.h"
 #include "TextureLibrary.h"
 #include "../Light.h"
 

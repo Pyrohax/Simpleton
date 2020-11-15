@@ -2,7 +2,7 @@
 
 #include "../Texture.h"
 #include "../../Core/Logger.h"
-#include "InputManager.h"
+#include "../../Core/InputManager.h"
 
 #include <GLFW/glfw3.h>
 #include <cstdio>
