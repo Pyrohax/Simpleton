@@ -10,7 +10,7 @@ ImguiTitleBar::~ImguiTitleBar()
 {
 }
 
-void ImguiTitleBar::Draw(bool* aShowConsole, bool* aShowDemo, bool* aShowDebugWidget)
+void ImguiTitleBar::Draw(bool* aShowConsole, bool* aShowDemo, bool* aShowDebugWidget, bool* aShowCameraWidget)
 {
     if (ImGui::BeginMainMenuBar())
     {
@@ -21,6 +21,7 @@ void ImguiTitleBar::Draw(bool* aShowConsole, bool* aShowDemo, bool* aShowDebugWi
             if (ImGui::MenuItem("Open", "Ctrl+O")) {}
             ImGui::EndMenu();
         }
+
         if (ImGui::BeginMenu("Tools"))
         {
             if (ImGui::Button("Console"))
@@ -29,8 +30,12 @@ void ImguiTitleBar::Draw(bool* aShowConsole, bool* aShowDemo, bool* aShowDebugWi
             if (ImGui::Button("Debug"))
                 *aShowDebugWidget = true;
 
+            if (ImGui::Button("Camera"))
+                *aShowCameraWidget = true;
+
             ImGui::EndMenu();
         }
+
         if (ImGui::Button("Demo"))
         {
             *aShowDemo = true;

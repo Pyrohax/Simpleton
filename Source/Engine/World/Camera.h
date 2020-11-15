@@ -23,6 +23,7 @@ private:
 	glm::vec3 myFront;
 	glm::vec3 myRight;
 	glm::vec3 myUp;
+	glm::vec3 myDirection;
 	float myHorizontalAngle;
 	float myVerticalAngle;
 	float myDefaultFieldOfView;

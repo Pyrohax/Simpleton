@@ -1,6 +1,7 @@
 #include "World.h"
 
 #include "AssetLoader.h"
+#include "Camera.h"
 #include "../Core/Logger.h"
 #include "../Graphics/Texture.h"
 #include "../Graphics/OpenGL/ShaderLibrary.h"
@@ -13,6 +14,7 @@ World::World()
 	myAssetLoader = new AssetLoader();
 	myShaderLibrary = new ShaderLibrary();
 	myTextureLibrary = new TextureLibrary();
+	myCamera = new Camera();
 }
 
 World::~World()

@@ -5,6 +5,7 @@
 #include <vector>
 
 class AssetLoader;
+class Camera;
 class ShaderLibrary;
 class TextureLibrary;
 
@@ -21,6 +22,7 @@ public:
 	ShaderLibrary& GetShaderLibrary() { return *myShaderLibrary; }
 	TextureLibrary& GetTextureLibrary() { return *myTextureLibrary; }
 	AssetLoader& GetAssetLoader() { return *myAssetLoader; }
+	Camera& GetCamera() { return *myCamera; }
 
 public:
 	std::vector<Model> myModels;
@@ -29,4 +31,5 @@ private:
 	AssetLoader* myAssetLoader;
 	ShaderLibrary* myShaderLibrary;
 	TextureLibrary* myTextureLibrary;
+	Camera* myCamera;
 };

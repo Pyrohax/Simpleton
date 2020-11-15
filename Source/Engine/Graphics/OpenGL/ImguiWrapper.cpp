@@ -3,6 +3,8 @@
 #include "ImguiDebugWidget.h"
 #include "ImguiTitleBar.h"
 #include "Console.h"
+#include "../../Core/Engine.h"
+#include "../../World/World.h"
 #include "../../World/Camera.h"
 
 #include "imgui.h"
@@ -20,10 +22,6 @@ ImguiWrapper::ImguiWrapper()
 {
     myImguiTitleBar = new ImguiTitleBar();
     myDebugWidget = new ImguiDebugWidget();
-    auto imguiTitleBar = std::bind(&ImguiTitleBar::Draw, myImguiTitleBar);
-    myCamera = new Camera();
-    std::function<void()> camera = std::bind(&Camera::DrawDebug, myCamera);
-    myBindings.push_back(camera);
 }
 
 ImguiWrapper::~ImguiWrapper()
@@ -50,13 +48,8 @@ void ImguiWrapper::CreateFrame()
 
 void ImguiWrapper::Render(double aDeltaTime)
 {
-    for (auto& binding : myBindings)
-    {
-        binding();
-    }
-
     if (myShowTitleBar)
-        myImguiTitleBar->Draw(&myShowConsole, &myShowDemo, &myShowDebugWidget);
+        myImguiTitleBar->Draw(&myShowConsole, &myShowDemo, &myShowDebugWidget, &myShowCamera);
 
     if (myShowConsole)
         Console::GetInstance().Draw("Console", &myShowConsole);
@@ -66,6 +59,13 @@ void ImguiWrapper::Render(double aDeltaTime)
 
     if (myShowDebugWidget)
         myDebugWidget->Draw(aDeltaTime);
+
+    if (myShowCamera)
+    {
+        Engine& engine = Engine::GetInstance();
+        World& world = *engine.GetWorld();
+        world.GetCamera().DrawDebug();
+    }
 
     ImGui::Render();
 }

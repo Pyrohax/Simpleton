@@ -13,8 +13,7 @@
 #include <cstddef>
 
 RenderContext::RenderContext()
-	: myCamera(nullptr)
-	, myLight(nullptr)
+	: myLight(nullptr)
 {
 }
 
@@ -26,11 +25,6 @@ void RenderContext::PrintDebugInfo()
 {
 	Log::Print(LogType::MESSAGE, "OpenGL %s", glGetString(GL_VERSION));
 	Log::Print(LogType::MESSAGE, "GLSL %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
-}
-
-void RenderContext::CreateCamera()
-{
-	myCamera = new Camera();
 }
 
 void RenderContext::CreateLight()
@@ -64,7 +58,6 @@ void RenderContext::Initialize()
 
 	CheckGLError();
 
-	CreateCamera();
 	CreateLight();
 }
 
@@ -98,13 +91,13 @@ void RenderContext::CreateBuffers(std::vector<Model>& aModels)
 	}
 }
 
-void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, ShaderLibrary& aShaderLibrary, int aWidth, int aHeight, float aDeltaTime)
+void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, ShaderLibrary& aShaderLibrary, Camera& aCamera, int aWidth, int aHeight, float aDeltaTime)
 {
-	myCamera->Update(aDeltaTime);
+	aCamera.Update(aDeltaTime);
 
 	for (const Model& model : aModels)
 	{
-		glm::mat4 modelViewProjection = myCamera->GetProjectionMatrix()  * myCamera->GetViewMatrix() * model.myModelMatrix;
+		glm::mat4 modelViewProjection = aCamera.GetProjectionMatrix()  * aCamera.GetViewMatrix() * model.myModelMatrix;
 		aShaderLibrary.SetMatrix4Float("modelViewProjectionMatrix", modelViewProjection);
 		aShaderLibrary.SetMatrix4Float("modelMatrix", model.myModelMatrix);
 
