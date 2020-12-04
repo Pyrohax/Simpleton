@@ -1,103 +1,120 @@
 #include "JobSystem.h"
 
 #include <chrono>
+#include <algorithm>
+#include <functional>
 
 #include "../Utility/Timer.h"
 #include "../Utility/Logger.h"
 #include "../Utility/Assert.h"
 
-auto exampleJob = []() -> bool
+JobSystem::JobSystem()
+	: myNeedsUpdate(true)
 {
-	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	// Leave one thread open for the OS (common decency).
+	const int myThreadCount = std::thread::hardware_concurrency() - 1;
+	Assert(myThreadCount <= 0, "Hardware concurrency is invalid. Unsupported architecture?");
 
-	return true;
-};
-
-JobSystem::JobSystem(){}
+	myThreads.reserve(myThreadCount);
+	for (int i = 0; i < myThreadCount; i++)
+		myThreads.push_back(nullptr);
+}
 
 JobSystem::~JobSystem(){}
 
+// Example for adding jobs:
+//auto exampleJob = []() -> bool
+//{
+//	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+//	return true;
+//};
+
 bool JobSystem::Init()
 {
-	// Leave one thread open for the OS (common decency).
-	myThreadCount = std::thread::hardware_concurrency() - 1;
-	myJobs.reserve(myThreadCount);
-	for (unsigned int i = 0; i < myThreadCount; ++i)
-	{
-		myJobs.emplace_back();
-	}
-
-	Assert(myThreadCount <= 0, "Hardware concurrency is invalid. Unsupported architecture?");
+	// Example for adding jobs:
+	//for (int i = 0; i < 30; i++)
+	//	AddJob(exampleJob);
 
 	return true;
 }
 
-bool JobSystem::AddJob(const std::function<bool()> f)
+void JobSystem::Update(float aFrameTime)
 {
-	const int id = CollectOneThread();
-	std::packaged_task<bool()> package(f);
-	myJobs[id].myFuture = package.get_future();
-	myJobs[id].myThread = std::thread(std::move(package));
+	// First lets check if any futures have finished.
+	for (int i = myRunningJobs.size() - 1; i >= 0; --i)
+	{
+		Job& job = myRunningJobs[i];
+		const std::future_status status = job.myFuture.wait_for(std::chrono::seconds(0));
+		if (status == std::future_status::ready)
+		{
+			Log::Print(LogType::MESSAGE, "A task finished with result %i!", job.myFuture.get());
+
+			for (int i = 0; i < myThreads.size(); ++i)
+			{
+				std::thread* threadToRemove = myThreads[i];
+				if (threadToRemove == *job.myThread)
+				{
+					threadToRemove->join();
+					delete(threadToRemove);
+					myThreads[i] = nullptr;
+					break;
+				}
+			}
+
+			job.myThread = nullptr;
+			myRunningJobs.erase(myRunningJobs.begin() + i);
+			myNeedsUpdate = true;
+		}
+	}
+
+	// Add jobs to the queue.
+	if (myNeedsUpdate && !myQueuedJobs.empty())
+	{
+		// Any threads not in use?
+		std::vector<std::thread**> emptyThreads;
+
+		int emptyThreadCount = 0;
+		for (int threadIndex = 0; threadIndex <= myThreads.capacity() - 1 && emptyThreadCount <= myQueuedJobs.size() - 1; ++threadIndex)
+		{
+			if (myThreads[threadIndex] == nullptr)
+			{
+				emptyThreads.push_back(&myThreads[threadIndex]);
+				emptyThreadCount++;
+			}
+		}
+
+		// Put all jobs we can start in there.
+		for (int i = emptyThreads.size() - 1; i >= 0 && emptyThreadCount > 0; --i)
+		{
+			Job& job = myQueuedJobs[myQueuedJobs.size() - i - 1];
+			StartJob(job, *emptyThreads[i]);
+			myQueuedJobs.erase(myQueuedJobs.end() - i - 1);
+			emptyThreadCount--;
+		}
+	}
+
+	myNeedsUpdate = false;
+	return;
+}
+
+bool JobSystem::Terminate()
+{
+	while (!myRunningJobs.empty())
+		Update(0.016f);
 
 	return true;
 }
 
-void JobSystem::Terminate()
+void JobSystem::AddJob(const std::function<bool()> aFunction)
 {
-	CollectAllThreads();
+	myQueuedJobs.push_back(Job{ aFunction, nullptr, std::future<bool>() });
+	myNeedsUpdate = true;
 }
 
-bool JobSystem::CollectAllThreads()
+void JobSystem::StartJob(Job& aJob, std::thread*& aThreadOut)
 {
-	for (Job& job : myJobs)
-	{
-		// If future is valid, so is the task.
-		if (job.myFuture.valid())
-		{
-			job.myFuture.wait();
-			if (job.myThread.joinable())
-			{
-				job.myThread.join();
-				job = Job();
-			}
-		}
-	}
-	
-	return true;
-}
-
-int JobSystem::CollectOneThread()
-{
-	// Wait for a thread to open up.
-	const size_t jobCount = myJobs.size();
-	const bool hasJobs = jobCount != 0;
-	std::chrono::nanoseconds waitForThreadTime(1);
-
-	Timer expireTimer;
-	expireTimer.Start();
-
-	while (hasJobs)
-	{
-		for (size_t i = 0; i < jobCount; ++i)
-		{
-			if (!myJobs[i].myFuture.valid())
-			{
-				return static_cast<int>(i);
-			}
-			if (myJobs[i].myFuture.wait_for(waitForThreadTime) == std::future_status::ready)
-			{
-				myJobs[i].myThread.join();
-				return static_cast<int>(i);
-			}
-		}
-		if (expireTimer.GetCurrentTime() > myMaximumExpirationTime)
-		{
-			expireTimer.Reset();
-			Log::Print(LogType::WARNING, "Threads all being locked for a long time. If unintended, consider closing the engine");
-		}
-	}
-
-	Assert(true, "Job count is zero! This should never happen!");
-
-	return -1;
+	std::packaged_task<bool()> package(aJob.myFunction);
+	myRunningJobs.emplace_back(Job{aJob.myFunction, &aThreadOut, package.get_future()});
+	aThreadOut = new std::thread(std::move(package));
+	return;
 }

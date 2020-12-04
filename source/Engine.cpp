@@ -34,6 +34,7 @@ void Engine::Update()
 		double frameTime = currentTime - myPreviousTime;
 		myPreviousTime = currentTime;
 
+		myJobSystem.Update(frameTime);
 		myRenderer->Update(frameTime);
 	}
 }
