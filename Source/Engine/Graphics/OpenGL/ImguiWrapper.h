@@ -1,13 +1,12 @@
 #pragma once
 
+#include "../../Graphics/UI/MenuBar.h"
 #include "../../Graphics/UI/Widget.h"
 
 #include <memory>
 
 struct GLFWwindow;
-class ImguiTitleBar;
 class ImguiDebugWidget;
-class Toolbar;
 
 #include <vector>
 
@@ -23,12 +22,12 @@ public:
 	void Draw();
 	void Destroy();
 
-	template<typename T>
-	T* GetWidget()
+	template<typename Type>
+	Type* GetWidget()
 	{
 		for (const auto& widget : myWidgets)
 		{
-			if (T* widgetTemplate = dynamic_cast<T*>(widget.get()))
+			if (Type* widgetTemplate = dynamic_cast<Type*>(widget.get()))
 			{
 				return widgetTemplate;
 			}
@@ -37,14 +36,26 @@ public:
 		return nullptr;
 	}
 
+	template<typename Type>
+	Type* GetMenuBar()
+	{
+		for (const auto& menuBar : myMenuBars)
+		{
+			if (Type* menuBarTemplate = dynamic_cast<Type*>(menuBar.get()))
+			{
+				return menuBarTemplate;
+			}
+		}
+
+		return nullptr;
+	}
+
 private:
 	std::vector<std::shared_ptr<UI::Widget>> myWidgets;
-	Toolbar* myToolbar;
-	ImguiTitleBar* myImguiTitleBar;
+	std::vector<std::shared_ptr<UI::MenuBar>> myMenuBars;
 	ImguiDebugWidget* myDebugWidget;
 	bool myShowTitleBar;
 	bool myShowConsole;
 	bool myShowDemo;
 	bool myShowDebugWidget;
-	bool myShowCamera;
 };

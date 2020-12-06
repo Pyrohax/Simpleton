@@ -8,8 +8,6 @@
 #include "../Graphics/OpenGL/TextureLibrary.h"
 
 World::World()
-	: myAssetLoader(nullptr)
-	, myShaderLibrary(nullptr)
 {
 	myAssetLoader = new AssetLoader();
 	myShaderLibrary = new ShaderLibrary();

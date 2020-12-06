@@ -56,4 +56,5 @@ void Engine::Update()
 void Engine::Terminate()
 {
 	myWorld->Destroy();
+	delete myWorld;
 }
