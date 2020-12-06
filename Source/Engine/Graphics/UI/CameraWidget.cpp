@@ -12,8 +12,8 @@ UI::CameraWidget::CameraWidget(ImguiWrapper* aWrapper, const std::string& aTitle
 
 void UI::CameraWidget::Tick()
 {
-    Engine& engine = Engine::GetInstance();
-    World& world = *engine.GetWorld();
+	Engine& engine = Engine::GetInstance();
+	World& world = *engine.GetWorld();
 	Camera& camera = world.GetCamera();
 
 	ImGui::Text("Front x:%0.f y:%0.f z:%0.f", camera.GetFront().x, camera.GetFront().y, camera.GetFront().z);
