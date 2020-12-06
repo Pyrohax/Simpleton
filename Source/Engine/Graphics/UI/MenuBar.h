@@ -8,11 +8,11 @@ class ImguiWrapper;
 
 namespace UI
 {
-	class Widget
+	class MenuBar
 	{
 	public:
-		Widget(ImguiWrapper* aWrapper, const std::string& aTitle, bool anIsVisible = false);
-		virtual ~Widget() = default;
+		MenuBar(ImguiWrapper* aWrapper, bool anIsVisible = false);
+		virtual ~MenuBar() = default;
 
 		bool Begin();
 		virtual void Tick() = 0;
@@ -27,7 +27,6 @@ namespace UI
 
 	private:
 		ImguiWrapper* myWrapper;
-		std::string myTitle;
 		int myVarPushes;
 		bool myIsVisible;
 	};

@@ -1,6 +1,5 @@
 #include "Camera.h"
 
-#include "imgui.h"
 #include "../Core/InputManager.h"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -69,14 +68,4 @@ void Camera::Update(float aDeltaTime)
 
 	myProjection = glm::perspective(glm::radians(myFieldOfView), 1280.0f / 720.0f, 0.1f, 100.0f);
 	myView = glm::lookAt(myPosition, myPosition + myDirection, myUp);
-}
-
-void Camera::DrawDebug()
-{
-	ImGui::Text("Front x:%0.f y:%0.f z:%0.f", myFront.x, myFront.y, myFront.z);
-	ImGui::Text("Up x:%0.f y:%0.f z:%0.f", myUp.x, myUp.y, myUp.z);
-	ImGui::Text("Right x:%0.f y:%0.f z:%0.f", myRight.x, myRight.y, myRight.z);
-	ImGui::Text("FOV: %0.f", myDefaultFieldOfView);
-	ImGui::Text("Position x:%f y:%f z:%f", myPosition.x, myPosition.y, myPosition.z);
-	ImGui::Text("Direction x:%f y:%f z:%f", myDirection.x, myDirection.y, myDirection.z);
 }

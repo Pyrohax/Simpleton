@@ -10,11 +10,19 @@ public:
 	~Camera();
 
 	void Update(float aDeltaTime);
-	void DrawDebug();
 
 	const glm::mat4x4& GetProjectionMatrix() const { return myProjection; }
 	const glm::mat4x4& GetViewMatrix() const { return myView; }
 	const glm::vec3& GetPositionMatrix() const { return myPosition; }
+	const glm::vec3& GetPosition() const { return myPosition; }
+	const glm::vec3& GetFront() const { return myFront; }
+	const glm::vec3& GetRight() const { return myRight; }
+	const glm::vec3& GetUp() const { return myUp; }
+	const glm::vec3& GetDirection() const { return myDirection; }
+
+	const float GetFieldOfView() const { return myFieldOfView; }
+	const float GetHorizontalAngle() const { return myHorizontalAngle; }
+	const float GetVerticalAngle() const { return myVerticalAngle; }
 
 private:
 	glm::mat4 myProjection;
