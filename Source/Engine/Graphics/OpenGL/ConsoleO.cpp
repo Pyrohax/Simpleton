@@ -61,22 +61,6 @@ void ConsoleO::AddLog(const char* aFormat, ...)
 void ConsoleO::Draw(const char* aTitle)
 {
     ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
-    bool test = true;
-    if (!ImGui::Begin(aTitle, &test))
-    {
-        ImGui::End();
-        return;
-    }
-
-    // As a specific feature guaranteed by the library, after calling Begin() the last Item represent the title bar.
-    // So e.g. IsItemHovered() will return true when hovering the title bar.
-    // Here we create a context menu only available from the title bar.
-    if (ImGui::BeginPopupContextItem())
-    {
-        if (ImGui::MenuItem("Close Console"))
-            test = false;
-        ImGui::EndPopup();
-    }
 
     ImGui::TextWrapped("Press TAB for auto-completion. Press UP/DOWN to navigate history.");
     ImGui::TextWrapped("Enter 'HELP' for help.");
@@ -195,8 +179,6 @@ void ConsoleO::Draw(const char* aTitle)
     ImGui::SetItemDefaultFocus();
     if (reclaim_focus)
         ImGui::SetKeyboardFocusHere(-1); // Auto focus previous widget
-
-    ImGui::End();
 }
 
 void ConsoleO::ExecuteCommand(const char* aCommand)

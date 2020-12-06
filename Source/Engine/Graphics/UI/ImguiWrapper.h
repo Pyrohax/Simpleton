@@ -4,9 +4,11 @@
 #include "../../Graphics/UI/Widget.h"
 
 #include <memory>
-#include <vector>
 
 struct GLFWwindow;
+class ImguiDebugWidget;
+
+#include <vector>
 
 class ImguiWrapper
 {
@@ -51,4 +53,7 @@ public:
 private:
 	std::vector<std::shared_ptr<UI::Widget>> myWidgets;
 	std::vector<std::shared_ptr<UI::MenuBar>> myMenuBars;
+	ImguiDebugWidget* myDebugWidget;
+	bool myShowDemo;
+	bool myShowDebugWidget;
 };

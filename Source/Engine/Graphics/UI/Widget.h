@@ -21,9 +21,11 @@ namespace UI
 		template<typename T>
 		void PushStyleVar(ImGuiStyleVar anIndex, T aValue) { ImGui::PushStyleVar(anIndex, aValue); myVarPushes++; }
 
-		bool& GetIsVisible() { return myIsVisible; }
 		void SetIsVisible(bool aValue) { myIsVisible = aValue; }
 		void ToggleVisiblity() { myIsVisible = !myIsVisible; }
+
+		bool& GetIsVisible() { return myIsVisible; }
+		const std::string& GetTitle() const { return myTitle; }
 
 	private:
 		ImguiWrapper* myWrapper;

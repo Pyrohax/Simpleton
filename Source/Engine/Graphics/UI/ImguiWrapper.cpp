@@ -1,8 +1,11 @@
 #include "ImguiWrapper.h"
 
+#include "ImguiDebugWidget.h"
 #include "../../Graphics/UI/CameraWidget.h"
 #include "../../Graphics/UI/ConsoleWidget.h"
 #include "../../Graphics/UI/ToolMenuBar.h"
+#include "../../Core/Engine.h"
+#include "../../World/World.h"
 
 #include "imgui.h"
 #include "backends/imgui_impl_opengl3.h"
@@ -11,7 +14,10 @@
 #include <GLFW/glfw3.h>
 
 ImguiWrapper::ImguiWrapper()
+    : myShowDemo(false)
+    , myShowDebugWidget(false)
 {
+    myDebugWidget = new ImguiDebugWidget();
 }
 
 ImguiWrapper::~ImguiWrapper()
@@ -60,6 +66,12 @@ void ImguiWrapper::Render(double aDeltaTime)
         }
     }
 
+    /*if (myShowDemo)
+        ImGui::ShowDemoWindow(&myShowDemo);
+
+    if (myShowDebugWidget)
+        myDebugWidget->Draw(aDeltaTime);*/
+
     ImGui::Render();
 }
 
@@ -73,4 +85,5 @@ void ImguiWrapper::Destroy()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+    delete myDebugWidget;
 }

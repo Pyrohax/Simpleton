@@ -1,8 +1,10 @@
 #include "ToolMenuBar.h"
+
 #include "ImguiExtension.h"
 #include "../../Graphics/OpenGL/ImguiWrapper.h"
 
 #include "CameraWidget.h"
+#include "ConsoleWidget.h"
 
 #include <functional>
 
@@ -10,7 +12,7 @@ UI::ToolMenuBar::ToolMenuBar(ImguiWrapper* aWrapper)
     : MenuBar(aWrapper, true)
 {
     myWidgetMap[WidgetIconType::Camera] = aWrapper->GetWidget<CameraWidget>();
-    //myWidgetMap[WidgetIconType::Console] =
+    myWidgetMap[WidgetIconType::Console] = aWrapper->GetWidget<ConsoleWidget>();
 }
 
 void UI::ToolMenuBar::Tick()
@@ -35,7 +37,7 @@ void UI::ToolMenuBar::Tick()
             Widget* widget = widgetReference.second;
             const WidgetIconType widgetIconType = widgetReference.first;
 
-            showButton(widgetIconType, "Camera", [this, &widget]() { return widget->GetIsVisible(); }, [this, &widget]() { widget->ToggleVisiblity(); });
+            showButton(widgetIconType, widget->GetTitle(), [this, &widget]() { return widget->GetIsVisible(); }, [this, &widget]() { widget->ToggleVisiblity(); });
         }
 
         ImGui::EndMainMenuBar();
