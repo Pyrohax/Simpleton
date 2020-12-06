@@ -2,7 +2,9 @@
 
 #include "ImguiDebugWidget.h"
 #include "ImguiTitleBar.h"
-#include "Console.h"
+#include "ConsoleO.h"
+#include "../../Graphics/UI/Console.h"
+#include "../../Graphics/UI/Toolbar.h"
 #include "../../Core/Engine.h"
 #include "../../World/World.h"
 #include "../../World/Camera.h"
@@ -19,8 +21,8 @@ ImguiWrapper::ImguiWrapper()
     , myShowDemo(false)
     , myShowDebugWidget(false)
     , myShowCamera(false)
+    , myToolbar(nullptr)
 {
-    myImguiTitleBar = new ImguiTitleBar();
     myDebugWidget = new ImguiDebugWidget();
 }
 
@@ -37,6 +39,9 @@ void ImguiWrapper::Initialize(GLFWwindow* aWindow)
 
     ImGui_ImplGlfw_InitForOpenGL(aWindow, true);
     ImGui_ImplOpenGL3_Init("#version 330");
+
+    myWidgets.emplace_back(std::make_shared<UI::Toolbar>(this));
+    myWidgets.emplace_back(std::make_shared<UI::Console>(this));
 }
 
 void ImguiWrapper::CreateFrame()
@@ -48,11 +53,14 @@ void ImguiWrapper::CreateFrame()
 
 void ImguiWrapper::Render(double aDeltaTime)
 {
-    if (myShowTitleBar)
-        myImguiTitleBar->Draw(&myShowConsole, &myShowDemo, &myShowDebugWidget, &myShowCamera);
-
-    if (myShowConsole)
-        Console::GetInstance().Draw("Console", &myShowConsole);
+    for (auto& widget : myWidgets)
+    {
+        if (widget->Begin())
+        {
+            widget->Tick();
+            widget->End();
+        }
+    }
 
     if (myShowDemo)
         ImGui::ShowDemoWindow(&myShowDemo);

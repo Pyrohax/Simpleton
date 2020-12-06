@@ -1,11 +1,11 @@
-#include "Console.h"
+#include "ConsoleO.h"
 
 #include "imgui.h"
 
 #define ERROR_PREFIX "(P)"
 #define SUCCES_PREFIX "(S)"
 
-Console::Console()
+ConsoleO::ConsoleO()
 {
 	ClearLog();
 	memset(myInputBuffer, 0, sizeof(myInputBuffer));
@@ -21,7 +21,7 @@ Console::Console()
     myScrollToBottom = false;
 }
 
-Console::~Console()
+ConsoleO::~ConsoleO()
 {
 	ClearLog();
 
@@ -33,7 +33,7 @@ Console::~Console()
     delete myFilter;
 }
 
-void Console::ClearLog()
+void ConsoleO::ClearLog()
 {
     for (int i = 0; i < myItems.size(); i++)
     {
@@ -43,7 +43,7 @@ void Console::ClearLog()
     myItems.clear();
 }
 
-void Console::AddLog(const char* aFormat, ...)
+void ConsoleO::AddLog(const char* aFormat, ...)
 {
     va_list argumentLeft, argumentRight;
     va_start(argumentLeft, aFormat);
@@ -58,10 +58,11 @@ void Console::AddLog(const char* aFormat, ...)
     myItems.push_back(_strdup(buffer));
 }
 
-void Console::Draw(const char* aTitle, bool* aShouldOpen)
+void ConsoleO::Draw(const char* aTitle)
 {
     ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
-    if (!ImGui::Begin(aTitle, aShouldOpen))
+    bool test = true;
+    if (!ImGui::Begin(aTitle, &test))
     {
         ImGui::End();
         return;
@@ -73,7 +74,7 @@ void Console::Draw(const char* aTitle, bool* aShouldOpen)
     if (ImGui::BeginPopupContextItem())
     {
         if (ImGui::MenuItem("Close Console"))
-            *aShouldOpen = false;
+            test = false;
         ImGui::EndPopup();
     }
 
@@ -174,7 +175,7 @@ void Console::Draw(const char* aTitle, bool* aShouldOpen)
 
     auto textEditCallback = [](ImGuiInputTextCallbackData* aData)
     {
-        Console* console = (Console*)aData->UserData;
+        ConsoleO* console = (ConsoleO*)aData->UserData;
         return console->TextEditCallback(aData);
     };
 
@@ -198,7 +199,7 @@ void Console::Draw(const char* aTitle, bool* aShouldOpen)
     ImGui::End();
 }
 
-void Console::ExecuteCommand(const char* aCommand)
+void ConsoleO::ExecuteCommand(const char* aCommand)
 {
     AddLog("# %s\n", aCommand);
 
@@ -240,7 +241,7 @@ void Console::ExecuteCommand(const char* aCommand)
     myScrollToBottom = true;
 }
 
-int Console::TextEditCallback(ImGuiInputTextCallbackData* aData)
+int ConsoleO::TextEditCallback(ImGuiInputTextCallbackData* aData)
 {
     //AddLog("cursor: %d, selection: %d-%d", data->CursorPos, data->SelectionStart, data->SelectionEnd);
     switch (aData->EventFlag)

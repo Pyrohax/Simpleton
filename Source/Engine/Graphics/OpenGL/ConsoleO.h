@@ -8,25 +8,25 @@
 struct ImGuiInputTextCallbackData;
 struct ImGuiTextFilter;
 
-struct Console
+struct ConsoleO
 {
 public:
-    static Console& GetInstance()
+    static ConsoleO& GetInstance()
     {
-        static Console instance;
+        static ConsoleO instance;
         return instance;
     }
 
-    Console(Console const&) = delete;
-    void operator=(Console const&) = delete;
+    ConsoleO(ConsoleO const&) = delete;
+    void operator=(ConsoleO const&) = delete;
 
     void ClearLog();
     void AddLog(const char* aFormat, ...);
-    void Draw(const char* aTitle, bool* aShouldOpen);
+    void Draw(const char* aTitle);
 
 private:
-    Console();
-    ~Console();
+    ConsoleO();
+    ~ConsoleO();
 
     void ExecuteCommand(const char* aCommand);
     int TextEditCallback(ImGuiInputTextCallbackData* aData);

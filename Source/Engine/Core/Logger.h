@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Graphics/OpenGL/Console.h"
+#include "../Graphics/OpenGL/ConsoleO.h"
 
 #include <fstream>
 #include <string>
@@ -98,7 +98,7 @@ public:
 
 			std::string time = GetCurrentDateTime(DateTimeFormat::Time);
 			std::string log(prefix + " " + time + " " + buffer);
-			Console::GetInstance().AddLog(log.c_str());
+			ConsoleO::GetInstance().AddLog(log.c_str());
 
 			std::string filePath = GetCurrentDateTime(DateTimeFormat::Date) + ".txt";
 			std::ofstream outstream(filePath.c_str(), std::ios_base::out | std::ios_base::app);
