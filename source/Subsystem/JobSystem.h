@@ -1,22 +1,15 @@
 #pragma once
 
-#include <algorithm>
-#include <functional>
 #include <future>
 #include <thread>
 #include <vector>
+#include <memory>
 
 struct Job
 {
-public:
-	std::thread myThread;
+	std::function<bool()> myFunction;
+	std::thread** myThread;
 	std::future<bool> myFuture;
-
-private:
-	static bool Idle()
-	{
-		return true;
-	};
 };
 
 class JobSystem
@@ -26,15 +19,18 @@ public:
 	~JobSystem();
 
 	bool Init();
-	bool AddJob(const std::function<bool()> f);
-	void Terminate();
+	void Update(float aFrameTime);
+	bool Terminate();
 
-	bool CollectAllThreads();
+	void AddJob(const std::function<bool()> f);
 
 private:
-	int CollectOneThread();
+	void StartJob(Job& aJob, std::thread*& aThreadOut);
+	void CollectFinishedThreads();
 
-	std::vector<Job> myJobs;
-	const float myMaximumExpirationTime = 3.f;
-	unsigned int myThreadCount = 0;
+	std::vector<Job> myQueuedJobs;
+	std::vector<Job> myRunningJobs;
+	std::vector<std::thread*> myThreads;
+
+	bool myNeedsUpdate;
 };

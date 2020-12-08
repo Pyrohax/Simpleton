@@ -1,9 +1,8 @@
 #pragma once
 
-#include "Subsystem/JobSystem.h"
-#include "Subsystem/EntityComponentSystem.h"
-
 class Renderer;
+class JobSystem;
+class EntityComponentSystem;
 
 class Engine
 {
@@ -15,8 +14,8 @@ public:
 	void Update();
 	void Terminate();
 
-	JobSystem myJobSystem;
-	EntityComponentSystem myEntityComponentSystem;
+	JobSystem* myJobSystem;
+	EntityComponentSystem* myEntityComponentSystem;
 
 private:
 	Renderer* myRenderer;
