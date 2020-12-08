@@ -25,13 +25,12 @@ public:
 	void AddJob(const std::function<bool()> f);
 
 private:
+	void StartJob(Job& aJob, std::thread*& aThreadOut);
+	void CollectFinishedThreads();
+
 	std::vector<Job> myQueuedJobs;
 	std::vector<Job> myRunningJobs;
 	std::vector<std::thread*> myThreads;
 
-	void StartJob(Job& aJob, std::thread*& aThreadOut);
-	void EndJob(Job& aJob);
-
-	const float myMaximumExpirationTime = 3.f;
 	bool myNeedsUpdate;
 };

@@ -1,12 +1,12 @@
 #include "JobSystem.h"
 
-#include <chrono>
 #include <algorithm>
+#include <chrono>
 #include <functional>
 
-#include "../Utility/Timer.h"
-#include "../Utility/Logger.h"
 #include "../Utility/Assert.h"
+#include "../Utility/Logger.h"
+#include "../Utility/Timer.h"
 
 JobSystem::JobSystem()
 	: myNeedsUpdate(true)
@@ -22,7 +22,7 @@ JobSystem::JobSystem()
 
 JobSystem::~JobSystem(){}
 
-// Example for adding jobs:
+//// Example for adding jobs:
 //auto exampleJob = []() -> bool
 //{
 //	std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -31,8 +31,8 @@ JobSystem::~JobSystem(){}
 
 bool JobSystem::Init()
 {
-	// Example for adding jobs:
-	//for (int i = 0; i < 30; i++)
+	//// Example for adding jobs:
+	//for (int i = 0; i < 30000; i++)
 	//	AddJob(exampleJob);
 
 	return true;
@@ -40,7 +40,61 @@ bool JobSystem::Init()
 
 void JobSystem::Update(float aFrameTime)
 {
-	// First lets check if any futures have finished.
+	CollectFinishedThreads();
+
+	// Add jobs to the queue.
+	if (myNeedsUpdate && !myQueuedJobs.empty())
+	{
+		// Any threads not in use?
+		std::vector<std::thread**> emptyThreads;
+		int emptyThreadCount = 0;
+		for (int threadIndex = 0; threadIndex <= myThreads.capacity() - 1 && emptyThreadCount <= myQueuedJobs.size() - 1; ++threadIndex)
+		{
+			if (myThreads[threadIndex] == nullptr)
+			{
+				emptyThreads.push_back(&myThreads[threadIndex]);
+				emptyThreadCount++;
+			}
+		}
+
+		// Put all available jobs in there.
+		for (int i = emptyThreads.size() - 1; i >= 0 && emptyThreadCount > 0; --i)
+		{
+			Job& job = myQueuedJobs[myQueuedJobs.size() - i - 1];
+			StartJob(job, *emptyThreads[i]);
+			myQueuedJobs.erase(myQueuedJobs.end() - i - 1);
+			emptyThreadCount--;
+		}
+	}
+
+	myNeedsUpdate = false;
+	return;
+}
+
+bool JobSystem::Terminate()
+{
+	while (!myRunningJobs.empty())
+		CollectFinishedThreads();
+
+	return true;
+}
+
+void JobSystem::AddJob(const std::function<bool()> aFunction)
+{
+	myQueuedJobs.push_back(Job{ aFunction, nullptr, std::future<bool>() });
+	myNeedsUpdate = true;
+}
+
+void JobSystem::StartJob(Job& aJob, std::thread*& aThreadOut)
+{
+	std::packaged_task<bool()> package(aJob.myFunction);
+	myRunningJobs.emplace_back(Job{aJob.myFunction, &aThreadOut, package.get_future()});
+	aThreadOut = new std::thread(std::move(package));
+	return;
+}
+
+void JobSystem::CollectFinishedThreads()
+{
 	for (int i = myRunningJobs.size() - 1; i >= 0; --i)
 	{
 		Job& job = myRunningJobs[i];
@@ -66,55 +120,4 @@ void JobSystem::Update(float aFrameTime)
 			myNeedsUpdate = true;
 		}
 	}
-
-	// Add jobs to the queue.
-	if (myNeedsUpdate && !myQueuedJobs.empty())
-	{
-		// Any threads not in use?
-		std::vector<std::thread**> emptyThreads;
-
-		int emptyThreadCount = 0;
-		for (int threadIndex = 0; threadIndex <= myThreads.capacity() - 1 && emptyThreadCount <= myQueuedJobs.size() - 1; ++threadIndex)
-		{
-			if (myThreads[threadIndex] == nullptr)
-			{
-				emptyThreads.push_back(&myThreads[threadIndex]);
-				emptyThreadCount++;
-			}
-		}
-
-		// Put all jobs we can start in there.
-		for (int i = emptyThreads.size() - 1; i >= 0 && emptyThreadCount > 0; --i)
-		{
-			Job& job = myQueuedJobs[myQueuedJobs.size() - i - 1];
-			StartJob(job, *emptyThreads[i]);
-			myQueuedJobs.erase(myQueuedJobs.end() - i - 1);
-			emptyThreadCount--;
-		}
-	}
-
-	myNeedsUpdate = false;
-	return;
-}
-
-bool JobSystem::Terminate()
-{
-	while (!myRunningJobs.empty())
-		Update(0.016f);
-
-	return true;
-}
-
-void JobSystem::AddJob(const std::function<bool()> aFunction)
-{
-	myQueuedJobs.push_back(Job{ aFunction, nullptr, std::future<bool>() });
-	myNeedsUpdate = true;
-}
-
-void JobSystem::StartJob(Job& aJob, std::thread*& aThreadOut)
-{
-	std::packaged_task<bool()> package(aJob.myFunction);
-	myRunningJobs.emplace_back(Job{aJob.myFunction, &aThreadOut, package.get_future()});
-	aThreadOut = new std::thread(std::move(package));
-	return;
 }
