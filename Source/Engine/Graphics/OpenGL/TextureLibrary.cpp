@@ -17,7 +17,7 @@ void TextureLibrary::CompileTexture(Texture& aTexture)
 		if (texture.mySource == aTexture.mySource)
 		{
 			free(aTexture.mySource);
-			Log::Print(LogType::MESSAGE, "Texture already exists: %s", aTexture.myName);
+			Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "Texture already exists: %s", aTexture.myName);
 			return;
 		}
 	}

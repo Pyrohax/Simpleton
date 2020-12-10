@@ -31,7 +31,7 @@ void ShaderLibrary::CreateProgram()
 
 void ShaderLibrary::CompileShader(Shader& aShader)
 {
-    Log::Print(LogType::MESSAGE, "Compiling %s", aShader.myName.c_str());
+    Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "Compiling %s", aShader.myName.c_str());
 
     aShader.myType = GetShaderType(aShader.myShaderType);
     aShader.myID = glCreateShader(aShader.myType);
@@ -51,17 +51,17 @@ void ShaderLibrary::CompileShader(Shader& aShader)
         {
             std::vector<GLchar> infoLog(maxInfoLength);
             glGetShaderInfoLog(aShader.myID, maxInfoLength, &maxInfoLength, &infoLog[0]);
-            Log::Print(LogType::PROBLEM, "%s", &infoLog[0]);
+            Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "%s", &infoLog[0]);
         }
     }
     
-    Log::Print(LogType::SUCCESS, "Compiled %s", aShader.myName.c_str());
+    Log::Logger::Print(Log::Severity::Succes, Log::Category::Rendering, "Compiled %s", aShader.myName.c_str());
 }
 
 void ShaderLibrary::AttachShaders(const Shader& aVertexShader, const Shader& aFragmentShader)
 {
-    Log::Print(LogType::MESSAGE, "Linking program [%i] to %s", myProgramID, aVertexShader.myName.c_str());
-    Log::Print(LogType::MESSAGE, "Linking program [%i] to %s", myProgramID, aFragmentShader.myName.c_str());
+    Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "Linking program [%i] to %s", myProgramID, aVertexShader.myName.c_str());
+    Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "Linking program [%i] to %s", myProgramID, aFragmentShader.myName.c_str());
 
     const unsigned int vertexShaderID = aVertexShader.myID;
     const unsigned int fragmentShaderID = aFragmentShader.myID;
@@ -75,7 +75,7 @@ void ShaderLibrary::AttachShaders(const Shader& aVertexShader, const Shader& aFr
     {
         GLchar infoLog[512];
         glGetProgramInfoLog(myProgramID, 512, nullptr, infoLog);
-        Log::Print(LogType::PROBLEM, "%s", infoLog);
+        Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "%s", infoLog);
     }
 
     glDetachShader(myProgramID, vertexShaderID);

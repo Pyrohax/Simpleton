@@ -3,8 +3,12 @@
 #include "../Core/Subsystem.h"
 #include "../Graphics/GraphicsDefines.h"
 
+namespace UI
+{
+	class ImguiWrapper;
+}
+
 class EngineContext;
-class ImguiWrapper;
 class RenderContext;
 class RenderSurface;
 
@@ -23,7 +27,7 @@ public:
 	bool HasClosedWindow() const;
 
 private:
-	ImguiWrapper* myImguiWrapper;
+	UI::ImguiWrapper* myImguiWrapper;
 	RenderContext* myRenderContext;
 	RenderSurface* myRenderSurface;
 	GraphicsAPI myGraphicsAPI;

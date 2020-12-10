@@ -1,6 +1,5 @@
 #include "ImguiWrapper.h"
 
-#include "ImguiDebugWidget.h"
 #include "../../Graphics/UI/CameraWidget.h"
 #include "../../Graphics/UI/ConsoleWidget.h"
 #include "../../Graphics/UI/ToolMenuBar.h"
@@ -13,18 +12,15 @@
 
 #include <GLFW/glfw3.h>
 
-ImguiWrapper::ImguiWrapper()
-    : myShowDemo(false)
-    , myShowDebugWidget(false)
-{
-    myDebugWidget = new ImguiDebugWidget();
-}
-
-ImguiWrapper::~ImguiWrapper()
+UI::ImguiWrapper::ImguiWrapper()
 {
 }
 
-void ImguiWrapper::Initialize(GLFWwindow* aWindow)
+UI::ImguiWrapper::~ImguiWrapper()
+{
+}
+
+void UI::ImguiWrapper::Initialize(GLFWwindow* aWindow)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -39,14 +35,14 @@ void ImguiWrapper::Initialize(GLFWwindow* aWindow)
     myMenuBars.emplace_back(std::make_shared<UI::ToolMenuBar>(this));
 }
 
-void ImguiWrapper::CreateFrame()
+void UI::ImguiWrapper::CreateFrame()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 }
 
-void ImguiWrapper::Render(double aDeltaTime)
+void UI::ImguiWrapper::Render(double aDeltaTime)
 {
     for (auto& widget : myWidgets)
     {
@@ -66,24 +62,17 @@ void ImguiWrapper::Render(double aDeltaTime)
         }
     }
 
-    /*if (myShowDemo)
-        ImGui::ShowDemoWindow(&myShowDemo);
-
-    if (myShowDebugWidget)
-        myDebugWidget->Draw(aDeltaTime);*/
-
     ImGui::Render();
 }
 
-void ImguiWrapper::Draw()
+void UI::ImguiWrapper::Draw()
 {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void ImguiWrapper::Destroy()
+void UI::ImguiWrapper::Destroy()
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
-    delete myDebugWidget;
 }

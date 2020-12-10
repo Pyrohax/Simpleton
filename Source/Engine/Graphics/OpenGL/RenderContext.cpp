@@ -23,8 +23,8 @@ RenderContext::~RenderContext()
 
 void RenderContext::PrintDebugInfo()
 {
-	Log::Print(LogType::MESSAGE, "OpenGL %s", glGetString(GL_VERSION));
-	Log::Print(LogType::MESSAGE, "GLSL %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "OpenGL %s", glGetString(GL_VERSION));
+	Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "GLSL %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 }
 
 void RenderContext::CreateLight()
@@ -38,7 +38,7 @@ void RenderContext::Initialize()
 {
 	if (!gladLoadGL())
 	{
-		Log::Print(LogType::PROBLEM, "Failed to load GLAD, because GL_VERSION returned NULL or function prototypes could not be loaded");
+		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering ,"Failed to load GLAD, because GL_VERSION returned NULL or function prototypes could not be loaded");
 		return;
 	}
 
@@ -136,4 +136,6 @@ void RenderContext::Destroy(const std::vector<Model>& aModels)
 		glDeleteVertexArrays(1, &model.myVertexArrayObject);
 		glDeleteBuffers(1, &model.myVertexBufferObject);
 	}
+
+	delete myLight;
 }

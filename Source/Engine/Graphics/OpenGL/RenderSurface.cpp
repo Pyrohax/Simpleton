@@ -26,7 +26,7 @@ void RenderSurface::Initialize()
 
 	if (!glfwInit())
 	{
-		Log::Print(LogType::PROBLEM, "Failed to initialize GLFW");
+		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to initialize GLFW");
 		glfwTerminate();
 		return;
 	}
@@ -42,7 +42,7 @@ void RenderSurface::Initialize()
 	myWindow = glfwCreateWindow(myWidth, myHeight, "Simpleton Editor", nullptr, nullptr);
 	if (!myWindow)
 	{
-		Log::Print(LogType::PROBLEM, "Failed to open a GLFW window");
+		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to open a GLFW window");
 		glfwTerminate();
 		return;
 	}
@@ -96,13 +96,13 @@ void RenderSurface::PrintDebugInfo()
 {
 	int major, minor, revision;
 	glfwGetVersion(&major, &minor, &revision);
-	Log::Print(LogType::MESSAGE, "GLFW %d.%d.%d", major, minor, revision);
-	Log::Print(LogType::MESSAGE, "Window size %ix%i", myWidth, myHeight);
+	Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "GLFW %d.%d.%d", major, minor, revision);
+	Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "Window size %ix%i", myWidth, myHeight);
 }
 
 void RenderSurface::ErrorCallback(int anError, const char* aDescription)
 {
-	Log::Print(LogType::MESSAGE, "%i %s", anError, aDescription);
+	Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "%i %s", anError, aDescription);
 }
 
 void RenderSurface::KeyCallback(GLFWwindow* aWindow, int aKey, int aScancode, int anAction, int aMode)

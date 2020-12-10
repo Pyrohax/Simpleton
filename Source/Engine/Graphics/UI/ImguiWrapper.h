@@ -4,56 +4,54 @@
 #include "../../Graphics/UI/Widget.h"
 
 #include <memory>
-
-struct GLFWwindow;
-class ImguiDebugWidget;
-
 #include <vector>
 
-class ImguiWrapper
+struct GLFWwindow;
+
+namespace UI
 {
-public:
-	ImguiWrapper();
-	~ImguiWrapper();
-
-	void Initialize(GLFWwindow* aWindow);
-	void CreateFrame();
-	void Render(double aDeltaTime);
-	void Draw();
-	void Destroy();
-
-	template<typename Type>
-	Type* GetWidget()
+	class ImguiWrapper
 	{
-		for (const auto& widget : myWidgets)
+	public:
+		ImguiWrapper();
+		~ImguiWrapper();
+
+		void Initialize(GLFWwindow* aWindow);
+		void CreateFrame();
+		void Render(double aDeltaTime);
+		void Draw();
+		void Destroy();
+
+		template<typename Type>
+		Type* GetWidget()
 		{
-			if (Type* widgetTemplate = dynamic_cast<Type*>(widget.get()))
+			for (const auto& widget : myWidgets)
 			{
-				return widgetTemplate;
+				if (Type* widgetTemplate = dynamic_cast<Type*>(widget.get()))
+				{
+					return widgetTemplate;
+				}
 			}
+
+			return nullptr;
 		}
 
-		return nullptr;
-	}
-
-	template<typename Type>
-	Type* GetMenuBar()
-	{
-		for (const auto& menuBar : myMenuBars)
+		template<typename Type>
+		Type* GetMenuBar()
 		{
-			if (Type* menuBarTemplate = dynamic_cast<Type*>(menuBar.get()))
+			for (const auto& menuBar : myMenuBars)
 			{
-				return menuBarTemplate;
+				if (Type* menuBarTemplate = dynamic_cast<Type*>(menuBar.get()))
+				{
+					return menuBarTemplate;
+				}
 			}
+
+			return nullptr;
 		}
 
-		return nullptr;
-	}
-
-private:
-	std::vector<std::shared_ptr<UI::Widget>> myWidgets;
-	std::vector<std::shared_ptr<UI::MenuBar>> myMenuBars;
-	ImguiDebugWidget* myDebugWidget;
-	bool myShowDemo;
-	bool myShowDebugWidget;
-};
+	private:
+		std::vector<std::shared_ptr<UI::Widget>> myWidgets;
+		std::vector<std::shared_ptr<UI::MenuBar>> myMenuBars;
+	};
+}

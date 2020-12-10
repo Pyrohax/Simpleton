@@ -3,7 +3,7 @@
 #include "../Core/Engine.h"
 #include "../World/World.h"
 #include "../World/AssetLoader.h"
-#include "../Graphics/OpenGL/ImguiWrapper.h"
+#include "../Graphics/UI/ImguiWrapper.h"
 #include "../Graphics/OpenGL/RenderContext.h"
 #include "../Graphics/OpenGL/RenderSurface.h"
 #include "../Graphics/OpenGL/ShaderLibrary.h"
@@ -12,7 +12,7 @@ Yellowstone::Yellowstone(EngineContext* aContext) : Subsystem(aContext)
 {
 	myRenderSurface = new RenderSurface();
 	myRenderContext = new RenderContext();
-	myImguiWrapper = new ImguiWrapper();
+	myImguiWrapper = new UI::ImguiWrapper();
 	myGraphicsAPI = GraphicsAPI::None;
 	myShowConsole = true;
 }

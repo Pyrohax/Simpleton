@@ -4,10 +4,10 @@
 
 #include <string>
 
-class ImguiWrapper;
-
 namespace UI
 {
+	class ImguiWrapper;
+
 	class Widget
 	{
 	public:

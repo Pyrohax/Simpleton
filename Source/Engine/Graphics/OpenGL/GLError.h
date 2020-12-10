@@ -41,12 +41,12 @@ static inline void CheckGLError()
                 break;
         }
 
-        Log::Print(LogType::PROBLEM, "%s", errorString);
+        Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "%s", errorString);
     }
 }
 
 static void GLAPIENTRY ErrorCallback(GLenum aSource, GLenum aType, GLuint anID, GLenum aSeverity, GLsizei /*aLength*/, const GLchar* aMessage, const void* /*aUserParam*/)
 {
-    Log::Print(LogType::PROBLEM, "Message from OpenGL: Source: 0x%x Type: 0x%x Id: 0x%x Severity: 0x%x", aSource, aType, anID, aSeverity);
-    Log::Print(LogType::PROBLEM, "%s", aMessage);
+    Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Message from OpenGL: Source: 0x%x Type: 0x%x Id: 0x%x Severity: 0x%x", aSource, aType, anID, aSeverity);
+    Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "%s", aMessage);
 }

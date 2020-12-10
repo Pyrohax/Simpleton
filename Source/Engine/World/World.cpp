@@ -26,7 +26,7 @@ void World::LoadDummyData()
 	Model* model = myAssetLoader->LoadModel("../../../Data/Models/Planet/Planet.obj");
 	if (!model)
 	{
-		Log::Print(LogType::PROBLEM, "Error loading dummy data");
+		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading dummy data");
 		return;
 	}
 
@@ -35,7 +35,7 @@ void World::LoadDummyData()
 		Texture* texture = myAssetLoader->LoadTexture(texturePair.first);
 		if (!texture)
 		{
-			Log::Print(LogType::PROBLEM, "Error loading dummy data");
+			Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading dummy data");
 			return;
 		}
 
@@ -51,7 +51,7 @@ void World::LoadDummyData()
 
 	if (!vertexShader || !fragmentShader)
 	{
-		Log::Print(LogType::PROBLEM, "Error loading dummy data");
+		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading dummy data");
 		return;
 	}
 

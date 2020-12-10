@@ -1,7 +1,7 @@
 #include "ToolMenuBar.h"
 
 #include "ImguiExtension.h"
-#include "../../Graphics/OpenGL/ImguiWrapper.h"
+#include "ImguiWrapper.h"
 
 #include "CameraWidget.h"
 #include "ConsoleWidget.h"

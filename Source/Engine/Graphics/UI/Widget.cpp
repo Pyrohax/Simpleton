@@ -1,34 +1,31 @@
 #include "Widget.h"
 
-#include "../../Graphics/OpenGL/ImguiWrapper.h"
+#include "ImguiWrapper.h"
 
-namespace UI
+UI::Widget::Widget(ImguiWrapper* aWrapper, const std::string& aTitle, bool anIsVisible)
+	: myWrapper(aWrapper)
+	, myTitle(aTitle)
+	, myVarPushes(0)
+	, myIsVisible(anIsVisible)
 {
-	Widget::Widget(ImguiWrapper* aWrapper, const std::string& aTitle, bool anIsVisible)
-		: myWrapper(aWrapper)
-		, myTitle(aTitle)
-		, myVarPushes(0)
-		, myIsVisible(anIsVisible)
-	{
-	}
+}
 
-	bool Widget::Begin()
-	{
-		if (!GetIsVisible())
-			return false;
+bool UI::Widget::Begin()
+{
+	if (!GetIsVisible())
+		return false;
 
-		ImGui::Begin(myTitle.c_str(), &myIsVisible);
+	ImGui::Begin(myTitle.c_str(), &myIsVisible);
 
-		return true;
-	}
+	return true;
+}
 
-	bool Widget::End()
-	{
-		/*ImGui::PopStyleVar(myVarPushes);
-		myVarPushes = 0;*/
+bool UI::Widget::End()
+{
+	/*ImGui::PopStyleVar(myVarPushes);
+	myVarPushes = 0;*/
 
-		ImGui::End();
+	ImGui::End();
 
-		return true;
-	}
+	return true;
 }

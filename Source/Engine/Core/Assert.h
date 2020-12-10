@@ -2,28 +2,29 @@
 
 #include "Logger.h"
 
-#include <exception>
+#include <stdexcept>
+#include <cstdarg>
 
-static void Assert(bool aBehaviorIsFaulty, const char* aFormat, ...)
+static inline void Assert(bool aBehaviorIsFaulty, const char* aFormat, ...)
 {
-	if (aBehaviorIsFaulty)
-	{
-		va_list argumentLeft, argumentRight;
-		va_start(argumentLeft, aFormat);
-		va_copy(argumentRight, argumentLeft);
-		int size = _vscprintf(aFormat, argumentRight) + 1;
-		va_end(argumentRight);
+	if (!aBehaviorIsFaulty)
+		return;
 
-		char* buffer = new char[size];
-		vsnprintf(buffer, size, aFormat, argumentLeft);
-		va_end(argumentLeft);
+	va_list argumentLeft, argumentRight;
+	va_start(argumentLeft, aFormat);
+	va_copy(argumentRight, argumentLeft);
+	int size = _vscprintf(aFormat, argumentRight) + 1;
+	va_end(argumentRight);
 
-		Log::Print(LogType::PROBLEM, buffer);
+	char* buffer = new char[size];
+	vsnprintf(buffer, size, aFormat, argumentLeft);
+	va_end(argumentLeft);
+
+	Log::Logger::Print(Log::Severity::Error, Log::Category::Assert, buffer);
 
 #ifdef NDEBUG
-		abort();
+	abort();
 #else
-		throw std::runtime_error(buffer);
+	throw std::runtime_error(buffer);
 #endif
-	}
 }

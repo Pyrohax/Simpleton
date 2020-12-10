@@ -1,6 +1,6 @@
 #include "MenuBar.h"
 
-#include "../../Graphics/OpenGL/ImguiWrapper.h"
+#include "ImguiWrapper.h"
 
 UI::MenuBar::MenuBar(ImguiWrapper* aWrapper, bool anIsVisible)
 	: myWrapper(aWrapper)

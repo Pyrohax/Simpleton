@@ -5,10 +5,9 @@
 
 #include <unordered_map>
 
-class ImguiWrapper;
-
 namespace UI
 {
+    class ImguiWrapper;
     enum class WidgetIconType;
 
     class ToolMenuBar : public MenuBar

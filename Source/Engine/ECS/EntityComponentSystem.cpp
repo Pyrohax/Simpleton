@@ -1,6 +1,7 @@
 #include "EntityComponentSystem.h"
 
 #include "../Core/Assert.h"
+#include "../Core/Logger.h"
 #include "../Core/Engine.h"
 #include "TransformComponent.h"
 #include "ModelComponent.h"
@@ -49,7 +50,7 @@ void EntityComponentSystem::RemoveComponent(UniqueID aUID)
 		break;
 
 	case ComponentType::UNDEFINED:
-		Log::Print(LogType::PROBLEM, "Attempting to remove a nonexistent component. UID: ", std::to_string(aUID));
+		Log::Logger::Print(Log::Severity::Error, Log::Category::ECS, "Attempting to remove a nonexistent component. UID: ", std::to_string(aUID));
 		return;
 
 	default:

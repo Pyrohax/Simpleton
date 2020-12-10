@@ -28,7 +28,7 @@ public:
 
 	void Print()
 	{
-		Log::Print(LogType::MESSAGE, "This took %s %s", std::to_string(GetCurrentTime()), " seconds");
+		Log::Logger::Print(Log::Severity::Message, Log::Category::Time, "This took %s %s", std::to_string(GetCurrentTime()), " seconds");
 	};
 
 	void Reset()

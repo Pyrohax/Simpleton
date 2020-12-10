@@ -39,7 +39,7 @@ Model* AssetLoader::LoadModel(const std::string& aPath)
 {
     if (!DoesFileExist(aPath))
     {
-        Log::Print(LogType::PROBLEM, "File does not exist: %s", aPath.c_str());
+        Log::Logger::Print(Log::Severity::Error, Log::Category::Asset, "File does not exist: %s", aPath.c_str());
         return nullptr;
     }
 
@@ -60,7 +60,7 @@ Shader* AssetLoader::LoadShader(const std::string& aPath, ShaderType aShaderType
 {
     if (!DoesFileExist(aPath))
     {
-        Log::Print(LogType::PROBLEM, "File does not exist: %s", aPath.c_str());
+        Log::Logger::Print(Log::Severity::Error, Log::Category::Asset, "File does not exist: %s", aPath.c_str());
         return nullptr;
     }
 
@@ -78,7 +78,7 @@ Texture* AssetLoader::LoadTexture(const std::string& aPath)
 {
     if (!DoesFileExist(aPath))
     {
-        Log::Print(LogType::PROBLEM, "File does not exist: %s", aPath.c_str());
+        Log::Logger::Print(Log::Severity::Error, Log::Category::Asset, "File does not exist: %s", aPath.c_str());
         return nullptr;
     }
 
@@ -90,14 +90,14 @@ Texture* AssetLoader::LoadTexture(const std::string& aPath)
     unsigned char* image = stbi_load(aPath.c_str(), &texture->myWidth, &texture->myHeight, &texture->myComponents, STBI_default);
     if (!image)
     {
-        Log::Print(LogType::PROBLEM, "Failed to load texture: %s", aPath.c_str());
+        Log::Logger::Print(Log::Severity::Error, Log::Category::Asset, "Failed to load texture: %s", aPath.c_str());
         stbi_image_free(image);
         return nullptr;
     }
 
     texture->mySource = image;
 
-    Log::Print(LogType::SUCCESS, "Loaded: %s", aPath.c_str());
+    Log::Logger::Print(Log::Severity::Succes, Log::Category::Asset, "Loaded: %s", aPath.c_str());
 
     return texture;
 }
@@ -116,7 +116,7 @@ std::string AssetLoader::ReadFile(const std::string& aPath)
 
     if (!sourceStream.is_open())
     {
-        Log::Print(LogType::PROBLEM, "File can't be read: %s", aPath.c_str());
+        Log::Logger::Print(Log::Severity::Error, Log::Category::Asset, "File can't be read: %s", aPath.c_str());
         return "";
     }
 
@@ -162,19 +162,19 @@ Model* AssetLoader::LoadOBJ(const std::string& aPath)
 
     if (!tinyobj::LoadObj(&attributes, &shapes, &materials, &warning, &error, aPath.c_str(), directory.c_str(), true))
     {
-        Log::Print(LogType::PROBLEM, "Failed to load %s", aPath.c_str());
+        Log::Logger::Print(Log::Severity::Error, Log::Category::Asset, "Failed to load %s", aPath.c_str());
 
         return nullptr;
     }
 
     if (!warning.empty())
     {
-        Log::Print(LogType::PROBLEM, "%s", warning.c_str());
+        Log::Logger::Print(Log::Severity::Error, Log::Category::Asset, "%s", warning.c_str());
     }
 
     if (!error.empty())
     {
-        Log::Print(LogType::PROBLEM, "%s", error.c_str());
+        Log::Logger::Print(Log::Severity::Error, Log::Category::Asset, "%s", error.c_str());
     }
 
     Model* model = new Model();
@@ -257,14 +257,14 @@ Model* AssetLoader::LoadFBX(const std::string& aPath)
     unsigned int flags = aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices;
     if (!importer.ValidateFlags(flags))
     {
-        Log::Print(LogType::PROBLEM, "Flags are incompatible: %s", aPath.c_str());
+        Log::Logger::Print(Log::Severity::Error, Log::Category::Asset, "Flags are incompatible: %s", aPath.c_str());
         return nullptr;
     }
 
     const aiScene* scene = importer.ReadFile(aPath.c_str(), flags);
     if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        Log::Print(LogType::PROBLEM, "Failed to load %s %s", aPath.c_str(), importer.GetErrorString());
+        Log::Logger::Print(Log::Severity::Error, Log::Category::Asset, "Failed to load %s %s", aPath.c_str(), importer.GetErrorString());
         return nullptr;
     }
 
@@ -340,16 +340,16 @@ Model* AssetLoader::LoadFBX(const std::string& aPath)
 
 void AssetLoader::PrintModelInfo(const Model& aModel)
 {
-    Log::Print(LogType::SUCCESS, "Loaded %s", aModel.myName.c_str());
-    Log::Print(LogType::MESSAGE, "Number of meshes %i", static_cast<int>(aModel.myMeshes.size()));
-    //Log::Print(LogType::MESSAGE, "Number of textures %i", static_cast<int>(aModel.myTextures.size()));
+    Log::Logger::Print(Log::Severity::Succes, Log::Category::Asset, "Loaded %s", aModel.myName.c_str());
+    Log::Logger::Print(Log::Severity::Message, Log::Category::Asset, "Number of meshes %i", static_cast<int>(aModel.myMeshes.size()));
+    //Log::Logger::Print(Log::Severity::Message, "Number of textures %i", static_cast<int>(aModel.myTextures.size()));
     //printf("Number of materials %i\n", static_cast<int>(aModel.myMaterials.size()));
 
     for (int meshIndex = 0; meshIndex < aModel.myMeshes.size(); ++meshIndex)
     {
         const Mesh& mesh = aModel.myMeshes[meshIndex];
-        Log::Print(LogType::MESSAGE, "Number of vertices %i in mesh %i", static_cast<int>(mesh.myVertices.size()), meshIndex);
-        Log::Print(LogType::MESSAGE, "Number of indices %i in mesh %i", static_cast<int>(mesh.myIndices.size()), meshIndex);
-        Log::Print(LogType::MESSAGE, "Number of triangles %i in mesh %i", static_cast<int>(mesh.myVertices.size() / 3), meshIndex);
+        Log::Logger::Print(Log::Severity::Message, Log::Category::Asset, "Number of vertices %i in mesh %i", static_cast<int>(mesh.myVertices.size()), meshIndex);
+        Log::Logger::Print(Log::Severity::Message, Log::Category::Asset, "Number of indices %i in mesh %i", static_cast<int>(mesh.myIndices.size()), meshIndex);
+        Log::Logger::Print(Log::Severity::Message, Log::Category::Asset, "Number of triangles %i in mesh %i", static_cast<int>(mesh.myVertices.size() / 3), meshIndex);
     }
 }
