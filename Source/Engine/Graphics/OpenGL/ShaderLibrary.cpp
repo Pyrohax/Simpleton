@@ -27,6 +27,10 @@ ShaderLibrary::~ShaderLibrary()
 void ShaderLibrary::CreateProgram()
 {
     myProgramID = glCreateProgram();
+    if (myProgramID == 0)
+    {
+        Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "Failed to create Program (glCreateProgram returned 0)");
+    }
 }
 
 void ShaderLibrary::CompileShader(Shader& aShader)
@@ -88,6 +92,9 @@ void ShaderLibrary::AttachShaders(const Shader& aVertexShader, const Shader& aFr
 
 void ShaderLibrary::BindShaders()
 {
+    if (myProgramID == 0)
+        return;
+
     glUseProgram(myProgramID);
 }
 

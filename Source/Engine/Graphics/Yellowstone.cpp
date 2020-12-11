@@ -50,7 +50,12 @@ void Yellowstone::Update(float aDeltaTime)
 {
 	Engine& engine = Engine::GetInstance();
 	World& world = *engine.GetWorld();
-	world.GetShaderLibrary().BindShaders();
+
+	if (world.myModels.size() > 0)
+	{
+		world.GetShaderLibrary().BindShaders();
+	}
+
 	myImguiWrapper->CreateFrame();
 	myImguiWrapper->Render(aDeltaTime);
 	myRenderContext->Render(world.myModels, world.GetTextureLibrary(), world.GetShaderLibrary(), world.GetCamera(), myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight(), aDeltaTime);
