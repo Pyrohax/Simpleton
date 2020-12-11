@@ -73,5 +73,6 @@ void World::Destroy()
 	delete myAssetLoader;
 	delete myShaderLibrary;
 	delete myTextureLibrary;
+	delete myCamera;
 	myModels.clear();
 }
