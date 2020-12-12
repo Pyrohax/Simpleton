@@ -13,7 +13,7 @@ Editor::~Editor()
 void Editor::Initialize()
 {
 	Engine& engine = Engine::GetInstance();
-	engine.Initialize();
+	engine.Initialize(BuildType::Editor);
 }
 
 void Editor::Tick()

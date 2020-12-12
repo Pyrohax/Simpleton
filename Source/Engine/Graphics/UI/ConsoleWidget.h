@@ -30,7 +30,7 @@ namespace UI
 
 	private:
 		char myInputBuffer[256];
-		std::vector<char*> myItems;
+		std::vector<Log::Package> myItems;
 		std::vector<const char*> myCommands;
 		std::vector<char*> myHistory;
 		std::string myTitle;

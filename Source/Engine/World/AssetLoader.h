@@ -26,4 +26,7 @@ private:
 	std::string GetDirectoryFromPath(const std::string& aPath);
 	bool DoesFileExist(const std::string& aPath) const;
 	void PrintModelInfo(const Model& aModel);
+
+private:
+	std::string myWorkingDirectory;
 };

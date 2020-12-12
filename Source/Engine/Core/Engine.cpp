@@ -23,8 +23,10 @@ Engine::~Engine()
 {
 }
 
-void Engine::Initialize()
+void Engine::Initialize(BuildType aBuildType)
 {
+	myBuildType = aBuildType;
+
 	myContext->Initialize();
 
 	if (myWorld)

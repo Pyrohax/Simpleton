@@ -1,6 +1,7 @@
 #include "AssetLoader.h"
 
 #include "../Core/Logger.h"
+#include "../Core/Engine.h"
 #include "../Graphics/Vertex.h"
 #include "../Graphics/Texture.h"
 #include "../Graphics/Model.h"
@@ -29,7 +30,8 @@
 
 AssetLoader::AssetLoader()
 {
-    Log::Logger::Print(Log::Severity::Message, Log::Category::Asset, "Current working directory: %s", std::filesystem::current_path().string().c_str());
+    myWorkingDirectory = std::filesystem::current_path().string().c_str();
+    Log::Logger::Print(Log::Severity::Message, Log::Category::Asset, "Current working directory: %s", myWorkingDirectory.c_str());
 }
 
 AssetLoader::~AssetLoader()
@@ -98,7 +100,7 @@ Texture* AssetLoader::LoadTexture(const std::string& aPath)
 
     texture->mySource = image;
 
-    Log::Logger::Print(Log::Severity::Succes, Log::Category::Asset, "Loaded: %s", aPath.c_str());
+    Log::Logger::Print(Log::Severity::Success, Log::Category::Asset, "Loaded: %s", aPath.c_str());
 
     return texture;
 }
@@ -341,7 +343,7 @@ Model* AssetLoader::LoadFBX(const std::string& aPath)
 
 void AssetLoader::PrintModelInfo(const Model& aModel)
 {
-    Log::Logger::Print(Log::Severity::Succes, Log::Category::Asset, "Loaded %s", aModel.myName.c_str());
+    Log::Logger::Print(Log::Severity::Success, Log::Category::Asset, "Loaded %s", aModel.myName.c_str());
     Log::Logger::Print(Log::Severity::Message, Log::Category::Asset, "Number of meshes %i", static_cast<int>(aModel.myMeshes.size()));
     //Log::Logger::Print(Log::Severity::Message, "Number of textures %i", static_cast<int>(aModel.myTextures.size()));
     //printf("Number of materials %i\n", static_cast<int>(aModel.myMaterials.size()));

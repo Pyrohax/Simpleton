@@ -6,6 +6,13 @@
 class EngineContext;
 class World;
 
+enum class BuildType
+{
+	Headless,
+	Editor,
+	Game
+};
+
 class Engine
 {
 public:
@@ -18,7 +25,7 @@ public:
 	Engine(Engine const&) = delete;
 	void operator=(Engine const&) = delete;
 
-	void Initialize();
+	void Initialize(BuildType aBuildType);
 	void Update();
 	void Terminate();
 
@@ -27,6 +34,7 @@ public:
 
 	World* GetWorld() const { return myWorld; }
 	auto GetContext() const { return myContext.get(); }
+	const BuildType GetBuildType() const { return myBuildType; }
 
 private:
 	Engine();
@@ -35,6 +43,7 @@ private:
 private:
 	std::shared_ptr<EngineContext> myContext;
 	World* myWorld;
+	BuildType myBuildType;
 	float myPreviousTime;
 	bool myShouldShutdown;
 };

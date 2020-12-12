@@ -59,7 +59,7 @@ void ShaderLibrary::CompileShader(Shader& aShader)
         }
     }
     
-    Log::Logger::Print(Log::Severity::Succes, Log::Category::Rendering, "Compiled %s", aShader.myName.c_str());
+    Log::Logger::Print(Log::Severity::Success, Log::Category::Rendering, "Compiled %s", aShader.myName.c_str());
 }
 
 void ShaderLibrary::AttachShaders(const Shader& aVertexShader, const Shader& aFragmentShader)
