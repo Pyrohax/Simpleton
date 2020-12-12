@@ -29,6 +29,7 @@
 
 AssetLoader::AssetLoader()
 {
+    Log::Logger::Print(Log::Severity::Message, Log::Category::Asset, "Current working directory: %s", std::filesystem::current_path().string().c_str());
 }
 
 AssetLoader::~AssetLoader()
