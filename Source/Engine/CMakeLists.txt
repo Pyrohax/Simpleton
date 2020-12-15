@@ -23,7 +23,6 @@ file(GLOB IMGUI
   "${IMGUI_DIR}/backends/imgui_impl_opengl3.h"
   "${IMGUI_DIR}/backends/imgui_impl_glfw.h"
   "${IMGUI_DIR}/imgui.cpp"
-  "${IMGUI_DIR}/imgui_demo.cpp"
   "${IMGUI_DIR}/imgui_draw.cpp"
   "${IMGUI_DIR}/imgui_tables.cpp"
   "${IMGUI_DIR}/imgui_widgets.cpp"

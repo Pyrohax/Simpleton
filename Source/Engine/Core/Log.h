@@ -47,6 +47,8 @@ namespace Log
 			case Log::Severity::Success:
 				return "Success";
 		}
+
+		return "";
 	}
 
 	static inline std::string GetCategoryAsString(Category aCategory)
@@ -74,5 +76,7 @@ namespace Log
 			case Log::Category::Threading:
 				return "Threading";
 		}
+
+		return "";
 	}
 }
