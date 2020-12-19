@@ -26,35 +26,10 @@ class EngineContext
 {
 public:
 	EngineContext() = default;
-	
-	EngineContext::~EngineContext()
-	{
-		for (size_t i = mySubsystems.size() - 1; i > 0; i--)
-		{
-			mySubsystems[i].myPointer.reset();
-		}
+	EngineContext::~EngineContext();
 
-		mySubsystems.clear();
-	}
-
-	void Initialize()
-	{
-		for (const auto& subsystem : mySubsystems)
-		{
-			subsystem.myPointer->Initialize();
-		}
-	}
-
-	void Tick(TickType aTickGroup, float aDeltaTime = 0.0f)
-	{
-		for (const auto& subsystem : mySubsystems)
-		{
-			if (subsystem.myTickGroup != aTickGroup)
-				continue;
-
-			subsystem.myPointer->Update(aDeltaTime);
-		}
-	}
+	void Initialize();
+	void Tick(TickType aTickGroup, float aDeltaTime = 0.0f);
 
 	template <class Type>
 	void RegisterSubsystem(TickType aTickGroup = TickType::Variable)

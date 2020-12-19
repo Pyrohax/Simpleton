@@ -95,4 +95,8 @@ target_link_libraries(Engine "glad")
 # IMGUI
 target_include_directories(Engine PRIVATE "${IMGUI_DIR}")
 
+# RAPIDJSON
+set(RAPIDJSON_DIR "${DEP_DIR}/rapidjson/include")
+target_include_directories(Engine PRIVATE "${RAPIDJSON_DIR}")
+
 ADD_PROJECT_FILTERS(${SRC_DIR} SRC Source)

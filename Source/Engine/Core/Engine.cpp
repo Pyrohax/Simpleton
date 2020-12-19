@@ -1,7 +1,9 @@
 #include "Engine.h"
 
 #include "Assert.h"
+#include "DataManager.h"
 #include "EngineContext.h"
+#include "EngineSettings.h"
 #include "../ECS/EntityComponentSystem.h"
 #include "../Threading/JobSystem.h"
 #include "../Graphics/Yellowstone.h"
@@ -13,6 +15,7 @@ Engine::Engine()
 {
 	//AddSystem<EntityComponentSystem>();
 	//AddSystem<JobSystem>();
+	myDataManager = new DataManager();
 	myWorld = new World();
 
 	myContext = std::make_shared<EngineContext>();
@@ -26,6 +29,10 @@ Engine::~Engine()
 void Engine::Initialize(BuildType aBuildType)
 {
 	myBuildType = aBuildType;
+
+	myDataManager->ReadData();
+	EngineSettings* settings = myDataManager->GetSerializableData<EngineSettings>();
+	myVersion = settings->myVersion;
 
 	myContext->Initialize();
 

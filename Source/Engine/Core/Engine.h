@@ -2,7 +2,9 @@
 
 #include <memory>
 #include <vector>
+#include <string>
 
+class DataManager;
 class EngineContext;
 class World;
 
@@ -35,6 +37,7 @@ public:
 	World* GetWorld() const { return myWorld; }
 	auto GetContext() const { return myContext.get(); }
 	const BuildType GetBuildType() const { return myBuildType; }
+	const std::string& GetVersion() const { return myVersion; }
 
 private:
 	Engine();
@@ -42,6 +45,8 @@ private:
 
 private:
 	std::shared_ptr<EngineContext> myContext;
+	std::string myVersion;
+	DataManager* myDataManager;
 	World* myWorld;
 	BuildType myBuildType;
 	float myPreviousTime;
