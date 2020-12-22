@@ -46,6 +46,7 @@ void RenderContext::Initialize()
 
 	glEnable(GL_DEBUG_OUTPUT);
 	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_FALSE);
 	glDebugMessageCallback(ErrorCallback, nullptr);
 
 	glEnable(GL_DEPTH_TEST);
