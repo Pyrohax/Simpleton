@@ -11,6 +11,8 @@ namespace UI
 class EngineContext;
 class RenderContext;
 class RenderSurface;
+class ShaderLibrary;
+class TextureLibrary;
 
 class Yellowstone : public Subsystem
 {
@@ -26,12 +28,17 @@ public:
 
 	bool HasClosedWindow() const;
 
+	ShaderLibrary* GetShaderLibrary() { return myShaderLibrary; }
+	TextureLibrary* GetTextureLibrary() { return myTextureLibrary; }
+
 	GraphicsAPI GetGraphicsAPI() const { return myGraphicsAPI; }
 
 private:
 	UI::ImguiWrapper* myImguiWrapper;
 	RenderContext* myRenderContext;
 	RenderSurface* myRenderSurface;
+	ShaderLibrary* myShaderLibrary;
+	TextureLibrary* myTextureLibrary;
 	GraphicsAPI myGraphicsAPI;
 	bool myShowConsole;
 };

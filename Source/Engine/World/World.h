@@ -6,8 +6,6 @@
 
 class AssetLoader;
 class Camera;
-class ShaderLibrary;
-class TextureLibrary;
 
 class World
 {
@@ -19,8 +17,6 @@ public:
 	void Update();
 	void Destroy();
 
-	ShaderLibrary& GetShaderLibrary() { return *myShaderLibrary; }
-	TextureLibrary& GetTextureLibrary() { return *myTextureLibrary; }
 	AssetLoader& GetAssetLoader() { return *myAssetLoader; }
 	Camera& GetCamera() { return *myCamera; }
 
@@ -29,7 +25,5 @@ public:
 
 private:
 	AssetLoader* myAssetLoader;
-	ShaderLibrary* myShaderLibrary;
-	TextureLibrary* myTextureLibrary;
 	Camera* myCamera;
 };

@@ -32,7 +32,7 @@ public:
 	void Tick(TickType aTickGroup, float aDeltaTime = 0.0f);
 
 	template <class Type>
-	void RegisterSubsystem(TickType aTickGroup = TickType::Variable)
+	void RegisterSubsystem(TickType aTickGroup)
 	{
 		ValidateSubsystem<Type>();
 		mySubsystems.emplace_back(std::make_shared<Type>(this), aTickGroup);

@@ -2,16 +2,17 @@
 
 #include "AssetLoader.h"
 #include "Camera.h"
+#include "../Core/Engine.h"
+#include "../Core/EngineContext.h"
+#include "../Graphics/Yellowstone.h"
 #include "../Core/Logger.h"
 #include "../Graphics/Texture.h"
-#include "../Graphics/OpenGL/OpenGLShaderLibrary.h"
-#include "../Graphics/OpenGL/OpenGLTextureLibrary.h"
+#include "../Graphics/ShaderLibrary.h"
+#include "../Graphics/TextureLibrary.h"
 
 World::World()
 {
 	myAssetLoader = new AssetLoader();
-	myShaderLibrary = new OpenGLShaderLibrary();
-	myTextureLibrary = new OpenGLTextureLibrary();
 	myCamera = new Camera();
 }
 
@@ -21,12 +22,10 @@ World::~World()
 
 void World::LoadDummyData()
 {
-	myShaderLibrary->CreateProgram();
-
 	Model* model = myAssetLoader->LoadModel("../../../Data/Models/Planet/Planet.obj");
 	if (!model)
 	{
-		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading dummy data");
+		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading model from dummy data");
 		return;
 	}
 
@@ -35,13 +34,20 @@ void World::LoadDummyData()
 		Texture* texture = myAssetLoader->LoadTexture(texturePair.first);
 		if (!texture)
 		{
-			Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading dummy data");
+			Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading texture from dummy data");
 			return;
 		}
 
 		texture->myType = texturePair.second;
-		myTextureLibrary->CompileTexture(*texture);
-		myTextureLibrary->myTextures.push_back(*texture);
+		TextureLibrary* textureLibrary = Engine::GetInstance().GetContext()->GetSubsystem<Yellowstone>()->GetTextureLibrary();
+		if (!textureLibrary)
+		{
+			Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading texture from dummy data");
+			return;
+		}
+
+		textureLibrary->CompileTexture(*texture);
+		textureLibrary->myTextures.push_back(*texture);
 	}
 
 	myModels.push_back(*model);
@@ -55,10 +61,17 @@ void World::LoadDummyData()
 		return;
 	}
 
-	myShaderLibrary->AddShader(*vertexShader);
-	myShaderLibrary->AddShader(*fragmentShader);
-	myShaderLibrary->CompileCurrentShaders();
-	myShaderLibrary->AttachCurrentShaders();
+	ShaderLibrary* shaderLibrary = Engine::GetInstance().GetContext()->GetSubsystem<Yellowstone>()->GetShaderLibrary();
+	if (!shaderLibrary)
+	{
+		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading shader from dummy data");
+		return;
+	}
+
+	shaderLibrary->AddShader(*vertexShader);
+	shaderLibrary->AddShader(*fragmentShader);
+	shaderLibrary->CompileCurrentShaders();
+	shaderLibrary->AttachCurrentShaders();
 }
 
 void World::Update()
@@ -68,8 +81,6 @@ void World::Update()
 void World::Destroy()
 {
 	delete myAssetLoader;
-	delete myShaderLibrary;
-	delete myTextureLibrary;
 	delete myCamera;
 	myModels.clear();
 }

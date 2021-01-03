@@ -6,28 +6,69 @@
 #include "../Graphics/UI/ImguiWrapper.h"
 #include "../Graphics/RenderSurface.h"
 #include "../Graphics/OpenGL/OpenGLRenderContext.h"
+#include "../Graphics/OpenGL/OpenGLTextureLibrary.h"
 #include "../Graphics/OpenGL/OpenGLShaderLibrary.h"
 
-Yellowstone::Yellowstone(EngineContext* aContext) : Subsystem(aContext)
+Yellowstone::Yellowstone(EngineContext* aContext)
+	: Subsystem(aContext)
+	, myGraphicsAPI(GraphicsAPI::OpenGL)
+	, myRenderSurface(nullptr)
+	, myRenderContext(nullptr)
+	, myShaderLibrary(nullptr)
+	, myTextureLibrary(nullptr)
+	, myImguiWrapper(nullptr)
+	, myShowConsole(false)
 {
-	myRenderSurface = new RenderSurface();
-	myRenderContext = new OpenGLRenderContext();
-	myImguiWrapper = new UI::ImguiWrapper();
-	myGraphicsAPI = GraphicsAPI::OpenGL;
-	myShowConsole = true;
+	switch (myGraphicsAPI)
+	{
+		case GraphicsAPI::None:
+		{
+			myRenderSurface = new RenderSurface();
+			break;
+		}
+		case GraphicsAPI::DirectX12:
+		{
+			myRenderSurface = new RenderSurface();
+			myShowConsole = true;
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			myRenderSurface = new RenderSurface();
+			myRenderContext = new OpenGLRenderContext();
+			myShaderLibrary = new OpenGLShaderLibrary();
+			myTextureLibrary = new OpenGLTextureLibrary();
+			myImguiWrapper = new UI::ImguiWrapper();
+			myShowConsole = true;
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			myRenderSurface = new RenderSurface();
+			myShowConsole = true;
+			break;
+		}
+	}
 }
 
 Yellowstone::~Yellowstone()
 {
 	delete myRenderContext;
 	delete myRenderSurface;
+	delete myShaderLibrary;
+	delete myTextureLibrary;
 	delete myImguiWrapper;
 }
 
 void Yellowstone::Initialize()
 {
-	myRenderSurface->Initialize();
-	myRenderContext->Initialize();
+	myRenderSurface->Initialize(myGraphicsAPI);
+
+	if (myRenderContext)
+	{
+		myRenderContext->Initialize();
+	}
+
 	Engine& engine = Engine::GetInstance();
 	World& world = *engine.GetWorld();
 
@@ -36,14 +77,27 @@ void Yellowstone::Initialize()
 		myRenderSurface->SetWindowIcon(*icon);
 		free(icon);
 	}
+
+	if (myGraphicsAPI == GraphicsAPI::OpenGL)
+	{
+		myShaderLibrary->CreateProgram();
+	}
 }
 
 void Yellowstone::CreateAssetBuffers()
 {
 	Engine& engine = Engine::GetInstance();
 	World& world = *engine.GetWorld();
-	myRenderContext->CreateBuffers(world.myModels);
-	myImguiWrapper->Initialize(myRenderSurface->GetWindow());
+
+	if (myRenderContext)
+	{
+		myRenderContext->CreateBuffers(world.myModels);
+	}
+
+	if (myImguiWrapper)
+	{
+		myImguiWrapper->Initialize(myRenderSurface->GetWindow());
+	}
 }
 
 void Yellowstone::Update(float aDeltaTime)
@@ -53,13 +107,17 @@ void Yellowstone::Update(float aDeltaTime)
 
 	if (world.myModels.size() > 0)
 	{
-		world.GetShaderLibrary().BindShaders();
+		myShaderLibrary->BindShaders();
 	}
 
-	myImguiWrapper->CreateFrame();
-	myImguiWrapper->Render(aDeltaTime);
-	myRenderContext->Render(world.myModels, world.GetTextureLibrary(), world.GetShaderLibrary(), world.GetCamera(), myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight(), aDeltaTime);
-	myImguiWrapper->Draw();
+	if (myRenderContext)
+	{
+		myImguiWrapper->CreateFrame();
+		myImguiWrapper->Render(aDeltaTime);
+		myRenderContext->Render(world.myModels, *myTextureLibrary, *myShaderLibrary, world.GetCamera(), myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight(), aDeltaTime);
+		myImguiWrapper->Draw();
+	}
+
 	myRenderSurface->Tick(aDeltaTime);
 
 	if (HasClosedWindow())

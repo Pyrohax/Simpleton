@@ -20,7 +20,7 @@ RenderSurface::~RenderSurface()
 {
 }
 
-void RenderSurface::Initialize()
+void RenderSurface::Initialize(GraphicsAPI aGraphicsAPI)
 {
 	glfwSetErrorCallback(ErrorCallback);
 
@@ -31,12 +31,45 @@ void RenderSurface::Initialize()
 		return;
 	}
 
-	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+	if (aGraphicsAPI == GraphicsAPI::Vulkan)
+	{
+		if (!glfwVulkanSupported())
+		{
+			Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to use Vulkan with GLFW");
+			glfwTerminate();
+			return;
+		}
+	}
+
+	switch (aGraphicsAPI)
+	{
+		case GraphicsAPI::None:
+		{
+			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+			break;
+		}
+		case GraphicsAPI::DirectX12:
+		{
+			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+			break;
+		}
+		case GraphicsAPI::OpenGL:
+		{
+			glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+			glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+			glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+			break;
+		}
+		case GraphicsAPI::Vulkan:
+		{
+			glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+			break;
+		}
+	}
+	
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	myWindow = glfwCreateWindow(myWidth, myHeight, "Simpleton Editor", nullptr, nullptr);

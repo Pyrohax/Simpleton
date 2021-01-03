@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GraphicsDefines.h"
+
 struct GLFWwindow;
 struct Texture;
 
@@ -9,7 +11,7 @@ public:
 	RenderSurface();
 	~RenderSurface();
 
-	void Initialize();
+	void Initialize(GraphicsAPI aGraphicsAPI);
 	void Tick(double aDeltaTime);
 	void Destroy();
 
