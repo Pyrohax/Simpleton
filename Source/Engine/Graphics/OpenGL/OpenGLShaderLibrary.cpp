@@ -1,6 +1,6 @@
-#include "ShaderLibrary.h"
+#include "OpenGLShaderLibrary.h"
 
-#include "GLError.h"
+#include "OpenGLError.h"
 
 #include <glad/glad.h>
 
@@ -11,12 +11,12 @@
 
 #include <filesystem>
 
-ShaderLibrary::ShaderLibrary()
-    : myProgramID(0)
+OpenGLShaderLibrary::OpenGLShaderLibrary() : ShaderLibrary()
 {
+    myProgramID = 0;
 }
 
-ShaderLibrary::~ShaderLibrary()
+OpenGLShaderLibrary::~OpenGLShaderLibrary()
 {
     if (myProgramID)
         glDeleteProgram(myProgramID);
@@ -24,7 +24,7 @@ ShaderLibrary::~ShaderLibrary()
     myShaders.clear();
 }
 
-void ShaderLibrary::CreateProgram()
+void OpenGLShaderLibrary::CreateProgram()
 {
     myProgramID = glCreateProgram();
     if (myProgramID == 0)
@@ -33,7 +33,12 @@ void ShaderLibrary::CreateProgram()
     }
 }
 
-void ShaderLibrary::CompileShader(Shader& aShader)
+void OpenGLShaderLibrary::AddShader(Shader& aShader)
+{
+    myShaders.push_back(aShader);
+}
+
+void OpenGLShaderLibrary::CompileShader(Shader& aShader)
 {
     Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "Compiling %s", aShader.myName.c_str());
 
@@ -62,7 +67,15 @@ void ShaderLibrary::CompileShader(Shader& aShader)
     Log::Logger::Print(Log::Severity::Success, Log::Category::Rendering, "Compiled %s", aShader.myName.c_str());
 }
 
-void ShaderLibrary::AttachShaders(const Shader& aVertexShader, const Shader& aFragmentShader)
+void OpenGLShaderLibrary::CompileCurrentShaders()
+{
+    for (Shader& shader : myShaders)
+    {
+        CompileShader(shader);
+    }
+}
+
+void OpenGLShaderLibrary::AttachShaders(const Shader& aVertexShader, const Shader& aFragmentShader)
 {
     Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "Linking program [%i] to %s", myProgramID, aVertexShader.myName.c_str());
     Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "Linking program [%i] to %s", myProgramID, aFragmentShader.myName.c_str());
@@ -90,7 +103,15 @@ void ShaderLibrary::AttachShaders(const Shader& aVertexShader, const Shader& aFr
     CheckGLError();
 }
 
-void ShaderLibrary::BindShaders()
+void OpenGLShaderLibrary::AttachCurrentShaders()
+{
+    if (myShaders.size() > 0)
+    {
+        AttachShaders(myShaders[0], myShaders[1]);
+    }
+}
+
+void OpenGLShaderLibrary::BindShaders()
 {
     if (myProgramID == 0)
         return;
@@ -98,43 +119,43 @@ void ShaderLibrary::BindShaders()
     glUseProgram(myProgramID);
 }
 
-void ShaderLibrary::SetInt(const std::string& aName, int aValue)
+void OpenGLShaderLibrary::SetInt(const std::string& aName, int aValue)
 {
     GLint location = glGetUniformLocation(myProgramID, aName.c_str());
     glUniform1i(location, aValue);
 }
 
-void ShaderLibrary::SetFloat(const std::string& aName, float aValue)
+void OpenGLShaderLibrary::SetFloat(const std::string& aName, float aValue)
 {
     GLint location = glGetUniformLocation(myProgramID, aName.c_str());
     glUniform1f(location, aValue);
 }
 
-void ShaderLibrary::SetVector3Float(const std::string& aName, const glm::vec3& aValue)
+void OpenGLShaderLibrary::SetVector3Float(const std::string& aName, const glm::vec3& aValue)
 {
     GLint location = glGetUniformLocation(myProgramID, aName.c_str());
     glUniform3f(location, aValue.x, aValue.y, aValue.z);
 }
 
-void ShaderLibrary::SetVector4Float(const std::string& aName, const glm::vec4& aValue)
+void OpenGLShaderLibrary::SetVector4Float(const std::string& aName, const glm::vec4& aValue)
 {
     GLint location = glGetUniformLocation(myProgramID, aName.c_str());
     glUniform4f(location, aValue.x, aValue.y, aValue.z, aValue.w);
 }
 
-void ShaderLibrary::SetMatrix3Float(const std::string& aName, const glm::mat3& aValue)
+void OpenGLShaderLibrary::SetMatrix3Float(const std::string& aName, const glm::mat3& aValue)
 {
     GLint location = glGetUniformLocation(myProgramID, aName.c_str());
     glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(aValue));
 }
 
-void ShaderLibrary::SetMatrix4Float(const std::string& aName, const glm::mat4& aValue)
+void OpenGLShaderLibrary::SetMatrix4Float(const std::string& aName, const glm::mat4& aValue)
 {
     GLint location = glGetUniformLocation(myProgramID, aName.c_str());
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(aValue));
 }
 
-unsigned int ShaderLibrary::GetShaderType(ShaderType aType)
+unsigned int OpenGLShaderLibrary::GetShaderType(ShaderType aType)
 {
     switch (aType)
     {

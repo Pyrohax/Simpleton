@@ -26,6 +26,8 @@ public:
 
 	bool HasClosedWindow() const;
 
+	GraphicsAPI GetGraphicsAPI() const { return myGraphicsAPI; }
+
 private:
 	UI::ImguiWrapper* myImguiWrapper;
 	RenderContext* myRenderContext;

@@ -1,40 +1,40 @@
-#include "RenderContext.h"
+#include "OpenGLRenderContext.h"
 
-#include "ShaderLibrary.h"
-#include "GLError.h"
+#include "OpenGLError.h"
+#include "OpenGLShaderLibrary.h"
+#include "OpenGLTextureLibrary.h"
 #include "../../World/Camera.h"
 #include "../../Core/InputManager.h"
 #include "../Mesh.h"
 #include "../Vertex.h"
 #include "../Texture.h"
-#include "TextureLibrary.h"
 #include "../Light.h"
 
 #include <cstddef>
 
-RenderContext::RenderContext()
-	: myLight(nullptr)
+OpenGLRenderContext::OpenGLRenderContext() : RenderContext()
+{
+	myLight = nullptr;
+}
+
+OpenGLRenderContext::~OpenGLRenderContext()
 {
 }
 
-RenderContext::~RenderContext()
-{
-}
-
-void RenderContext::PrintDebugInfo()
+void OpenGLRenderContext::PrintDebugInfo()
 {
 	Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "OpenGL %s", glGetString(GL_VERSION));
 	Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "GLSL %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
 }
 
-void RenderContext::CreateLight()
+void OpenGLRenderContext::CreateLight()
 {
 	myLight = new Light();
 	myLight->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
 	myLight->SetPosition(glm::vec3(-5.f, -2.5f, 7.5f));
 }
 
-void RenderContext::Initialize()
+void OpenGLRenderContext::Initialize()
 {
 	if (!gladLoadGL())
 	{
@@ -62,7 +62,7 @@ void RenderContext::Initialize()
 	CreateLight();
 }
 
-void RenderContext::CreateBuffers(std::vector<Model>& aModels)
+void OpenGLRenderContext::CreateBuffers(std::vector<Model>& aModels)
 {
 	for (Model& model : aModels)
 	{
@@ -92,7 +92,7 @@ void RenderContext::CreateBuffers(std::vector<Model>& aModels)
 	}
 }
 
-void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, ShaderLibrary& aShaderLibrary, Camera& aCamera, int aWidth, int aHeight, float aDeltaTime)
+void OpenGLRenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, ShaderLibrary& aShaderLibrary, Camera& aCamera, int aWidth, int aHeight, float aDeltaTime)
 {
 	aCamera.Update(aDeltaTime);
 
@@ -128,7 +128,7 @@ void RenderContext::Render(const std::vector<Model>& aModels, const TextureLibra
 	}
 }
 
-void RenderContext::Destroy(const std::vector<Model>& aModels)
+void OpenGLRenderContext::Destroy(const std::vector<Model>& aModels)
 {
 	glBindVertexArray(0);
 

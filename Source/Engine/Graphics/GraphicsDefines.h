@@ -3,7 +3,7 @@
 enum class GraphicsAPI
 {
 	None,
+	DirectX12,
 	OpenGL,
-	Vulkan,
-	DX12
+	Vulkan
 };

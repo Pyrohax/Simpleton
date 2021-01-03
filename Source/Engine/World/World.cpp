@@ -4,14 +4,14 @@
 #include "Camera.h"
 #include "../Core/Logger.h"
 #include "../Graphics/Texture.h"
-#include "../Graphics/OpenGL/ShaderLibrary.h"
-#include "../Graphics/OpenGL/TextureLibrary.h"
+#include "../Graphics/OpenGL/OpenGLShaderLibrary.h"
+#include "../Graphics/OpenGL/OpenGLTextureLibrary.h"
 
 World::World()
 {
 	myAssetLoader = new AssetLoader();
-	myShaderLibrary = new ShaderLibrary();
-	myTextureLibrary = new TextureLibrary();
+	myShaderLibrary = new OpenGLShaderLibrary();
+	myTextureLibrary = new OpenGLTextureLibrary();
 	myCamera = new Camera();
 }
 
@@ -55,13 +55,10 @@ void World::LoadDummyData()
 		return;
 	}
 
-	myShaderLibrary->myShaders.push_back(*vertexShader);
-	myShaderLibrary->myShaders.push_back(*fragmentShader);
-
-	myShaderLibrary->CompileShader(myShaderLibrary->myShaders[0]);
-	myShaderLibrary->CompileShader(myShaderLibrary->myShaders[1]);
-
-	myShaderLibrary->AttachShaders(myShaderLibrary->myShaders[0], myShaderLibrary->myShaders[1]);
+	myShaderLibrary->AddShader(*vertexShader);
+	myShaderLibrary->AddShader(*fragmentShader);
+	myShaderLibrary->CompileCurrentShaders();
+	myShaderLibrary->AttachCurrentShaders();
 }
 
 void World::Update()

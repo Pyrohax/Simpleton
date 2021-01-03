@@ -1,16 +1,16 @@
-#include "TextureLibrary.h"
+#include "OpenGLTextureLibrary.h"
 
-#include "GLError.h"
+#include "OpenGLError.h"
 
-TextureLibrary::TextureLibrary()
+OpenGLTextureLibrary::OpenGLTextureLibrary() : TextureLibrary()
 {
 }
 
-TextureLibrary::~TextureLibrary()
+OpenGLTextureLibrary::~OpenGLTextureLibrary()
 {
 }
 
-void TextureLibrary::CompileTexture(Texture& aTexture)
+void OpenGLTextureLibrary::CompileTexture(Texture& aTexture)
 {
 	for (const Texture& texture : myTextures)
 	{

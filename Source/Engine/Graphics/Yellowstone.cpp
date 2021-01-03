@@ -4,16 +4,16 @@
 #include "../World/World.h"
 #include "../World/AssetLoader.h"
 #include "../Graphics/UI/ImguiWrapper.h"
-#include "../Graphics/OpenGL/RenderContext.h"
-#include "../Graphics/OpenGL/RenderSurface.h"
-#include "../Graphics/OpenGL/ShaderLibrary.h"
+#include "../Graphics/RenderSurface.h"
+#include "../Graphics/OpenGL/OpenGLRenderContext.h"
+#include "../Graphics/OpenGL/OpenGLShaderLibrary.h"
 
 Yellowstone::Yellowstone(EngineContext* aContext) : Subsystem(aContext)
 {
 	myRenderSurface = new RenderSurface();
-	myRenderContext = new RenderContext();
+	myRenderContext = new OpenGLRenderContext();
 	myImguiWrapper = new UI::ImguiWrapper();
-	myGraphicsAPI = GraphicsAPI::None;
+	myGraphicsAPI = GraphicsAPI::OpenGL;
 	myShowConsole = true;
 }
 

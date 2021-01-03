@@ -1,16 +1,15 @@
 #pragma once
 
-#include "../Texture.h"
+#include "Texture.h"
 
 #include <vector>
 
 class TextureLibrary
 {
 public:
-	TextureLibrary();
-	~TextureLibrary();
+	TextureLibrary() {}
 
-	void CompileTexture(Texture& aTexture);
+	virtual void CompileTexture(Texture& aTexture) = 0;
 
 public:
 	std::vector<Texture> myTextures;
