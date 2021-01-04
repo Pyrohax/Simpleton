@@ -1,16 +1,18 @@
 # Simpleton
 ## Goal
-We want to design a platform-agnostic multithreaded high performance framework to build small games with. 
+Our goal is to design a platform-agnostic and multi-threaded 3D game engine by focusing on architecture, modularity and tools.
+The game engine should be easy to use, including setup and contribution, and support multiple grahpics APIs and file formats.
 
 ## Setup
 
 ### Windows
-With the prerequities you can use `Generate.bat` to generate the Visual Studio 2019 solution that will be put in `Build`. `Launch.bat` can be used to launch the solution.
+With the prerequisites you can use `GenerateVS2019.bat` to generate the Visual Studio 2019 Solution that will be put in `Generated`. `LaunchVS2019.bat` can be used to launch the VS Solution. The binaries and associated build files are put in `Binaries`.
 ### Prerequisites
 Name | Description
 ------------ | -------------
 [CMake](https://cmake.org/) | 3.7.0+
 [Python](https://www.python.org/) | Python 2.8+
+[Vulkan SDK](https://vulkan.lunarg.com/) | 1.2.162.0
 
 ## Dependencies
 Name | Description | License
