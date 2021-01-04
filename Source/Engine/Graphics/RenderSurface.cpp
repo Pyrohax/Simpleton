@@ -4,6 +4,7 @@
 #include "../Core/Logger.h"
 #include "../Core/InputManager.h"
 
+#define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <cstdio>
 #include <map>
@@ -36,6 +37,55 @@ void RenderSurface::Initialize(GraphicsAPI aGraphicsAPI)
 		if (!glfwVulkanSupported())
 		{
 			Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to use Vulkan with GLFW");
+			glfwTerminate();
+			return;
+		}
+
+		VkApplicationInfo vulkanAppInfo{};
+		vulkanAppInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+		vulkanAppInfo.pApplicationName = "Simpleton Editor";
+		vulkanAppInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
+		vulkanAppInfo.pEngineName = "Simpleton";
+		vulkanAppInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
+		vulkanAppInfo.apiVersion = VK_API_VERSION_1_0;
+
+		//PFN_vkCreateInstance pfnCreateInstance = (PFN_vkCreateInstance)glfwGetInstanceProcAddress(myVulkanInstance, "vkCreateInstance");
+		//PFN_vkCreateDevice pfnCreateDevice = (PFN_vkCreateDevice)glfwGetInstanceProcAddress(myVulkanInstance, "vkCreateDevice");
+		//PFN_vkGetDeviceProcAddr pfnGetDeviceProcAddr = (PFN_vkGetDeviceProcAddr)glfwGetInstanceProcAddress(myVulkanInstance, "vkGetDeviceProcAddr");
+		uint32_t count;
+		const char** extensions = glfwGetRequiredInstanceExtensions(&count);
+
+		VkInstanceCreateInfo vulkanInstanceCreateInfo{};
+		vulkanInstanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+		vulkanInstanceCreateInfo.enabledExtensionCount = count;
+		vulkanInstanceCreateInfo.ppEnabledExtensionNames = extensions;
+		vulkanInstanceCreateInfo.pApplicationInfo = &vulkanAppInfo;
+		vulkanInstanceCreateInfo.enabledLayerCount = 0;
+
+		if (vkCreateInstance(&vulkanInstanceCreateInfo, nullptr, &myVulkanInstance) != VK_SUCCESS)
+		{
+			Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to create Vulkan instance");
+			glfwTerminate();
+			return;
+		}
+
+		VkPhysicalDevice vulkanPhysicalDevice = VK_NULL_HANDLE;
+		uint32_t deviceCount = 0;
+		vkEnumeratePhysicalDevices(myVulkanInstance, &deviceCount, nullptr);
+		if (deviceCount == 0)
+		{
+			Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to detect physical device presentation support");
+			glfwTerminate();
+			return;
+		}
+
+		std::vector<VkPhysicalDevice> devices(deviceCount);
+		vkEnumeratePhysicalDevices(myVulkanInstance, &deviceCount, devices.data());
+		vulkanPhysicalDevice = devices[0];
+
+		if (glfwGetPhysicalDevicePresentationSupport(myVulkanInstance, vulkanPhysicalDevice, 0) != GLFW_TRUE)
+		{
+			Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to detect physical device presentation support");
 			glfwTerminate();
 			return;
 		}
@@ -80,6 +130,17 @@ void RenderSurface::Initialize(GraphicsAPI aGraphicsAPI)
 		return;
 	}
 
+	if (aGraphicsAPI == GraphicsAPI::Vulkan)
+	{
+		VkSurfaceKHR vulkanSurface;
+		if (glfwCreateWindowSurface(myVulkanInstance, myWindow, nullptr, &vulkanSurface) != VK_SUCCESS)
+		{
+			Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to open a GLFW window");
+			glfwTerminate();
+			return;
+		}
+	}
+
 	glfwMakeContextCurrent(myWindow);
 	glfwSetWindowUserPointer(myWindow, this);
 	glfwSetKeyCallback(myWindow, KeyCallback);
@@ -97,6 +158,8 @@ void RenderSurface::Initialize(GraphicsAPI aGraphicsAPI)
 
 void RenderSurface::Tick(double aDeltaTime)
 {
+	glfwPollEvents();
+
 	if (InputManager::GetInstance().GetIsKeyDown(Keys::Escape))
 	{
 		glfwSetWindowShouldClose(myWindow, true);
@@ -107,11 +170,11 @@ void RenderSurface::Tick(double aDeltaTime)
 
 	glfwGetFramebufferSize(myWindow, &myWidth, &myHeight);
 	glfwSwapBuffers(myWindow);
-	glfwPollEvents();
 }
 
 void RenderSurface::Destroy()
 {
+	vkDestroyInstance(myVulkanInstance, nullptr);
 	glfwDestroyWindow(myWindow);
 	glfwTerminate();
 }

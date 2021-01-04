@@ -4,6 +4,7 @@
 
 struct GLFWwindow;
 struct Texture;
+typedef struct VkInstance_T* VkInstance;
 
 class RenderSurface
 {
@@ -33,6 +34,7 @@ private:
 
 private:
 	GLFWwindow* myWindow;
+	VkInstance myVulkanInstance;
 	bool myShouldClose;
 	int myWidth;
 	int myHeight;

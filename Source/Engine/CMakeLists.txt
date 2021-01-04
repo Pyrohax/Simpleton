@@ -39,6 +39,8 @@ add_library(Engine STATIC ${SRC} ${IMGUI})
 
 source_group("imgui" FILES ${IMGUI})
 
+find_package(Vulkan REQUIRED)
+
 # GLFW
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "Generate docs" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "Generate examples" FORCE)
@@ -48,6 +50,9 @@ set(GLFW_DIR "${DEP_DIR}/glfw")
 add_subdirectory("${GLFW_DIR}" glfw)
 target_include_directories(Engine PRIVATE "${GLFW_DIR}/include")
 target_link_libraries(Engine "glfw")
+
+# VULKAN
+target_link_libraries (Engine Vulkan::Vulkan)
 
 # GLM
 set(GLM_DIR "${DEP_DIR}/glm")
