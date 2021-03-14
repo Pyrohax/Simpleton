@@ -9,21 +9,4 @@ public:
 	~EditorOverlay();
 
 	void Tick() override;
-
-private:
-
 };
-
-EditorOverlay::EditorOverlay()
-	: Overlay(true)
-{
-}
-
-EditorOverlay::~EditorOverlay()
-{
-}
-
-inline void EditorOverlay::Tick()
-{
-	ImGui::Text("Test");
-}
