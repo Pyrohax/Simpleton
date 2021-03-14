@@ -66,6 +66,10 @@ target_include_directories(Engine PRIVATE "${STB_DIR}")
 set(TINYOBJ_DIR "${DEP_DIR}/tinyobjloader")
 target_include_directories(Engine PRIVATE "${TINYOBJ_DIR}")
 
+# TINYGLTF
+set(TINYGLTF_DIR "${DEP_DIR}/tinygltf")
+target_include_directories(Engine PRIVATE "${TINYGLTF_DIR}")
+
 # ASSIMP
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "Build tools" FORCE)
 set(ASSIMP_BUILD_SAMPLES OFF CACHE BOOL "Build samples" FORCE)
@@ -86,6 +90,7 @@ set(ASSIMP_BUILD_BVH_IMPORTER OFF CACHE BOOL "Import BVH" FORCE)
 set(ASSIMP_BUILD_COLLADA_IMPORTER OFF CACHE BOOL "Import COLLADA" FORCE)
 set(ASSIMP_BUILD_DXF_IMPORTER OFF CACHE BOOL "Import DXF" FORCE)
 set(ASSIMP_BUILD_IRRMESH_IMPORTER OFF CACHE BOOL "Import IRRMESH" FORCE)
+set(ASSIMP_BUILD_DRACO OFF CACHE BOOL "DRACO" FORCE)
 set(ASSIMP_DIR "${DEP_DIR}/assimp")
 add_subdirectory("${ASSIMP_DIR}" assimp)
 target_include_directories(Engine PRIVATE "${ASSIMP_DIR}/include")
