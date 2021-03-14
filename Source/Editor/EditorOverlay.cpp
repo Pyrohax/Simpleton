@@ -13,7 +13,7 @@ EditorOverlay::~EditorOverlay()
 {
 }
 
-inline void EditorOverlay::Tick()
+void EditorOverlay::Tick()
 {
 	EntityFactory& entityFactory = Engine::GetInstance().GetWorld()->GetEntityFactory();
 	if (ImGui::Button("Add Entity"))
