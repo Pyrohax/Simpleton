@@ -22,3 +22,6 @@
 [submodule "Dependencies/rapidjson"]
 	path = Dependencies/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
+[submodule "Dependencies/tinygltf"]
+	path = Dependencies/tinygltf
+	url = https://github.com/syoyo/tinygltf.git
