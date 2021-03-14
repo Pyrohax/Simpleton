@@ -12,12 +12,19 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include <tiny_obj_loader.h>
 
+#define TINYGLTF_IMPLEMENTATION
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#define TINYGLTF_NOEXCEPTION
+#define JSON_NOEXCEPTION
+#include <tiny_gltf.h>
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+//#define STB_IMAGE_IMPLEMENTATION
+//#include <stb_image.h>
 #include <fstream>
 #include <sstream>
 
@@ -337,6 +344,92 @@ Model* AssetLoader::LoadFBX(const std::string& aPath)
 
     if (model->myMeshes.size() < 1 && model->myMeshes[0].myVertices.size() < 1)
         return nullptr;
+
+    return model;
+}
+
+Model* AssetLoader::LoadGLTF(const std::string& aPath)
+{
+    tinygltf::Model tinyGLTFModel;
+    tinygltf::TinyGLTF loader;
+    std::string err;
+    std::string warn;
+
+    bool res = loader.LoadASCIIFromFile(&tinyGLTFModel, &err, &warn, aPath);
+    if (!warn.empty())
+    {
+        Log::Logger::Print(Log::Severity::Error, Log::Category::Asset, "Failed to load %s %s", aPath.c_str(), warn);
+        return nullptr;
+    }
+
+    if (!err.empty())
+    {
+        Log::Logger::Print(Log::Severity::Error, Log::Category::Asset, "Failed to load %s %s", aPath.c_str(), err);
+        return nullptr;
+    }
+
+    if (!res)
+    {
+        Log::Logger::Print(Log::Severity::Error, Log::Category::Asset, "Failed to load %s %s", aPath.c_str());
+        return nullptr;
+    }
+
+    const std::string& fileName = GetNameFromPath(aPath);
+    const std::string& directory = GetDirectoryFromPath(aPath);
+    const std::string& fileExtension = GetExtensionFromPath(aPath);
+
+    Model* model = new Model();
+    model->myName = fileName;
+    model->myFileExtension = fileExtension;
+
+    for (const tinygltf::Mesh& mesh : tinyGLTFModel.meshes)
+    {
+        for (const tinygltf::Primitive primitive : mesh.primitives)
+        {
+            tinygltf::Accessor indexAccessor = tinyGLTFModel.accessors[primitive.indices];
+
+            for (auto& attrib : primitive.attributes)
+            {
+                tinygltf::Accessor accessor = tinyGLTFModel.accessors[attrib.second];
+                int byteStride = accessor.ByteStride(tinyGLTFModel.bufferViews[accessor.bufferView]);
+                //glBindBuffer(GL_ARRAY_BUFFER, vbos[accessor.bufferView]);
+
+                int size = 1;
+                if (accessor.type != TINYGLTF_TYPE_SCALAR)
+                {
+                    size = accessor.type;
+                }
+
+                int vaa = -1;
+                if (attrib.first.compare("POSITION") == 0) vaa = 0;
+                if (attrib.first.compare("NORMAL") == 0) vaa = 1;
+                if (attrib.first.compare("TEXCOORD_0") == 0) vaa = 2;
+                if (vaa > -1)
+                {
+                    /*glEnableVertexAttribArray(vaa);
+                    glVertexAttribPointer(vaa, size, accessor.componentType,
+                                          accessor.normalized ? true : false,
+                                          byteStride, BUFFER_OFFSET(accessor.byteOffset));*/
+                }
+            }
+        }
+    }
+
+    if (tinyGLTFModel.textures.size() > 0)
+    {
+        // fixme: Use material's baseColor
+        tinygltf::Texture& tex = tinyGLTFModel.textures[0];
+
+        if (tex.source > -1)
+        {
+            tinygltf::Image& image = tinyGLTFModel.images[tex.source];
+            Texture* texture = new Texture();
+            texture->mySource = &image.image.at(0);
+            texture->myHeight = image.height;
+            texture->myWidth = image.width;
+            model->myTextures.push_back(texture);
+        }
+    }
 
     return model;
 }

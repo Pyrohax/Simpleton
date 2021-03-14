@@ -9,11 +9,13 @@
 #include "../Graphics/Texture.h"
 #include "../Graphics/ShaderLibrary.h"
 #include "../Graphics/TextureLibrary.h"
+#include "EntityFactory.h"
 
 World::World()
 {
 	myAssetLoader = new AssetLoader();
 	myCamera = new Camera();
+	myEntityFactory = new EntityFactory();
 }
 
 World::~World()
@@ -80,7 +82,8 @@ void World::Update()
 
 void World::Destroy()
 {
-	delete myAssetLoader;
+	delete myEntityFactory;
 	delete myCamera;
+	delete myAssetLoader;
 	myModels.clear();
 }

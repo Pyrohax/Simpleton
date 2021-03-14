@@ -4,6 +4,7 @@
 
 enum class TextureType
 {
+	None,
 	Alpha,
 	Ambient,
 	Bump,
@@ -16,6 +17,18 @@ enum class TextureType
 
 struct Texture
 {
+	Texture()
+		: myName("")
+		, myFileExtension("")
+		, mySource(0)
+		, myID(0)
+		, myType(TextureType::None)
+		, myWidth(0)
+		, myHeight(0)
+		, myComponents(0)
+	{
+	}
+
 	std::string myName;
 	std::string myFileExtension;
 	unsigned char* mySource;

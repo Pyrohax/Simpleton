@@ -2,6 +2,7 @@
 
 #include "../../Graphics/UI/MenuBar.h"
 #include "../../Graphics/UI/Widget.h"
+#include "../../Graphics/UI/Overlay.h"
 
 #include <memory>
 #include <vector>
@@ -17,6 +18,7 @@ namespace UI
 		~ImguiWrapper();
 
 		void Initialize(GLFWwindow* aWindow);
+		void AddOverlay(const std::shared_ptr<UI::Overlay>& anOverlay);
 		void CreateFrame();
 		void Render(double aDeltaTime);
 		void Draw();
@@ -50,8 +52,23 @@ namespace UI
 			return nullptr;
 		}
 
+		template<typename Type>
+		Type* GetOverlay()
+		{
+			for (const auto& overlay : myOverlays)
+			{
+				if (Type* overlayTemplate = dynamic_cast<Type*>(overlay.get()))
+				{
+					return overlayTemplate;
+				}
+			}
+
+			return nullptr;
+		}
+
 	private:
 		std::vector<std::shared_ptr<UI::Widget>> myWidgets;
 		std::vector<std::shared_ptr<UI::MenuBar>> myMenuBars;
+		std::vector<std::shared_ptr<UI::Overlay>> myOverlays;
 	};
 }

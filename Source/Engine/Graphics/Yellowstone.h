@@ -32,6 +32,7 @@ public:
 	TextureLibrary* GetTextureLibrary() { return myTextureLibrary; }
 
 	GraphicsAPI GetGraphicsAPI() const { return myGraphicsAPI; }
+	UI::ImguiWrapper* GetImguiWrapper() const { return myImguiWrapper; }
 
 private:
 	UI::ImguiWrapper* myImguiWrapper;

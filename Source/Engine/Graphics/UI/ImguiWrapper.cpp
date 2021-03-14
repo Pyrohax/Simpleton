@@ -1,9 +1,9 @@
 #include "ImguiWrapper.h"
 
+#include "../../Core/Engine.h"
 #include "../../Graphics/UI/CameraWidget.h"
 #include "../../Graphics/UI/ConsoleWidget.h"
 #include "../../Graphics/UI/ToolMenuBar.h"
-#include "../../Core/Engine.h"
 #include "../../World/World.h"
 
 #include "imgui.h"
@@ -35,6 +35,11 @@ void UI::ImguiWrapper::Initialize(GLFWwindow* aWindow)
     myMenuBars.emplace_back(std::make_shared<UI::ToolMenuBar>(this));
 }
 
+void UI::ImguiWrapper::AddOverlay(const std::shared_ptr<UI::Overlay>& anOverlay)
+{
+    myOverlays.emplace_back(anOverlay);
+}
+
 void UI::ImguiWrapper::CreateFrame()
 {
     ImGui_ImplOpenGL3_NewFrame();
@@ -59,6 +64,15 @@ void UI::ImguiWrapper::Render(double aDeltaTime)
         {
             menuBar->Tick();
             menuBar->End();
+        }
+    }
+
+    for (auto& overlay : myOverlays)
+    {
+        if (overlay->Begin())
+        {
+            overlay->Tick();
+            overlay->End();
         }
     }
 

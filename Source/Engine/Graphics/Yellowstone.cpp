@@ -91,7 +91,7 @@ void Yellowstone::CreateAssetBuffers()
 
 	if (myRenderContext)
 	{
-		myRenderContext->CreateBuffers(world.myModels);
+		myRenderContext->CreateBuffers(world.GetModels());
 	}
 
 	if (myImguiWrapper)
@@ -105,7 +105,7 @@ void Yellowstone::Update(float aDeltaTime)
 	Engine& engine = Engine::GetInstance();
 	World& world = *engine.GetWorld();
 
-	if (world.myModels.size() > 0)
+	if (world.GetModels().size() > 0)
 	{
 		myShaderLibrary->BindShaders();
 	}
@@ -114,7 +114,7 @@ void Yellowstone::Update(float aDeltaTime)
 	{
 		myImguiWrapper->CreateFrame();
 		myImguiWrapper->Render(aDeltaTime);
-		myRenderContext->Render(world.myModels, *myTextureLibrary, *myShaderLibrary, world.GetCamera(), myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight(), aDeltaTime);
+		myRenderContext->Render(world.GetModels(), *myTextureLibrary, *myShaderLibrary, world.GetCamera(), myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight(), aDeltaTime);
 		myImguiWrapper->Draw();
 	}
 
@@ -130,7 +130,7 @@ void Yellowstone::Terminate()
 {
 	Engine& engine = Engine::GetInstance();
 	World& world = *engine.GetWorld();
-	myRenderContext->Destroy(world.myModels);
+	myRenderContext->Destroy(world.GetModels());
 	myRenderSurface->Destroy();
 	myImguiWrapper->Destroy();
 }
