@@ -26,7 +26,7 @@ class EngineContext
 {
 public:
 	EngineContext() = default;
-	EngineContext::~EngineContext();
+	~EngineContext();
 
 	void Initialize();
 	void Tick(TickType aTickGroup, float aDeltaTime = 0.0f);

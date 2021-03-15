@@ -52,10 +52,10 @@ public:
 	ComponentType GetTypeByComponentClass()
 	{
 		static_assert(std::is_base_of<Component, T>::value);
-		if constexpr (std::is_same<T, TransformComponent>::value)
+		/*if constexpr (std::is_same<T, TransformComponent>::value)
 			return ComponentType::TRANSFORM;
 		if constexpr (std::is_same<T, ModelComponent>::value)
-			return ComponentType::MODEL;
+			return ComponentType::MODEL;*/
 		
 		return ComponentType::UNDEFINED;
 	}

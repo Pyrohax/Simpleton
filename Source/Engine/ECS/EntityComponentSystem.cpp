@@ -64,7 +64,7 @@ void EntityComponentSystem::RemoveComponent(UniqueID aUID)
 
 UniqueID EntityComponentSystem::AddEntity()
 {
-	Entity* entity = new Entity;
+	Entity* entity = new Entity("Test");
 	myEntityTable.emplace(myUIDCounter, entity);
 	myUIDCounter += 1;
 	return myUIDCounter - 1;

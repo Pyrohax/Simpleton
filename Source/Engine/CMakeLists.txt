@@ -52,7 +52,7 @@ target_include_directories(Engine PRIVATE "${GLFW_DIR}/include")
 target_link_libraries(Engine "glfw")
 
 # VULKAN
-target_link_libraries (Engine Vulkan::Vulkan)
+target_link_libraries(Engine Vulkan::Vulkan)
 
 # GLM
 set(GLM_DIR "${DEP_DIR}/glm")
@@ -69,6 +69,11 @@ target_include_directories(Engine PRIVATE "${TINYOBJ_DIR}")
 # TINYGLTF
 set(TINYGLTF_DIR "${DEP_DIR}/tinygltf")
 target_include_directories(Engine PRIVATE "${TINYGLTF_DIR}")
+
+# STDUUID
+set(STDUUID_DIR "${DEP_DIR}/stduuid")
+add_subdirectory("${STDUUID_DIR}" stuuid)
+target_include_directories(Engine PUBLIC "${STDUUID_DIR}/include")
 
 # ASSIMP
 set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "Build tools" FORCE)

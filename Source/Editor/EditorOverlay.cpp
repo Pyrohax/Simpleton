@@ -4,6 +4,8 @@
 #include "World/EntityFactory.h"
 #include "World/World.h"
 
+#include <uuid.h>
+
 EditorOverlay::EditorOverlay()
 	: Overlay(true)
 {
@@ -23,6 +25,9 @@ void EditorOverlay::Tick()
 
 	for (int index = 0; index < entityFactory.GetEntityCount(); index++)
 	{
-		ImGui::Text(entityFactory.GetEntityByIndex(index)->myName.c_str());
+		Entity* entity = entityFactory.GetEntityByIndex(index);
+		ImGui::Text(entity->GetName().c_str());
+		ImGui::SameLine();
+		ImGui::Text(uuids::to_string(entity->GetUID()).c_str());
 	}
 }

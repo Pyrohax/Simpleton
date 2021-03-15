@@ -47,9 +47,9 @@ static inline void CheckGLError()
 
 static void GLAPIENTRY ErrorCallback(GLenum aSource, GLenum aType, GLuint anID, GLenum aSeverity, GLsizei /*aLength*/, const GLchar* aMessage, const void* /*aUserParam*/)
 {
-    char* source;
-    char* type;
-    char* severity;
+   std::string source;
+   std::string type;
+   std::string severity;
 
     switch (aSource)
     {
@@ -123,6 +123,6 @@ static void GLAPIENTRY ErrorCallback(GLenum aSource, GLenum aType, GLuint anID, 
             break;
     }
 
-    Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Message from OpenGL: Severity: %s Type: %s Source: %s Id: 0x%x", severity, type, source, anID);
+    Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Message from OpenGL: Severity: %s Type: %s Source: %s Id: 0x%x", severity.c_str(), type.c_str(), source.c_str(), anID);
     Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "%s", aMessage);
 }

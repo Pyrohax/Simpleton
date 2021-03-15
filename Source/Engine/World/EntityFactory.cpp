@@ -12,8 +12,7 @@ EntityFactory::~EntityFactory()
 
 Entity* EntityFactory::CreateEntity()
 {
-	Entity* entity = new Entity();
-	entity->myName = "test";
+	Entity* entity = new Entity("Test");
 	myEntities.push_back(*entity);
 
 	return entity;
