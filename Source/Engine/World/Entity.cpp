@@ -5,14 +5,14 @@
 Entity::Entity(const std::string& aName)
 	: myName(aName)
 {
-	std::random_device rd;
-	auto seed_data = std::array<int, std::mt19937::state_size> {};
-	std::generate(std::begin(seed_data), std::end(seed_data), std::ref(rd));
-	std::seed_seq seq(std::begin(seed_data), std::end(seed_data));
-	std::mt19937 generator(seq);
-	uuids::uuid_random_generator gen{ generator };
+	std::random_device randomDevice;
+	auto seedData = std::array<int, std::mt19937::state_size> {};
+	std::generate(std::begin(seedData), std::end(seedData), std::ref(randomDevice));
+	std::seed_seq seedSequence(std::begin(seedData), std::end(seedData));
+	std::mt19937 mersenneTwisterGenerator(seedSequence);
+	uuids::uuid_random_generator randomGenerator { mersenneTwisterGenerator };
 
-	myUID = gen();
+	myUID = randomGenerator();
 	Assert(myUID.is_nil(), "Generated UID is nil");
 	Assert(myUID.as_bytes().size() != 16, "Generated UID size is faulty");
 	Assert(myUID.version() != uuids::uuid_version::random_number_based, "Generated UID version is faulty");

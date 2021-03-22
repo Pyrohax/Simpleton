@@ -25,9 +25,9 @@ void EditorOverlay::Tick()
 
 	for (int index = 0; index < entityFactory.GetEntityCount(); index++)
 	{
-		Entity* entity = entityFactory.GetEntityByIndex(index);
-		ImGui::Text(entity->GetName().c_str());
+		Entity& entity = entityFactory.GetEntityByIndex(index);
+		ImGui::Text(entity.GetName().c_str());
 		ImGui::SameLine();
-		ImGui::Text(uuids::to_string(entity->GetUID()).c_str());
+		ImGui::Text(uuids::to_string(entity.GetUID()).c_str());
 	}
 }

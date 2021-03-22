@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Component.h"
-
 #include <uuid.h>
 
 #include <vector>
@@ -19,5 +17,4 @@ public:
 private:
 	uuids::uuid myUID;
 	std::string myName;
-	std::vector<unsigned int> myComponentIDList;
 };
