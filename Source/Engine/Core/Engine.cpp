@@ -1,20 +1,17 @@
 #include "Engine.h"
 
+#include "../Graphics/Yellowstone.h"
+#include "../Threading/JobSystem.h"
+#include "../World/World.h"
 #include "Assert.h"
 #include "DataManager.h"
 #include "EngineContext.h"
 #include "EngineSettings.h"
-#include "../ECS/EntityComponentSystem.h"
-#include "../Threading/JobSystem.h"
-#include "../Graphics/Yellowstone.h"
-#include "../World/World.h"
 
 Engine::Engine()
 	: myPreviousTime(0.0f)
 	, myShouldShutdown(false)
 {
-	//AddSystem<EntityComponentSystem>();
-	//AddSystem<JobSystem>();
 	myDataManager = new DataManager();
 	myWorld = new World();
 
@@ -35,15 +32,6 @@ void Engine::Initialize(BuildType aBuildType)
 	myVersion = settings->myVersion;
 
 	myContext->Initialize();
-
-	if (myWorld)
-	{
-		myWorld->LoadDummyData();
-	}
-
-	// TODO: improve architecture
-	Yellowstone* yellowstone = myContext->GetSubsystem<Yellowstone>();
-	yellowstone->CreateAssetBuffers();
 
 	myPreviousTime = std::chrono::duration<float>(std::chrono::system_clock::now().time_since_epoch()).count();
 }

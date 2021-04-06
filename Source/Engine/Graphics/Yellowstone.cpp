@@ -1,13 +1,13 @@
 #include "Yellowstone.h"
 
 #include "../Core/Engine.h"
-#include "../World/World.h"
-#include "../World/AssetLoader.h"
-#include "../Graphics/UI/ImguiWrapper.h"
-#include "../Graphics/RenderSurface.h"
 #include "../Graphics/OpenGL/OpenGLRenderContext.h"
-#include "../Graphics/OpenGL/OpenGLTextureLibrary.h"
 #include "../Graphics/OpenGL/OpenGLShaderLibrary.h"
+#include "../Graphics/OpenGL/OpenGLTextureLibrary.h"
+#include "../Graphics/RenderSurface.h"
+#include "../Graphics/UI/ImguiWrapper.h"
+#include "../World/AssetLoader.h"
+#include "../World/World.h"
 
 Yellowstone::Yellowstone(EngineContext* aContext)
 	: Subsystem(aContext)
@@ -82,17 +82,6 @@ void Yellowstone::Initialize()
 	{
 		myShaderLibrary->CreateProgram();
 	}
-}
-
-void Yellowstone::CreateAssetBuffers()
-{
-	Engine& engine = Engine::GetInstance();
-	World& world = *engine.GetWorld();
-
-	if (myRenderContext)
-	{
-		myRenderContext->CreateBuffers(world.GetModels());
-	}
 
 	if (myImguiWrapper)
 	{
@@ -133,6 +122,14 @@ void Yellowstone::Terminate()
 	myRenderContext->Destroy(world.GetModels());
 	myRenderSurface->Destroy();
 	myImguiWrapper->Destroy();
+}
+
+void Yellowstone::CreateAssetBuffers(std::vector<Model>& aModels)
+{
+	if (myRenderContext)
+	{
+		myRenderContext->CreateBuffers(aModels);
+	}
 }
 
 bool Yellowstone::HasClosedWindow() const

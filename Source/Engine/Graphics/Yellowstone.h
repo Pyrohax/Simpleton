@@ -2,6 +2,7 @@
 
 #include "../Core/Subsystem.h"
 #include "../Graphics/GraphicsDefines.h"
+#include "../Graphics/Model.h"
 
 namespace UI
 {
@@ -24,7 +25,7 @@ public:
 	void Update(float aDeltaTime) override;
 	void Terminate() override;
 
-	void CreateAssetBuffers();
+	void CreateAssetBuffers(std::vector<Model>& aModels);
 
 	bool HasClosedWindow() const;
 

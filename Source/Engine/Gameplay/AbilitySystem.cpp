@@ -1,12 +1,10 @@
 #include "AbilitySystem.h"
 
-#include "../ECS/EntityComponentSystem.h"
-
 bool AbilitySystem::StartAbilityOnEntity(const Ability& anAbility, const UniqueID aTargetEntity)
 {
-	const Entity* affectedEntity = myEntityComponentSystem->GetEntity(aTargetEntity);
+	/*const Entity* affectedEntity = myEntityComponentSystem->GetEntity(aTargetEntity);
 	if (!affectedEntity || !anAbility.myEffect)
-		return false;
+		return false;*/
 
 	bool affectTagsMatch = false;
 	

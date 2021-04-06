@@ -1,9 +1,12 @@
 #include "Entity.h"
 
 #include "../Core/Assert.h"
+#include "EntityFactory.h"
+#include "MeshComponent.h"
 
-Entity::Entity(const std::string& aName)
+Entity::Entity(const std::string& aName, EntityFactory* anEntityFactory)
 	: myName(aName)
+	, myEntityFactory(anEntityFactory)
 {
 	std::random_device randomDevice;
 	auto seedData = std::array<int, std::mt19937::state_size> {};
@@ -21,4 +24,14 @@ Entity::Entity(const std::string& aName)
 
 Entity::~Entity()
 {
+}
+
+MeshComponent* Entity::GetMesComponent() const
+{
+	return myEntityFactory->GetMeshComponent(myUID);
+}
+
+void Entity::AddComponent(Component* aComponent)
+{
+	myEntityFactory->AddComponent(myUID, aComponent);
 }

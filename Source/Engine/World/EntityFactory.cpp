@@ -1,8 +1,8 @@
 #include "EntityFactory.h"
 
-#include "Entity.h"
-
 #include "../Core/Assert.h"
+#include "Entity.h"
+#include "MeshComponent.h"
 
 EntityFactory::EntityFactory()
 {
@@ -15,8 +15,41 @@ EntityFactory::~EntityFactory()
 void EntityFactory::CreateEntity()
 {
 	Assert(myEntities.size() > MAX_ENTITIES, "The entity limit has been reached");
-	Entity* entity = new Entity("Test");
+	std::random_device randomDevice;
+	std::mt19937 mersenneTwisterGenerator(randomDevice());
+	std::uniform_int_distribution<std::mt19937::result_type> distribution(1, 256);
+	std::string name = "Unnamed" + std::to_string(distribution(mersenneTwisterGenerator));
+	Entity* entity = new Entity(name, this);
 	myEntities.push_back(*entity);
+}
+
+void EntityFactory::CreateEntity(const std::string& aName)
+{
+	Assert(myEntities.size() > MAX_ENTITIES, "The entity limit has been reached");
+	Entity* entity = new Entity(aName, this);
+	myEntities.push_back(*entity);
+}
+
+void EntityFactory::AddComponent(const uuids::uuid& anEntityUID, Component* aComponent)
+{
+	myComponents.emplace(anEntityUID, aComponent);
+}
+
+MeshComponent* EntityFactory::GetMeshComponent(const uuids::uuid& anEntityUID) const
+{
+	for (auto& hash :myComponents)
+	{
+		if (hash.first != anEntityUID)
+			continue;
+
+		MeshComponent* meshComponent = static_cast<MeshComponent*>(hash.second);
+		if (!meshComponent)
+			continue;
+
+		return meshComponent;
+	}
+
+	return nullptr;
 }
 
 Entity& EntityFactory::GetEntityByIndex(const int anIndex)

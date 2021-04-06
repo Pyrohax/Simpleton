@@ -1,14 +1,14 @@
 #include "OpenGLRenderContext.h"
 
+#include "../../Core/InputManager.h"
+#include "../../World/Camera.h"
+#include "../Light.h"
+#include "../Mesh.h"
+#include "../Texture.h"
+#include "../Vertex.h"
 #include "OpenGLError.h"
 #include "OpenGLShaderLibrary.h"
 #include "OpenGLTextureLibrary.h"
-#include "../../World/Camera.h"
-#include "../../Core/InputManager.h"
-#include "../Mesh.h"
-#include "../Vertex.h"
-#include "../Texture.h"
-#include "../Light.h"
 
 #include <cstddef>
 
@@ -96,15 +96,18 @@ void OpenGLRenderContext::Render(const std::vector<Model>& aModels, const Textur
 {
 	aCamera.Update(aDeltaTime);
 
+	glViewport(0, 0, aWidth, aHeight);
+	glClearColor(0.7f, 0.9f, 0.1f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	aShaderLibrary.SetVector3Float("lightColor", myLight->GetColor());
+	aShaderLibrary.SetVector3Float("lightPosition", myLight->GetPosition());
+
 	for (const Model& model : aModels)
 	{
-		glm::mat4 modelViewProjection = aCamera.GetProjectionMatrix()  * aCamera.GetViewMatrix() * model.myModelMatrix;
+		glm::mat4 modelViewProjection = aCamera.GetProjectionMatrix() * aCamera.GetViewMatrix() * model.myModelMatrix;
 		aShaderLibrary.SetMatrix4Float("modelViewProjectionMatrix", modelViewProjection);
 		aShaderLibrary.SetMatrix4Float("modelMatrix", model.myModelMatrix);
-
-		glViewport(0, 0, aWidth, aHeight);
-		glClearColor(0.7f, 0.9f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		if (aTextureLibrary.myTextures.size() > 0)
 		{
@@ -113,9 +116,6 @@ void OpenGLRenderContext::Render(const std::vector<Model>& aModels, const Textur
 			aShaderLibrary.SetInt("textureSampler", textureID);
 			glBindTexture(GL_TEXTURE_2D, textureID);
 		}
-
-		aShaderLibrary.SetVector3Float("lightColor", myLight->GetColor());
-		aShaderLibrary.SetVector3Float("lightPosition", myLight->GetPosition());
 
 		glBindVertexArray(model.myVertexArrayObject);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, model.myElementBufferObject);
