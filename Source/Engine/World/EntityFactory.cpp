@@ -37,7 +37,7 @@ void EntityFactory::AddComponent(const uuids::uuid& anEntityUID, Component* aCom
 
 MeshComponent* EntityFactory::GetMeshComponent(const uuids::uuid& anEntityUID) const
 {
-	for (auto& hash :myComponents)
+	for (auto& hash : myComponents)
 	{
 		if (hash.first != anEntityUID)
 			continue;
