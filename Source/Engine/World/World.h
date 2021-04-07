@@ -15,9 +15,12 @@ public:
 	World();
 	~World();
 
-	void LoadDummyData();
 	void Update();
 	void Destroy();
+
+	void LoadDummyData();
+	void LoadAndAddModel(const std::string& aPath);
+	void LoadAndAddShaders(const std::string& aVertexShaderPath, const std::string& aFragmentShaderPath);
 
 	AssetLoader& GetAssetLoader() { return *myAssetLoader; }
 	Camera& GetCamera() { return *myCamera; }
