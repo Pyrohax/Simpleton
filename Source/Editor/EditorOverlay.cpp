@@ -152,9 +152,9 @@ void EditorOverlay::Tick()
 
 		if (!foundShaderPair.empty())
 		{
-			if (ImGui::Button(foundShaderPair[0].second.c_str()))
+			if (ImGui::Button(foundShaderPair[1].second.c_str()))
 			{
-				world->LoadAndAddShaders(foundShaderPair[0].first, foundShaderPair[1].first);
+				world->LoadAndAddShaders(foundShaderPair[1].first, foundShaderPair[0].first);
 			}
 		}
 	}

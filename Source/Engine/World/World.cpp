@@ -43,22 +43,24 @@ void World::LoadDummyData()
 		return;
 	}
 
+	Yellowstone* yellowstone = Engine::GetInstance().GetContext()->GetSubsystem<Yellowstone>();
+	TextureLibrary* textureLibrary = yellowstone->GetTextureLibrary();
+	if (!textureLibrary)
+	{
+		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Failed to access the Texture Library");
+		return;
+	}
+
 	for (const std::pair<std::string, TextureType>& texturePair : model->myTextureMap)
 	{
 		Texture* texture = myAssetLoader->LoadTexture(texturePair.first);
 		if (!texture)
 		{
-			Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading texture from dummy data");
+			Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Failed to load texture %s", texturePair.first.c_str());
 			return;
 		}
 
 		texture->myType = texturePair.second;
-		TextureLibrary* textureLibrary = Engine::GetInstance().GetContext()->GetSubsystem<Yellowstone>()->GetTextureLibrary();
-		if (!textureLibrary)
-		{
-			Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading texture from dummy data");
-			return;
-		}
 
 		textureLibrary->CompileTexture(*texture);
 		textureLibrary->myTextures.push_back(*texture);
@@ -75,7 +77,7 @@ void World::LoadDummyData()
 		return;
 	}
 
-	ShaderLibrary* shaderLibrary = Engine::GetInstance().GetContext()->GetSubsystem<Yellowstone>()->GetShaderLibrary();
+	ShaderLibrary* shaderLibrary = yellowstone->GetShaderLibrary();
 	if (!shaderLibrary)
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Failed to get Shader Library");
@@ -93,7 +95,14 @@ void World::LoadAndAddModel(const std::string& aPath)
 	Model* model = myAssetLoader->LoadModel(aPath);
 	if (!model)
 	{
-		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading model from dummy data");
+		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading model %s", aPath.c_str());
+		return;
+	}
+
+	TextureLibrary* textureLibrary = Engine::GetInstance().GetContext()->GetSubsystem<Yellowstone>()->GetTextureLibrary();
+	if (!textureLibrary)
+	{
+		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Failed to access Texture Library");
 		return;
 	}
 
@@ -102,17 +111,11 @@ void World::LoadAndAddModel(const std::string& aPath)
 		Texture* texture = myAssetLoader->LoadTexture(texturePair.first);
 		if (!texture)
 		{
-			Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading texture from dummy data");
+			Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading texture %s", texturePair.first.c_str());
 			return;
 		}
 
 		texture->myType = texturePair.second;
-		TextureLibrary* textureLibrary = Engine::GetInstance().GetContext()->GetSubsystem<Yellowstone>()->GetTextureLibrary();
-		if (!textureLibrary)
-		{
-			Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading texture from dummy data");
-			return;
-		}
 
 		textureLibrary->CompileTexture(*texture);
 		textureLibrary->myTextures.push_back(*texture);
@@ -135,7 +138,7 @@ void World::LoadAndAddShaders(const std::string& aVertexShaderPath, const std::s
 	ShaderLibrary* shaderLibrary = Engine::GetInstance().GetContext()->GetSubsystem<Yellowstone>()->GetShaderLibrary();
 	if (!shaderLibrary)
 	{
-		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Failed to find Shader Library");
+		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Failed to access Shader Library");
 		return;
 	}
 
