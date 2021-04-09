@@ -48,7 +48,7 @@ void EditorOverlay::Tick()
 		ImGui::SameLine();
 		ImGui::Text(uuids::to_string(entity.GetUID()).c_str());
 		ImGui::SameLine();
-		if (const MeshComponent* meshComponent = entity.GetMesComponent())
+		if (const MeshComponent* meshComponent = entity.GetComponent<MeshComponent>())
 		{
 			ImGui::Text(uuids::to_string(meshComponent->myUID).c_str());
 		}

@@ -103,7 +103,7 @@ void Yellowstone::Update(float aDeltaTime)
 	{
 		myImguiWrapper->CreateFrame();
 		myImguiWrapper->Render(aDeltaTime);
-		myRenderContext->Render(world.GetModels(), *myTextureLibrary, *myShaderLibrary, world.GetCamera(), myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight(), aDeltaTime);
+		myRenderContext->Render(world.GetModels(), *myTextureLibrary, *myShaderLibrary, world.GetCamera(), world.GetLighting(), myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight(), aDeltaTime);
 		myImguiWrapper->Draw();
 	}
 

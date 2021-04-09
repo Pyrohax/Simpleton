@@ -1,13 +1,11 @@
 #pragma once
 
+#include "EntityFactory.h"
+
 #include <uuid.h>
 
 #include <string>
 #include <vector>
-
-class EntityFactory;
-struct Component;
-struct MeshComponent;
 
 class Entity
 {
@@ -19,7 +17,12 @@ public:
 	const std::string& GetName() const { return myName; }
 
 	void AddComponent(Component* aComponent);
-	MeshComponent* GetMesComponent() const;
+
+	template<class ComponentType>
+	ComponentType* GetComponent() const
+	{
+		return myEntityFactory->GetComponent<ComponentType>(myUID);
+	}
 
 private:
 	EntityFactory* myEntityFactory;

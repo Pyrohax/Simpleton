@@ -2,19 +2,20 @@
 
 #include "../../Core/InputManager.h"
 #include "../../World/Camera.h"
-#include "../Light.h"
+#include "../../World/Entity.h"
 #include "../Mesh.h"
 #include "../Texture.h"
 #include "../Vertex.h"
 #include "OpenGLError.h"
 #include "OpenGLShaderLibrary.h"
 #include "OpenGLTextureLibrary.h"
+#include "../../World/LightingComponent.h"
+#include "../../World/TransformComponent.h"
 
 #include <cstddef>
 
 OpenGLRenderContext::OpenGLRenderContext() : RenderContext()
 {
-	myLight = nullptr;
 }
 
 OpenGLRenderContext::~OpenGLRenderContext()
@@ -25,13 +26,6 @@ void OpenGLRenderContext::PrintDebugInfo()
 {
 	Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "OpenGL %s", glGetString(GL_VERSION));
 	Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "GLSL %s", glGetString(GL_SHADING_LANGUAGE_VERSION));
-}
-
-void OpenGLRenderContext::CreateLight()
-{
-	myLight = new Light();
-	myLight->SetColor(glm::vec3(1.0f, 1.0f, 1.0f));
-	myLight->SetPosition(glm::vec3(-5.f, -2.5f, 7.5f));
 }
 
 void OpenGLRenderContext::Initialize()
@@ -58,8 +52,6 @@ void OpenGLRenderContext::Initialize()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	CheckGLError();
-
-	CreateLight();
 }
 
 void OpenGLRenderContext::CreateBuffers(std::vector<Model>& aModels)
@@ -92,7 +84,7 @@ void OpenGLRenderContext::CreateBuffers(std::vector<Model>& aModels)
 	}
 }
 
-void OpenGLRenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, ShaderLibrary& aShaderLibrary, Camera& aCamera, int aWidth, int aHeight, float aDeltaTime)
+void OpenGLRenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, ShaderLibrary& aShaderLibrary, Camera& aCamera, const Entity& aLighting, int aWidth, int aHeight, float aDeltaTime)
 {
 	aCamera.Update(aDeltaTime);
 
@@ -104,8 +96,8 @@ void OpenGLRenderContext::Render(const std::vector<Model>& aModels, const Textur
 	if (shaderCount > 0)
 	{
 		aShaderLibrary.BindShaders();
-		aShaderLibrary.SetVector3Float("lightColor", myLight->GetColor());
-		aShaderLibrary.SetVector3Float("lightPosition", myLight->GetPosition());
+		aShaderLibrary.SetVector3Float("lightColor", aLighting.GetComponent<LightingComponent>()->GetColor());
+		aShaderLibrary.SetVector3Float("lightPosition", aLighting.GetComponent<TransformComponent>()->GetPosition());
 	}
 
 	for (const Model& model : aModels)
@@ -150,6 +142,4 @@ void OpenGLRenderContext::Destroy(const std::vector<Model>& aModels)
 		glDeleteVertexArrays(1, &model.myVertexArrayObject);
 		glDeleteBuffers(1, &model.myVertexBufferObject);
 	}
-
-	delete myLight;
 }

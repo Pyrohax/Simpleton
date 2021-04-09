@@ -4,13 +4,11 @@
 #include <uuid.h>
 #include <vector>
 
-class Entity;
-
 const size_t MAX_COMPONENTS = 150;
 const size_t MAX_ENTITIES = 150;
 
 struct Component;
-struct MeshComponent;
+class Entity;
 
 class EntityFactory
 {
@@ -22,7 +20,24 @@ public:
 	void CreateEntity(const std::string& aName);
 	
 	void AddComponent(const uuids::uuid& anEntityUID, Component* aComponent);
-	MeshComponent* GetMeshComponent(const uuids::uuid& anEntityUID) const;
+
+	template<class ComponentType>
+	ComponentType* GetComponent(const uuids::uuid& anEntityUID) const
+	{
+		for (auto& hash : myComponents)
+		{
+			if (hash.first != anEntityUID)
+				continue;
+
+			ComponentType* component = static_cast<ComponentType*>(hash.second);
+			if (!component)
+				continue;
+
+			return component;
+		}
+
+		return nullptr;
+	}
 
 	int GetEntityCount() const { return static_cast<int>(myEntities.size()); }
 	Entity& GetEntityByIndex(const int anIndex);

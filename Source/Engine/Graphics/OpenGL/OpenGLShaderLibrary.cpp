@@ -3,13 +3,11 @@
 #include "OpenGLError.h"
 
 #include <glad/glad.h>
-
 #include <glm/gtc/type_ptr.hpp>
 
-#include <vector>
-#include <string>
-
 #include <filesystem>
+#include <string>
+#include <vector>
 
 OpenGLShaderLibrary::OpenGLShaderLibrary() : ShaderLibrary()
 {

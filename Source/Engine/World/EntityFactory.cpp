@@ -3,6 +3,7 @@
 #include "../Core/Assert.h"
 #include "Entity.h"
 #include "MeshComponent.h"
+#include "LightingComponent.h"
 
 EntityFactory::EntityFactory()
 {
@@ -33,23 +34,6 @@ void EntityFactory::CreateEntity(const std::string& aName)
 void EntityFactory::AddComponent(const uuids::uuid& anEntityUID, Component* aComponent)
 {
 	myComponents.emplace(anEntityUID, aComponent);
-}
-
-MeshComponent* EntityFactory::GetMeshComponent(const uuids::uuid& anEntityUID) const
-{
-	for (auto& hash : myComponents)
-	{
-		if (hash.first != anEntityUID)
-			continue;
-
-		MeshComponent* meshComponent = static_cast<MeshComponent*>(hash.second);
-		if (!meshComponent)
-			continue;
-
-		return meshComponent;
-	}
-
-	return nullptr;
 }
 
 Entity& EntityFactory::GetEntityByIndex(const int anIndex)

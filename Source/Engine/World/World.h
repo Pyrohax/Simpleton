@@ -25,15 +25,17 @@ public:
 	AssetLoader& GetAssetLoader() { return *myAssetLoader; }
 	Camera& GetCamera() { return *myCamera; }
 	EntityFactory& GetEntityFactory() { return *myEntityFactory; }
+	const Entity& GetLighting() const { return *myLighting; }
 
 	const std::vector<Entity>& GetEntities() const { return myEntities; }
 	const std::vector<Model>& GetModels() const { return myModels; }
 	std::vector<Model>& GetModels() { return myModels; }
 
 private:
+	std::vector<Entity> myEntities;
+	std::vector<Model> myModels;
 	AssetLoader* myAssetLoader;
 	Camera* myCamera;
 	EntityFactory* myEntityFactory;
-	std::vector<Entity> myEntities;
-	std::vector<Model> myModels;
+	Entity* myLighting;
 };

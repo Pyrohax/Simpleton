@@ -10,12 +10,19 @@
 #include "../Graphics/ShaderLibrary.h"
 #include "../Graphics/TextureLibrary.h"
 #include "EntityFactory.h"
+#include "LightingComponent.h"
+#include "TransformComponent.h"
 
 World::World()
 {
 	myAssetLoader = new AssetLoader();
 	myCamera = new Camera();
 	myEntityFactory = new EntityFactory();
+	myLighting = new Entity("Lighting", myEntityFactory);
+	LightingComponent* lightingComponent = new LightingComponent();
+	myLighting->AddComponent(lightingComponent);
+	TransformComponent* transformComponent = new TransformComponent(glm::vec3(-5.f, -2.5f, 7.5f));
+	myLighting->AddComponent(transformComponent);
 }
 
 World::~World()

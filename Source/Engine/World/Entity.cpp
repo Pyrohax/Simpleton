@@ -1,8 +1,8 @@
 #include "Entity.h"
 
 #include "../Core/Assert.h"
+#include "Component.h"
 #include "EntityFactory.h"
-#include "MeshComponent.h"
 
 Entity::Entity(const std::string& aName, EntityFactory* anEntityFactory)
 	: myName(aName)
@@ -24,11 +24,6 @@ Entity::Entity(const std::string& aName, EntityFactory* anEntityFactory)
 
 Entity::~Entity()
 {
-}
-
-MeshComponent* Entity::GetMesComponent() const
-{
-	return myEntityFactory->GetMeshComponent(myUID);
 }
 
 void Entity::AddComponent(Component* aComponent)
