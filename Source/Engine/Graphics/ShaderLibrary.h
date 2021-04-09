@@ -19,6 +19,7 @@ public:
 	virtual void AttachShaders(const Shader& aVertexShader, const Shader& aFragmentShader) = 0;
 	virtual void AttachCurrentShaders() = 0;
 	virtual void BindShaders() = 0;
+	virtual void UnbindShaders() = 0;
 
 	virtual void SetInt(const std::string& aName, int aValue) = 0;
 	virtual void SetFloat(const std::string& aName, float aValue) = 0;
@@ -27,6 +28,8 @@ public:
 	virtual void SetMatrix3Float(const std::string& aName, const glm::mat3& aValue) = 0;
 	virtual void SetMatrix4Float(const std::string& aName, const glm::mat4& aValue) = 0;
 
-	virtual unsigned int GetShaderType(ShaderType aType) = 0;
+	virtual const std::vector<Shader>& GetShaders() const = 0;
 	virtual const unsigned int GetProgramID() const = 0;
+
+	virtual unsigned int GetShaderType(ShaderType aType) = 0;
 };

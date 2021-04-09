@@ -61,6 +61,11 @@ void EditorOverlay::Tick()
 
 	std::string dataPath = std::filesystem::current_path().string() + "\\..\\..\\..\\Data\\";
 
+	auto findCharactersInString = [](const std::string& aString, const char* aCharacters)
+	{
+		return (aString.find(aCharacters) != std::string::npos);
+	};
+
 	if (ImGui::CollapsingHeader("Models"))
 	{
 		static ImGuiTextFilter filter;
@@ -76,11 +81,6 @@ void EditorOverlay::Tick()
 		{
 			if (!entry.path().has_extension())
 				continue;
-
-			auto findCharactersInString = [](const std::string& aString, const char* aCharacters)
-			{
-				return (aString.find(aCharacters) != std::string::npos);
-			};
 
 			const bool isTexture = findCharactersInString(entry.path().extension().string(), ".png") || findCharactersInString(entry.path().extension().string(), ".jpg");
 			const bool isModel = findCharactersInString(entry.path().extension().string(), ".obj") || findCharactersInString(entry.path().extension().string(), ".fbx") || findCharactersInString(entry.path().extension().string(), ".gltf");
@@ -130,11 +130,6 @@ void EditorOverlay::Tick()
 		{
 			if (!entry.path().has_extension())
 				continue;
-
-			auto findCharactersInString = [](const std::string& aString, const char* aCharacters)
-			{
-				return (aString.find(aCharacters) != std::string::npos);
-			};
 
 			const bool isShader = findCharactersInString(entry.path().extension().string(), ".glsl");
 

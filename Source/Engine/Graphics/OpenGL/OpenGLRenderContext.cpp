@@ -100,14 +100,22 @@ void OpenGLRenderContext::Render(const std::vector<Model>& aModels, const Textur
 	glClearColor(0.7f, 0.9f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	aShaderLibrary.SetVector3Float("lightColor", myLight->GetColor());
-	aShaderLibrary.SetVector3Float("lightPosition", myLight->GetPosition());
+	const int shaderCount = static_cast<int>(aShaderLibrary.GetShaders().size());
+	if (shaderCount > 0)
+	{
+		aShaderLibrary.BindShaders();
+		aShaderLibrary.SetVector3Float("lightColor", myLight->GetColor());
+		aShaderLibrary.SetVector3Float("lightPosition", myLight->GetPosition());
+	}
 
 	for (const Model& model : aModels)
 	{
-		glm::mat4 modelViewProjection = aCamera.GetProjectionMatrix() * aCamera.GetViewMatrix() * model.myModelMatrix;
-		aShaderLibrary.SetMatrix4Float("modelViewProjectionMatrix", modelViewProjection);
-		aShaderLibrary.SetMatrix4Float("modelMatrix", model.myModelMatrix);
+		if (shaderCount > 0)
+		{
+			glm::mat4 modelViewProjection = aCamera.GetProjectionMatrix() * aCamera.GetViewMatrix() * model.myModelMatrix;
+			aShaderLibrary.SetMatrix4Float("modelViewProjectionMatrix", modelViewProjection);
+			aShaderLibrary.SetMatrix4Float("modelMatrix", model.myModelMatrix);
+		}
 
 		if (aTextureLibrary.myTextures.size() > 0)
 		{
@@ -123,9 +131,14 @@ void OpenGLRenderContext::Render(const std::vector<Model>& aModels, const Textur
 
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
-
-		CheckGLError();
 	}
+
+	if (shaderCount > 0)
+	{
+		aShaderLibrary.UnbindShaders();
+	}
+
+	CheckGLError();
 }
 
 void OpenGLRenderContext::Destroy(const std::vector<Model>& aModels)

@@ -46,7 +46,8 @@ void OpenGLShaderLibrary::CompileShader(Shader& aShader)
     aShader.myID = glCreateShader(aShader.myType);
     
     const GLchar* sourceCStr = aShader.mySource.c_str();
-    glShaderSource(aShader.myID, 1, &sourceCStr, nullptr);
+    const GLsizei length = static_cast<GLsizei>(aShader.mySource.length());
+    glShaderSource(aShader.myID, 1, &sourceCStr, &length);
     glCompileShader(aShader.myID);
     
     GLint isCompiled = GL_FALSE;
@@ -113,10 +114,18 @@ void OpenGLShaderLibrary::AttachCurrentShaders()
 
 void OpenGLShaderLibrary::BindShaders()
 {
-    if (myProgramID == 0)
+    if (myProgramID == 0 || myShaders.empty())
         return;
 
     glUseProgram(myProgramID);
+}
+
+void OpenGLShaderLibrary::UnbindShaders()
+{
+    if (myProgramID == 0 || myShaders.empty())
+        return;
+
+    glUseProgram(0);
 }
 
 void OpenGLShaderLibrary::SetInt(const std::string& aName, int aValue)
@@ -165,7 +174,7 @@ unsigned int OpenGLShaderLibrary::GetShaderType(ShaderType aType)
             return GL_VERTEX_SHADER;
         case ShaderType::Fragment:
             return GL_FRAGMENT_SHADER;
-        default:
-            return GL_NONE;
     }
+
+    return GL_NONE;
 }
