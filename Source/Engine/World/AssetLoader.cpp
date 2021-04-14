@@ -19,9 +19,11 @@
 #define JSON_NOEXCEPTION
 #include <tiny_gltf.h>
 
+#ifdef USE_ASSIMP
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#endif // USE_ASSIMP
 
 //#define STB_IMAGE_IMPLEMENTATION
 //#include <stb_image.h>
@@ -262,6 +264,7 @@ Model* AssetLoader::LoadOBJ(const std::string& aPath)
 
 Model* AssetLoader::LoadFBX(const std::string& aPath)
 {
+#ifdef USE_ASSIMP
     Assimp::Importer importer;
 
     unsigned int flags = aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices;
@@ -346,6 +349,9 @@ Model* AssetLoader::LoadFBX(const std::string& aPath)
         return nullptr;
 
     return model;
+#else
+    return nullptr;
+#endif
 }
 
 Model* AssetLoader::LoadGLTF(const std::string& aPath)

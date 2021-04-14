@@ -11,7 +11,6 @@
 #include "../../World/LightingComponent.h"
 #include "../../World/TransformComponent.h"
 #include "../../World/CameraComponent.h"
-#include "../ImGui/ImGuizmo.h"
 
 #include <cstddef>
 
