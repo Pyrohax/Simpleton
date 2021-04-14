@@ -33,6 +33,8 @@ void Engine::Initialize(BuildType aBuildType)
 
 	myContext->Initialize();
 
+	myWorld->LoadDefaultData();
+
 	myPreviousTime = std::chrono::duration<float>(std::chrono::system_clock::now().time_since_epoch()).count();
 }
 

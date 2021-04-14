@@ -4,9 +4,9 @@
 #include "Entity.h"
 
 #include <vector>
+#include "../Graphics/UI/WidgetIconType.h"
 
 class AssetLoader;
-class Camera;
 class EntityFactory;
 
 class World
@@ -18,12 +18,12 @@ public:
 	void Update();
 	void Destroy();
 
-	void LoadDummyData();
+	void LoadDefaultData();
 	void LoadAndAddModel(const std::string& aPath);
 	void LoadAndAddShaders(const std::string& aVertexShaderPath, const std::string& aFragmentShaderPath);
 
 	AssetLoader& GetAssetLoader() { return *myAssetLoader; }
-	Camera& GetCamera() { return *myCamera; }
+	Entity& GetCamera() { return *myCamera; }
 	EntityFactory& GetEntityFactory() { return *myEntityFactory; }
 	const Entity& GetLighting() const { return *myLighting; }
 
@@ -35,7 +35,7 @@ private:
 	std::vector<Entity> myEntities;
 	std::vector<Model> myModels;
 	AssetLoader* myAssetLoader;
-	Camera* myCamera;
 	EntityFactory* myEntityFactory;
 	Entity* myLighting;
+	Entity* myCamera;
 };

@@ -1,11 +1,11 @@
-#include "Camera.h"
+#include "CameraComponent.h"
 
 #include "../Core/InputManager.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
-Camera::Camera()
+CameraComponent::CameraComponent()
 	: myHorizontalAngle(3.14f)
 	, myVerticalAngle(0.0f)
 	, myDefaultFieldOfView(45.0f)
@@ -23,13 +23,13 @@ Camera::Camera()
 	myDirection = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
-Camera::~Camera()
+CameraComponent::~CameraComponent()
 {
 }
 
-void Camera::Update(float aDeltaTime)
+void CameraComponent::Update(float aDeltaTime)
 {
-	const InputManager& inputManager = InputManager::GetInstance();
+	InputManager& inputManager = InputManager::GetInstance();
 
 	float movementSpeed = myKeySpeed;
 
@@ -59,7 +59,7 @@ void Camera::Update(float aDeltaTime)
 		myHorizontalAngle += aDeltaTime * myMouseSpeed * (1280.0f / 2.0f - inputManager.myCursorXPosition);
 		myVerticalAngle += aDeltaTime * myMouseSpeed * (720.0f / 2.0f - inputManager.myCursorYPosition);
 	}
-	
+
 	myDirection = glm::vec3(cos(myVerticalAngle) * sin(myHorizontalAngle), sin(myVerticalAngle), cos(myVerticalAngle) * cos(myHorizontalAngle));
 	myRight = glm::vec3(sin(myHorizontalAngle - 3.14f / 2.0f), 0.0f, cos(myHorizontalAngle - 3.14f / 2.0f));
 	myUp = glm::cross(myRight, myDirection);

@@ -1,7 +1,6 @@
 #include "World.h"
 
 #include "AssetLoader.h"
-#include "Camera.h"
 #include "../Core/Engine.h"
 #include "../Core/EngineContext.h"
 #include "../Graphics/Yellowstone.h"
@@ -12,17 +11,22 @@
 #include "EntityFactory.h"
 #include "LightingComponent.h"
 #include "TransformComponent.h"
+#include "CameraComponent.h"
 
 World::World()
 {
 	myAssetLoader = new AssetLoader();
-	myCamera = new Camera();
 	myEntityFactory = new EntityFactory();
+
 	myLighting = new Entity("Lighting", myEntityFactory);
 	LightingComponent* lightingComponent = new LightingComponent();
 	myLighting->AddComponent(lightingComponent);
 	TransformComponent* transformComponent = new TransformComponent(glm::vec3(-5.f, -2.5f, 7.5f));
 	myLighting->AddComponent(transformComponent);
+
+	myCamera = new Entity("Camera", myEntityFactory);
+	CameraComponent* cameraComponent = new CameraComponent();
+	myCamera->AddComponent(cameraComponent);
 }
 
 World::~World()
@@ -41,60 +45,9 @@ void World::Destroy()
 	myModels.clear();
 }
 
-void World::LoadDummyData()
+void World::LoadDefaultData()
 {
-	Model* model = myAssetLoader->LoadModel("../../../Data/Models/Planet/Planet.obj");
-	if (!model)
-	{
-		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading model from dummy data");
-		return;
-	}
-
-	Yellowstone* yellowstone = Engine::GetInstance().GetContext()->GetSubsystem<Yellowstone>();
-	TextureLibrary* textureLibrary = yellowstone->GetTextureLibrary();
-	if (!textureLibrary)
-	{
-		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Failed to access the Texture Library");
-		return;
-	}
-
-	for (const std::pair<std::string, TextureType>& texturePair : model->myTextureMap)
-	{
-		Texture* texture = myAssetLoader->LoadTexture(texturePair.first);
-		if (!texture)
-		{
-			Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Failed to load texture %s", texturePair.first.c_str());
-			return;
-		}
-
-		texture->myType = texturePair.second;
-
-		textureLibrary->CompileTexture(*texture);
-		textureLibrary->myTextures.push_back(*texture);
-	}
-
-	myModels.push_back(*model);
-
-	Shader* vertexShader = myAssetLoader->LoadShader("../../../Data/Shaders/NormalVertexShader.glsl", ShaderType::Vertex);
-	Shader* fragmentShader = myAssetLoader->LoadShader("../../../Data/Shaders/NormalFragmentShader.glsl", ShaderType::Fragment);
-
-	if (!vertexShader || !fragmentShader)
-	{
-		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Error loading shaders from dummy data");
-		return;
-	}
-
-	ShaderLibrary* shaderLibrary = yellowstone->GetShaderLibrary();
-	if (!shaderLibrary)
-	{
-		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Failed to get Shader Library");
-		return;
-	}
-
-	shaderLibrary->AddShader(*vertexShader);
-	shaderLibrary->AddShader(*fragmentShader);
-	shaderLibrary->CompileCurrentShaders();
-	shaderLibrary->AttachCurrentShaders();
+	LoadAndAddShaders("../../../Data/Shaders/DefaultVertexShader.glsl", "../../../Data/Shaders/DefaultFragmentShader.glsl");
 }
 
 void World::LoadAndAddModel(const std::string& aPath)

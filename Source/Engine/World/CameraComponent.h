@@ -1,13 +1,14 @@
 #pragma once
 
-#include <glm/vec3.hpp>
+#include "Component.h"
+
 #include <glm/mat4x4.hpp>
 
-class Camera
+class CameraComponent : public Component
 {
 public:
-	Camera();
-	~Camera();
+	CameraComponent();
+	~CameraComponent();
 
 	void Update(float aDeltaTime);
 
