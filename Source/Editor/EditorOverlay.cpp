@@ -24,17 +24,6 @@ void EditorOverlay::Tick()
 	Engine& engine = Engine::GetInstance();
 	World* world = engine.GetWorld();
 
-	if (ImGui::Button("Load Dummy Data"))
-	{
-		world->LoadDummyData();
-
-		EngineContext* engineContext = engine.GetContext();
-		if (Yellowstone* yellowstone = engineContext->GetSubsystem<Yellowstone>())
-		{
-			yellowstone->CreateAssetBuffers(world->GetModels());
-		}
-	}
-
 	EntityFactory& entityFactory = world->GetEntityFactory();
 	if (ImGui::Button("Add Entity"))
 	{
@@ -59,7 +48,7 @@ void EditorOverlay::Tick()
 		}
 	}
 
-	std::string dataPath = std::filesystem::current_path().string() + "\\..\\..\\..\\Data\\";
+	const std::string dataPath = std::filesystem::current_path().string().substr(0, std::filesystem::current_path().string().length() - 23) + "Data\\";
 
 	auto findCharactersInString = [](const std::string& aString, const char* aCharacters)
 	{
@@ -76,7 +65,8 @@ void EditorOverlay::Tick()
 					"  \"-xxx\"     hide lines containing \"xxx\"");
 		filter.Draw();
 
-		std::string modelsPath = dataPath + "Models\\";
+		const std::string modelsPath = dataPath + "Models\\";
+
 		for (const auto& entry : std::filesystem::recursive_directory_iterator(modelsPath))
 		{
 			if (!entry.path().has_extension())
@@ -125,7 +115,7 @@ void EditorOverlay::Tick()
 		filter.Draw();
 
 		std::vector<std::pair<std::string, std::string>> foundShaderPair;
-		std::string shadersPath = dataPath + "Shaders\\";
+		const std::string shadersPath = dataPath + "Shaders\\";
 		for (const auto& entry : std::filesystem::recursive_directory_iterator(shadersPath))
 		{
 			if (!entry.path().has_extension())
