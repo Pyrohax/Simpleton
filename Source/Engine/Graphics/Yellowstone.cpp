@@ -7,6 +7,9 @@
 #include "../Graphics/RenderSurface.h"
 #include "../Graphics/UI/ImguiWrapper.h"
 #include "../World/AssetLoader.h"
+#include "../World/CameraComponent.h"
+#include "../World/Entity.h"
+#include "../World/EntityFactory.h"
 #include "../World/World.h"
 
 Yellowstone::Yellowstone(EngineContext* aContext)
@@ -103,7 +106,11 @@ void Yellowstone::Update(float aDeltaTime)
 	{
 		myImguiWrapper->CreateFrame();
 		myImguiWrapper->Render(aDeltaTime);
-		myRenderContext->Render(world.GetModels(), *myTextureLibrary, *myShaderLibrary, world.GetCamera(), world.GetLighting(), myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight(), aDeltaTime);
+		CameraComponent& cameraComponent = world.GetCamera().GetComponent<CameraComponent>();
+		cameraComponent.Update(aDeltaTime);
+		LightingComponent& lightingComponent = world.GetLighting().GetComponent<LightingComponent>();
+		TransformComponent& lightingTransformComponent = world.GetLighting().GetComponent<TransformComponent>();
+		myRenderContext->Render(world.GetModels(), *myTextureLibrary, *myShaderLibrary, cameraComponent, lightingComponent, lightingTransformComponent, myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight(), aDeltaTime);
 		myImguiWrapper->Draw();
 	}
 

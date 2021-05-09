@@ -1,13 +1,10 @@
 #pragma once
 
-#include <unordered_map>
-#include <uuid.h>
-#include <vector>
+#include <entt/entt.hpp>
 
 const size_t MAX_COMPONENTS = 150;
 const size_t MAX_ENTITIES = 150;
 
-struct Component;
 class Entity;
 
 class EntityFactory
@@ -16,34 +13,32 @@ public:
 	EntityFactory();
 	~EntityFactory();
 
-	void CreateEntity();
-	void CreateEntity(const std::string& aName);
-	
-	void AddComponent(const uuids::uuid& anEntityUID, Component* aComponent);
+	Entity* CreateEntity();
 
-	template<class ComponentType>
-	ComponentType* GetComponent(const uuids::uuid& anEntityUID) const
+	template<typename ComponentType, typename... Args>
+	ComponentType& AddComponent(const entt::entity& anEntity, Args &&... anArguments)
 	{
-		for (auto& hash : myComponents)
-		{
-			if (hash.first != anEntityUID)
-				continue;
-
-			ComponentType* component = static_cast<ComponentType*>(hash.second);
-			if (!component)
-				continue;
-
-			return component;
-		}
-
-		return nullptr;
+		return myRegistry.emplace<ComponentType>(anEntity, std::forward<Args>(anArguments)...);
 	}
 
-	int GetEntityCount() const { return static_cast<int>(myEntities.size()); }
-	Entity& GetEntityByIndex(const int anIndex);
-	const Entity& GetEntityByUID(const uuids::uuid& anUID) const;
+	template<typename ComponentType>
+	ComponentType& GetComponent(const entt::entity& anEntity)
+	{
+		return myRegistry.get<ComponentType>(anEntity);
+	}
+
+	template<typename ComponentType>
+	ComponentType& GetComponent(const entt::entity& anEntity) const
+	{
+		return myRegistry.get<ComponentType>(anEntity);
+	}
+
+	template<typename ComponentType, typename... Args>
+	void RemoveComponent(const entt::entity& anEntity, Args &&... anArguments)
+	{
+		myRegistry.remove<ComponentType>(anEntity);
+	}
 
 private:
-	std::unordered_map<uuids::uuid, Component*> myComponents;
-	std::vector<Entity> myEntities;
+	entt::registry myRegistry;
 };

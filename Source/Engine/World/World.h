@@ -1,10 +1,10 @@
 #pragma once
 
 #include "../Graphics/Model.h"
-#include "Entity.h"
+#include "../Graphics/UI/WidgetIconType.h"
+#include "../World/Entity.h"
 
 #include <vector>
-#include "../Graphics/UI/WidgetIconType.h"
 
 class AssetLoader;
 class EntityFactory;
@@ -25,7 +25,7 @@ public:
 	AssetLoader& GetAssetLoader() { return *myAssetLoader; }
 	Entity& GetCamera() { return *myCamera; }
 	EntityFactory& GetEntityFactory() { return *myEntityFactory; }
-	const Entity& GetLighting() const { return *myLighting; }
+	Entity& GetLighting() { return *myLighting; }
 
 	const std::vector<Entity>& GetEntities() const { return myEntities; }
 	const std::vector<Model>& GetModels() const { return myModels; }

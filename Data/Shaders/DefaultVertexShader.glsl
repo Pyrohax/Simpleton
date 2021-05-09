@@ -17,7 +17,6 @@ out VertexData {
 } outVertexData;
 
 uniform float lightIntensity;
-uniform vec3 lightColor;
 uniform vec3 lightPositionWorldSpace;
 uniform mat4 modelViewProjectionMatrix;
 uniform mat4 modelMatrix;

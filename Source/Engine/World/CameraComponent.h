@@ -1,10 +1,8 @@
 #pragma once
 
-#include "Component.h"
-
 #include <glm/mat4x4.hpp>
 
-class CameraComponent : public Component
+class CameraComponent
 {
 public:
 	CameraComponent();

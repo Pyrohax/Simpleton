@@ -1,31 +1,56 @@
 #pragma once
 
+#include "../Core/Assert.h"
 #include "EntityFactory.h"
 
-#include <uuid.h>
+#include <entt/entt.hpp>
 
-#include <string>
-#include <vector>
+#include <uuid.h>
 
 class Entity
 {
 public:
-	Entity(const std::string& aName, EntityFactory* anEntityFactory);
+	Entity() = default;
+	Entity(const Entity& anOther) = default;
+	Entity(EntityFactory* anEntityFactory, entt::entity aHandle);
 	~Entity();
 
-	const uuids::uuid& GetUID() const { return myUID; }
-	const std::string& GetName() const { return myName; }
-
-	void AddComponent(Component* aComponent);
-
-	template<class ComponentType>
-	ComponentType* GetComponent() const
+	template<typename T, typename... Args>
+	T& AddComponent(Args&&... args)
 	{
-		return myEntityFactory->GetComponent<ComponentType>(myUID);
+		myEntityFactory->AddComponent<T>(myEntityHandle, std::forward<Args>(args)...);
 	}
+
+	template<typename T>
+	T& GetComponent()
+	{
+		return myEntityFactory->GetComponent<T>(myEntityHandle);
+	}
+
+	template<typename T>
+	void RemoveComponent()
+	{
+		return myEntityFactory->RemoveComponent<T>(myEntityHandle);
+	}
+
+	operator bool() const { return myEntityHandle != entt::null; }
+	operator entt::entity() const { return myEntityHandle; }
+	operator uint32_t() const { return static_cast<uint32_t>(myEntityHandle); }
+
+	bool operator==(const Entity& other) const
+	{
+		return myEntityHandle == other.myEntityHandle && mySceneUID == other.mySceneUID;
+	}
+
+	bool operator!=(const Entity& anOther) const
+	{
+		return !(*this == anOther);
+	}
+
+	const entt::entity& GetEntityHandle() const { return myEntityHandle; }
 
 private:
 	EntityFactory* myEntityFactory;
-	uuids::uuid myUID;
-	std::string myName;
+	entt::entity myEntityHandle{ entt::null };
+	uuids::uuid mySceneUID;
 };

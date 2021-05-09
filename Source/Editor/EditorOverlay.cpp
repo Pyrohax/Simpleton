@@ -4,11 +4,18 @@
 #include "Core/EngineContext.h"
 #include "Graphics/Yellowstone.h"
 #include "World/AssetLoader.h"
+#include "World/CameraComponent.h"
+#include "World/Entity.h"
 #include "World/EntityFactory.h"
+#include "World/LightingComponent.h"
 #include "World/MeshComponent.h"
+#include "World/TransformComponent.h"
 #include "World/World.h"
 
+#include <entt/entt.hpp>
+
 #include <filesystem>
+#include <vector>
 
 EditorOverlay::EditorOverlay()
 	: Overlay(true)
@@ -23,29 +30,17 @@ void EditorOverlay::Tick()
 {
 	Engine& engine = Engine::GetInstance();
 	World* world = engine.GetWorld();
-
 	EntityFactory& entityFactory = world->GetEntityFactory();
+
+	Entity& lighting = world->GetLighting();
+	TransformComponent& lightingTransformComponent = lighting.GetComponent<TransformComponent>();
+	ImGui::InputFloat3("Lighting Transform", lightingTransformComponent.GetRawPosition());
+	LightingComponent& lightingComponent = lighting.GetComponent<LightingComponent>();
+	ImGui::InputFloat3("Lighting Color", lightingComponent.GetRawColor());
+
 	if (ImGui::Button("Add Entity"))
 	{
 		entityFactory.CreateEntity();
-	}
-
-	for (int index = 0; index < entityFactory.GetEntityCount(); index++)
-	{
-		Entity& entity = entityFactory.GetEntityByIndex(index);
-		ImGui::Text(entity.GetName().c_str());
-		ImGui::SameLine();
-		ImGui::Text(uuids::to_string(entity.GetUID()).c_str());
-		ImGui::SameLine();
-		if (const MeshComponent* meshComponent = entity.GetComponent<MeshComponent>())
-		{
-			ImGui::Text(uuids::to_string(meshComponent->myUID).c_str());
-		}
-		else if (ImGui::Button("Add Mesh Component"))
-		{
-			MeshComponent* meshComponent = new MeshComponent();
-			entityFactory.AddComponent(entity.GetUID(), meshComponent);
-		}
 	}
 
 	const std::string dataPath = std::filesystem::current_path().string().substr(0, std::filesystem::current_path().string().length() - 23) + "Data\\";

@@ -1,32 +1,33 @@
 #include "World.h"
 
-#include "AssetLoader.h"
 #include "../Core/Engine.h"
 #include "../Core/EngineContext.h"
-#include "../Graphics/Yellowstone.h"
 #include "../Core/Logger.h"
-#include "../Graphics/Texture.h"
 #include "../Graphics/ShaderLibrary.h"
+#include "../Graphics/Texture.h"
 #include "../Graphics/TextureLibrary.h"
+#include "../Graphics/Yellowstone.h"
+#include "AssetLoader.h"
+#include "CameraComponent.h"
 #include "EntityFactory.h"
 #include "LightingComponent.h"
 #include "TransformComponent.h"
-#include "CameraComponent.h"
 
 World::World()
 {
 	myAssetLoader = new AssetLoader();
 	myEntityFactory = new EntityFactory();
+	myLighting = myEntityFactory->CreateEntity();
+	myCamera = myEntityFactory->CreateEntity();
 
-	myLighting = new Entity("Lighting", myEntityFactory);
 	LightingComponent* lightingComponent = new LightingComponent();
-	myLighting->AddComponent(lightingComponent);
+	myEntityFactory->AddComponent<LightingComponent>(myLighting->GetEntityHandle(), *lightingComponent);
+	
 	TransformComponent* transformComponent = new TransformComponent(glm::vec3(-5.f, -2.5f, 7.5f));
-	myLighting->AddComponent(transformComponent);
+	myEntityFactory->AddComponent<TransformComponent>(myLighting->GetEntityHandle(), *transformComponent);
 
-	myCamera = new Entity("Camera", myEntityFactory);
 	CameraComponent* cameraComponent = new CameraComponent();
-	myCamera->AddComponent(cameraComponent);
+	myEntityFactory->AddComponent<CameraComponent>(myCamera->GetEntityHandle(), *cameraComponent);
 }
 
 World::~World()
@@ -40,7 +41,6 @@ void World::Update()
 void World::Destroy()
 {
 	delete myEntityFactory;
-	delete myCamera;
 	delete myAssetLoader;
 	myModels.clear();
 }

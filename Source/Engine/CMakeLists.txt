@@ -56,7 +56,7 @@ target_link_libraries(Engine Vulkan::Vulkan)
 
 # GLM
 set(GLM_DIR "${DEP_DIR}/glm")
-target_include_directories(Engine PRIVATE "${GLM_DIR}")
+target_include_directories(Engine PUBLIC "${GLM_DIR}")
 
 # STB
 set(STB_DIR "${DEP_DIR}/stb")
@@ -88,5 +88,9 @@ target_include_directories(Engine PRIVATE "${IMGUI_DIR}")
 # RAPIDJSON
 set(RAPIDJSON_DIR "${DEP_DIR}/rapidjson/include")
 target_include_directories(Engine PRIVATE "${RAPIDJSON_DIR}")
+
+# ENTT
+set(ENTT_DIR "${DEP_DIR}/entt")
+target_include_directories(Engine PUBLIC "${ENTT_DIR}/src")
 
 ADD_PROJECT_FILTERS(${SRC_DIR} SRC Source)

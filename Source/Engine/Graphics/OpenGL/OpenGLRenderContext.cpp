@@ -1,17 +1,18 @@
 #include "OpenGLRenderContext.h"
 
 #include "../../Core/InputManager.h"
-#include "../../World/Entity.h"
+#include "../../World/CameraComponent.h"
+#include "../../World/EntityFactory.h"
+#include "../../World/LightingComponent.h"
+#include "../../World/TransformComponent.h"
 #include "../Mesh.h"
 #include "../Texture.h"
 #include "../Vertex.h"
 #include "OpenGLError.h"
 #include "OpenGLShaderLibrary.h"
 #include "OpenGLTextureLibrary.h"
-#include "../../World/LightingComponent.h"
-#include "../../World/TransformComponent.h"
-#include "../../World/CameraComponent.h"
 
+#include <entt/entt.hpp>
 #include <cstddef>
 
 OpenGLRenderContext::OpenGLRenderContext() : RenderContext()
@@ -84,11 +85,8 @@ void OpenGLRenderContext::CreateBuffers(std::vector<Model>& aModels)
 	}
 }
 
-void OpenGLRenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, ShaderLibrary& aShaderLibrary, Entity& aCamera, const Entity& aLighting, int aWidth, int aHeight, float aDeltaTime)
+void OpenGLRenderContext::Render(const std::vector<Model>& aModels, const TextureLibrary& aTextureLibrary, ShaderLibrary& aShaderLibrary, CameraComponent& aCameraComponent, LightingComponent& aLightingComponent, TransformComponent& aTransformComponentLighting, int aWidth, int aHeight, float aDeltaTime)
 {
-	CameraComponent* cameraComponent = aCamera.GetComponent<CameraComponent>();
-	cameraComponent->Update(aDeltaTime);
-
 	glViewport(0, 0, aWidth, aHeight);
 	glClearColor(0.7f, 0.9f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -97,18 +95,18 @@ void OpenGLRenderContext::Render(const std::vector<Model>& aModels, const Textur
 	if (shaderCount > 0)
 	{
 		aShaderLibrary.BindShaders();
-		aShaderLibrary.SetVector3Float("lightColor", aLighting.GetComponent<LightingComponent>()->GetColor());
-		aShaderLibrary.SetVector3Float("lightPositionWorldSpace", aLighting.GetComponent<TransformComponent>()->GetPosition());
 		aShaderLibrary.SetFloat("lightIntensity", 10.0f);
+		aShaderLibrary.SetVector3Float("lightColor", aLightingComponent.GetColor());
+		aShaderLibrary.SetVector3Float("lightPositionWorldSpace", aTransformComponentLighting.GetPosition());
 	}
 
 	for (const Model& model : aModels)
 	{
 		if (shaderCount > 0)
 		{
-			const glm::mat4x4& viewMatrix = cameraComponent->GetViewMatrix();
+			const glm::mat4x4& viewMatrix = aCameraComponent.GetViewMatrix();
 			const glm::mat4x4& modelMatrix = model.myModelMatrix;
-			const glm::mat4x4 modelViewProjectionMatrix = cameraComponent->GetProjectionMatrix() * viewMatrix * modelMatrix;
+			const glm::mat4x4 modelViewProjectionMatrix = aCameraComponent.GetProjectionMatrix() * viewMatrix * modelMatrix;
 			aShaderLibrary.SetMatrix4Float("modelViewProjectionMatrix", modelViewProjectionMatrix);
 			aShaderLibrary.SetMatrix4Float("modelMatrix", modelMatrix);
 			aShaderLibrary.SetMatrix4Float("viewMatrix", viewMatrix);
