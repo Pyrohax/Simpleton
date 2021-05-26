@@ -24,7 +24,6 @@ void UI::ImguiWrapper::Initialize(GLFWwindow* aWindow)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
     ImGui::StyleColorsDark();
 
     ImGui_ImplGlfw_InitForOpenGL(aWindow, true);
