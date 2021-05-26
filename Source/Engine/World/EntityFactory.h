@@ -33,6 +33,12 @@ public:
 		return myRegistry.get<ComponentType>(anEntity);
 	}
 
+	template<typename ComponentType>
+	bool HasComponent(const entt::entity& anEntity) const
+	{
+		return (myRegistry.try_get<ComponentType>(anEntity));
+	}
+
 	template<typename ComponentType, typename... Args>
 	void RemoveComponent(const entt::entity& anEntity, Args &&... anArguments)
 	{

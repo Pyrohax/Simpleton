@@ -28,7 +28,7 @@ void UI::ImguiWrapper::Initialize(GLFWwindow* aWindow)
     ImGui::StyleColorsDark();
 
     ImGui_ImplGlfw_InitForOpenGL(aWindow, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
+    ImGui_ImplOpenGL3_Init("#version 460");
 
     myWidgets.emplace_back(std::make_shared<UI::CameraWidget>(this, "Camera"));
     myWidgets.emplace_back(std::make_shared<UI::ConsoleWidget>(this, "Console"));

@@ -1,5 +1,5 @@
 // FRAGMENT SHADER
-#version 330 core
+#version 460
 
 in LightData {
 	vec3 lightDirectionCameraSpace;

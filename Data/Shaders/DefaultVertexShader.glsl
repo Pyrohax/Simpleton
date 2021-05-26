@@ -1,5 +1,5 @@
 // VERTEX SHADER
-#version 330 core
+#version 460
 
 layout(location = 0) in vec3 inVertexPositionModelSpace;
 layout(location = 1) in vec2 inVertexTextureCoordinates;
