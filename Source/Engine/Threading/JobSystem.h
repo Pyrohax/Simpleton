@@ -1,13 +1,15 @@
 #pragma once
 
+#include <algorithm>
+#include <functional>
 #include <future>
 #include <thread>
 #include <vector>
-#include <memory>
 
 struct Job
 {
-	std::thread** myThread;
+public:
+	std::thread myThread;
 	std::future<bool> myFuture;
 
 private:
@@ -28,12 +30,7 @@ public:
 	bool CollectAllThreads();
 
 private:
-	void StartJob(Job& aJob, std::thread*& aThreadOut);
-	void CollectFinishedThreads();
-
-	std::vector<Job> myQueuedJobs;
-	std::vector<Job> myRunningJobs;
-	std::vector<std::thread*> myThreads;
+	int CollectOneThread();
 
 	std::vector<Job> myJobs;
 	const float myMaximumExpirationTime = 3.f;

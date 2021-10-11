@@ -11,6 +11,7 @@
 
 RenderSurface::RenderSurface()
 	: myWindow(nullptr)
+	, myVulkanInstance(nullptr)
 	, myShouldClose(false)
 	, myWidth(1280)
 	, myHeight(720)
@@ -49,9 +50,6 @@ void RenderSurface::Initialize(GraphicsAPI aGraphicsAPI)
 		vulkanAppInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
 		vulkanAppInfo.apiVersion = VK_API_VERSION_1_0;
 
-		//PFN_vkCreateInstance pfnCreateInstance = (PFN_vkCreateInstance)glfwGetInstanceProcAddress(myVulkanInstance, "vkCreateInstance");
-		//PFN_vkCreateDevice pfnCreateDevice = (PFN_vkCreateDevice)glfwGetInstanceProcAddress(myVulkanInstance, "vkCreateDevice");
-		//PFN_vkGetDeviceProcAddr pfnGetDeviceProcAddr = (PFN_vkGetDeviceProcAddr)glfwGetInstanceProcAddress(myVulkanInstance, "vkGetDeviceProcAddr");
 		uint32_t count;
 		const char** extensions = glfwGetRequiredInstanceExtensions(&count);
 
