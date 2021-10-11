@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.7.0)
 
 set(CMAKE_CXX_STANDARD 20)
-add_definitions(-DUNICODE)
+add_definitions(-DUNICODE "/MP")
 set_property(GLOBAL PROPERTY CMAKE_CXX_STANDARD_REQUIRED ON)
 set_property(GLOBAL PROPERTY CMAKE_CXX_EXTENSIONS OFF)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
