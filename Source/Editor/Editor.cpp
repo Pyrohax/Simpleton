@@ -20,6 +20,13 @@ void Editor::Initialize()
 	engine.Initialize(BuildType::Editor);
 
 	Yellowstone* yellowstone = engine.GetContext()->GetSubsystem<Yellowstone>();
+	if (!yellowstone)
+		return;
+
+	UI::ImguiWrapper* imguiWrapper = yellowstone->GetImguiWrapper();
+	if (!imguiWrapper)
+		return;
+
 	yellowstone->GetImguiWrapper()->AddOverlay(std::make_shared<EditorOverlay>());
 }
 
