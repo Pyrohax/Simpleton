@@ -43,7 +43,7 @@ void RenderSurface::Initialize(GraphicsAPI aGraphicsAPI)
 		}
 
 		VkApplicationInfo vulkanAppInfo{};
-		vulkanAppInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+		vulkanAppInfo.sType = VkStructureType::VK_STRUCTURE_TYPE_APPLICATION_INFO;
 		vulkanAppInfo.pApplicationName = "Simpleton Editor";
 		vulkanAppInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
 		vulkanAppInfo.pEngineName = "Simpleton";
@@ -54,13 +54,13 @@ void RenderSurface::Initialize(GraphicsAPI aGraphicsAPI)
 		const char** extensions = glfwGetRequiredInstanceExtensions(&count);
 
 		VkInstanceCreateInfo vulkanInstanceCreateInfo{};
-		vulkanInstanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+		vulkanInstanceCreateInfo.sType = VkStructureType::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 		vulkanInstanceCreateInfo.enabledExtensionCount = count;
 		vulkanInstanceCreateInfo.ppEnabledExtensionNames = extensions;
 		vulkanInstanceCreateInfo.pApplicationInfo = &vulkanAppInfo;
 		vulkanInstanceCreateInfo.enabledLayerCount = 0;
 
-		if (vkCreateInstance(&vulkanInstanceCreateInfo, nullptr, &myVulkanInstance) != VK_SUCCESS)
+		if (vkCreateInstance(&vulkanInstanceCreateInfo, nullptr, &myVulkanInstance) != VkResult::VK_SUCCESS)
 		{
 			Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to create Vulkan instance");
 			glfwTerminate();
