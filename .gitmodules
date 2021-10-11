@@ -13,9 +13,18 @@
 [submodule "Dependencies/glad"]
 	path = Dependencies/glad
 	url = https://github.com/Dav1dde/glad.git
-[submodule "Dependencies/assimp"]
-	path = Dependencies/assimp
-	url = https://github.com/assimp/assimp.git
 [submodule "Dependencies/imgui"]
 	path = Dependencies/imgui
 	url = https://github.com/ocornut/imgui.git
+[submodule "Dependencies/rapidjson"]
+	path = Dependencies/rapidjson
+	url = https://github.com/Tencent/rapidjson.git
+[submodule "Dependencies/tinygltf"]
+	path = Dependencies/tinygltf
+	url = https://github.com/syoyo/tinygltf.git
+[submodule "Dependencies/stduuid"]
+	path = Dependencies/stduuid
+	url = https://github.com/mariusbancila/stduuid.git
+[submodule "Dependencies/entt"]
+	path = Dependencies/entt
+	url = https://github.com/skypjack/entt.git

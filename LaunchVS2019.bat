@@ -1,1 +1,1 @@
-start Build/Simpleton.sln
+start Generated/Simpleton.sln

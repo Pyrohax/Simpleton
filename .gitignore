@@ -362,5 +362,8 @@ MigrationBackup/
 FodyWeavers.xsd
 
 ## Project-specific files and folders
+[Bb]in/
 [Bb]uild/
+[Gg]enerated/
+[Oo]utput/
 ![Dd]ata/**
