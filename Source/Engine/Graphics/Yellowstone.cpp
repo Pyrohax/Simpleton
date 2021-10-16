@@ -2,10 +2,12 @@
 
 #include "../Core/Engine.h"
 #include "../Graphics/OpenGL/OpenGLRenderContext.h"
+#include "../Graphics/OpenGL/OpenGLRenderSurface.h"
 #include "../Graphics/OpenGL/OpenGLShaderLibrary.h"
 #include "../Graphics/OpenGL/OpenGLTextureLibrary.h"
 #include "../Graphics/RenderSurface.h"
 #include "../Graphics/UI/ImguiWrapper.h"
+#include "../Graphics/Vulkan/VulkanRenderSurface.h"
 #include "../World/AssetLoader.h"
 #include "../World/CameraComponent.h"
 #include "../World/Entity.h"
@@ -14,7 +16,7 @@
 
 Yellowstone::Yellowstone(EngineContext* aContext)
 	: Subsystem(aContext)
-	, myGraphicsAPI(GraphicsAPI::OpenGL)
+	, myGraphicsAPI(GraphicsAPI::Vulkan)
 	, myRenderSurface(nullptr)
 	, myRenderContext(nullptr)
 	, myShaderLibrary(nullptr)
@@ -26,18 +28,16 @@ Yellowstone::Yellowstone(EngineContext* aContext)
 	{
 		case GraphicsAPI::None:
 		{
-			myRenderSurface = new RenderSurface();
 			break;
 		}
 		case GraphicsAPI::DirectX12:
 		{
-			myRenderSurface = new RenderSurface();
 			myShowConsole = true;
 			break;
 		}
 		case GraphicsAPI::OpenGL:
 		{
-			myRenderSurface = new RenderSurface();
+			myRenderSurface = new OpenGLRenderSurface(GraphicsAPI::OpenGL, 1280, 720);
 			myRenderContext = new OpenGLRenderContext();
 			myShaderLibrary = new OpenGLShaderLibrary();
 			myTextureLibrary = new OpenGLTextureLibrary();
@@ -47,7 +47,7 @@ Yellowstone::Yellowstone(EngineContext* aContext)
 		}
 		case GraphicsAPI::Vulkan:
 		{
-			myRenderSurface = new RenderSurface();
+			myRenderSurface = new VulkanRenderSurface(GraphicsAPI::OpenGL, 1280, 720);
 			myShowConsole = true;
 			break;
 		}
@@ -65,7 +65,7 @@ Yellowstone::~Yellowstone()
 
 void Yellowstone::Initialize()
 {
-	myRenderSurface->Initialize(myGraphicsAPI);
+	myRenderSurface->Initialize();
 
 	if (myRenderContext)
 	{

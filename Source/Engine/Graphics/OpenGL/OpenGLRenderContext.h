@@ -2,7 +2,7 @@
 
 #include "../RenderContext.h"
 
-class OpenGLRenderContext : public RenderContext
+class OpenGLRenderContext final : public RenderContext
 {
 public:
 	OpenGLRenderContext();
