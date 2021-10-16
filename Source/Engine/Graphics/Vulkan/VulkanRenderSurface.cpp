@@ -10,8 +10,8 @@
 VulkanRenderSurface::VulkanRenderSurface(const GraphicsAPI aGraphicsAPI, const int aWidth, const int aHeight)
 	: RenderSurface(aGraphicsAPI, aWidth, aHeight)
 	, myVulkanInstance(nullptr)
-{
-}
+	, myVulkanPhysicalDevice(nullptr)
+{}
 
 VulkanRenderSurface::~VulkanRenderSurface()
 {}
@@ -34,51 +34,8 @@ void VulkanRenderSurface::Initialize()
 		return;
 	}
 
-	VkApplicationInfo vulkanAppInfo{};
-	vulkanAppInfo.sType = VkStructureType::VK_STRUCTURE_TYPE_APPLICATION_INFO;
-	vulkanAppInfo.pApplicationName = "Simpleton Editor";
-	vulkanAppInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-	vulkanAppInfo.pEngineName = "Simpleton";
-	vulkanAppInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-	vulkanAppInfo.apiVersion = VK_API_VERSION_1_0;
-
-	uint32_t count;
-	const char** extensions = glfwGetRequiredInstanceExtensions(&count);
-
-	VkInstanceCreateInfo vulkanInstanceCreateInfo{};
-	vulkanInstanceCreateInfo.sType = VkStructureType::VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-	vulkanInstanceCreateInfo.enabledExtensionCount = count;
-	vulkanInstanceCreateInfo.ppEnabledExtensionNames = extensions;
-	vulkanInstanceCreateInfo.pApplicationInfo = &vulkanAppInfo;
-	vulkanInstanceCreateInfo.enabledLayerCount = 0;
-
-	if (vkCreateInstance(&vulkanInstanceCreateInfo, nullptr, &myVulkanInstance) != VkResult::VK_SUCCESS)
-	{
-		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to create Vulkan instance");
-		glfwTerminate();
-		return;
-	}
-
-	VkPhysicalDevice vulkanPhysicalDevice = VK_NULL_HANDLE;
-	uint32_t deviceCount = 0;
-	vkEnumeratePhysicalDevices(myVulkanInstance, &deviceCount, nullptr);
-	if (deviceCount == 0)
-	{
-		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to detect physical device presentation support");
-		glfwTerminate();
-		return;
-	}
-
-	std::vector<VkPhysicalDevice> devices(deviceCount);
-	vkEnumeratePhysicalDevices(myVulkanInstance, &deviceCount, devices.data());
-	vulkanPhysicalDevice = devices[0];
-
-	if (glfwGetPhysicalDevicePresentationSupport(myVulkanInstance, vulkanPhysicalDevice, 0) != GLFW_TRUE)
-	{
-		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to detect physical device presentation support");
-		glfwTerminate();
-		return;
-	}
+	CreateVulkanInstance();
+	SetupVulkanPhysicalDevice();
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_SAMPLES, 4);
@@ -177,4 +134,93 @@ void VulkanRenderSurface::ScrollCallback(GLFWwindow* aWindow, double aXOffset, d
 void VulkanRenderSurface::MouseButtonCallback(GLFWwindow* aWindow, int aButton, int anAction, int aModifiers)
 {
 	InputManager::GetInstance().OnMouseButtonAction(aButton, anAction, aModifiers);
+}
+
+void VulkanRenderSurface::CreateVulkanInstance()
+{
+	VkApplicationInfo appInfo = {};
+	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+	appInfo.pApplicationName = "Simpleton Editor";
+	appInfo.applicationVersion = VK_MAKE_API_VERSION(0, 0, 0, 1);
+	appInfo.pEngineName = "Simpleton";
+	appInfo.engineVersion = VK_MAKE_API_VERSION(0, 0, 0, 1);
+	appInfo.apiVersion = VK_API_VERSION_1_1;
+
+	VkInstanceCreateInfo instanceCreateInfo = {};
+	instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+	instanceCreateInfo.pApplicationInfo = &appInfo;
+	uint32_t glfwExtensionCount = 0;
+	const char** glfwExtensions;
+	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+	instanceCreateInfo.enabledExtensionCount = glfwExtensionCount;
+	instanceCreateInfo.ppEnabledExtensionNames = glfwExtensions;
+	instanceCreateInfo.enabledLayerCount = 0;
+
+	if (vkCreateInstance(&instanceCreateInfo, nullptr, &myVulkanInstance) != VK_SUCCESS)
+	{
+		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to create Vulkan instance");
+		glfwTerminate();
+		return;
+	}
+}
+
+VulkanRenderSurface::QueueFamilyIndices VulkanRenderSurface::FindQueueFamilies(VkPhysicalDevice aPhysicalDevice) const
+{
+	QueueFamilyIndices indices;
+
+	uint32_t queueFamilyCount = 0;
+	vkGetPhysicalDeviceQueueFamilyProperties(aPhysicalDevice, &queueFamilyCount, nullptr);
+
+	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+	vkGetPhysicalDeviceQueueFamilyProperties(aPhysicalDevice, &queueFamilyCount, queueFamilies.data());
+
+	for (int index = 0; index < queueFamilies.size(); index++)
+	{
+		if (queueFamilies[index].queueFlags & VK_QUEUE_GRAPHICS_BIT)
+			indices.myGraphicsFamily = index;
+
+		if (indices.isComplete())
+			break;
+	}
+
+	return indices;
+}
+
+bool VulkanRenderSurface::IsDeviceSuitable(VkPhysicalDevice aDevice) const
+{
+	QueueFamilyIndices indices = FindQueueFamilies(aDevice);
+
+	return indices.isComplete();
+}
+
+void VulkanRenderSurface::SetupVulkanPhysicalDevice()
+{
+	uint32_t deviceCount = 0;
+	vkEnumeratePhysicalDevices(myVulkanInstance, &deviceCount, nullptr);
+
+	if (deviceCount == 0)
+	{
+		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to find a GPU with Vulkan support");
+		glfwTerminate();
+		return;
+	}
+
+	std::vector<VkPhysicalDevice> devices(deviceCount);
+	vkEnumeratePhysicalDevices(myVulkanInstance, &deviceCount, devices.data());
+
+	for (const auto& device : devices)
+	{
+		if (IsDeviceSuitable(device))
+		{
+			myVulkanPhysicalDevice = device;
+			break;
+		}
+	}
+
+	if (!myVulkanPhysicalDevice)
+	{
+		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to find a GPU with Vulkan support");
+		glfwTerminate();
+		return;
+	}
 }
