@@ -1,8 +1,8 @@
 #include "OpenGLRenderSurface.h"
 
-#include "../Texture.h"
-#include "../../Core/Logger.h"
 #include "../../Core/InputManager.h"
+#include "../../Core/Logger.h"
+#include "../Texture.h"
 
 #include <GLFW/glfw3.h>
 

@@ -30,11 +30,6 @@ public:
 
 protected:
 	virtual void PrintDebugInfo() = 0;
-	static void ErrorCallback(int anError, const char* aDescription);
-	static void KeyCallback(GLFWwindow* aWindow, int aKey, int aScancode, int anAction, int aMode);
-	static void CursorCallback(GLFWwindow* aWindow, double aXPosition, double aYPosition);
-	static void ScrollCallback(GLFWwindow* aWindow, double aXOffset, double aYOffset);
-	static void MouseButtonCallback(GLFWwindow* aWindow, int aButton, int anAction, int aModifiers);
 
 	GLFWwindow* myWindow;
 	GraphicsAPI myGraphicsAPI;

@@ -1,8 +1,8 @@
 #include "VulkanRenderSurface.h"
 
-#include "../Texture.h"
-#include "../../Core/Logger.h"
 #include "../../Core/InputManager.h"
+#include "../../Core/Logger.h"
+#include "../Texture.h"
 
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
