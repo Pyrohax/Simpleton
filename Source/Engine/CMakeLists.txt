@@ -124,7 +124,14 @@ set(ENABLE_GLSLANG_WEBMIN OFF CACHE BOOL "ENABLE_GLSLANG_WEBMIN" FORCE)
 set(BUILD_TESTING OFF CACHE BOOL "BUILD_TESTING" FORCE)
 set(SPIRV_HEADERS_SKIP_EXAMPLES ON CACHE BOOL "SPIRV_HEADERS_SKIP_EXAMPLES" FORCE)
 set(SPIRV_HEADERS_SKIP_INSTALL ON CACHE BOOL "SPIRV_HEADERS_SKIP_INSTALL" FORCE)
-set(SKIP_SPIRV_TOOLS_INSTALL ON CACHE BOOL "SKIP_SPIRV_TOOLS_INSTALL" FORCE)
+set(SKIP_SPIRV_TOOLS_INSTALL OFF CACHE BOOL "SKIP_SPIRV_TOOLS_INSTALL" FORCE)
+set(SPIRV_BUILD_COMPRESSION OFF CACHE BOOL "SPIRV_BUILD_COMPRESSION" FORCE)
+set(SPIRV_BUILD_FUZZER OFF CACHE BOOL "SPIRV_BUILD_FUZZER" FORCE)
+set(SPIRV_BUILD_LIBFUZZER_TARGETS OFF CACHE BOOL "SPIRV_BUILD_LIBFUZZER_TARGETS" FORCE)
+set(SPIRV_COLOR_TERMINAL OFF CACHE BOOL "SPIRV_COLOR_TERMINAL" FORCE)
+set(SPIRV_SKIP_EXECUTABLES ON CACHE BOOL "SPIRV_SKIP_EXECUTABLES" FORCE)
+set(SPIRV_SKIP_TESTS ON CACHE BOOL "SPIRV_SKIP_TESTS" FORCE)
+set(ENABLE_SPIRV_TOOLS_INSTALL OFF CACHE BOOL "ENABLE_SPIRV_TOOLS_INSTALL" FORCE)
 set(SHADERC_SPIRV_TOOLS_DIR "${DEP_DIR}/SPIRV-Tools" CACHE STRING "SHADERC_SPIRV_TOOLS_DIR" FORCE)
 set(SHADERC_SPIRV_HEADERS_DIR "${DEP_DIR}/SPIRV-Headers" CACHE STRING "SHADERC_SPIRV_HEADERS_DIR" FORCE)
 set(SHADERC_GLSLANG_DIR "${DEP_DIR}/glslang" CACHE STRING "SHADERC_GLSLANG_DIR" FORCE)
@@ -140,7 +147,24 @@ set_target_properties(add-copyright update_mappings build-version core_tables
     shaderc_shared shaderc_static-pkg-config shaderc_util shaderc-pkg-config
     spirv-tools-pkg-config spirv-tools-shared-pkg-config testdata
     glslangValidator spirv-remap HLSL glslang GenericCodeGen glslang-default-resource-limits
-    MachineIndependent OGLCompiler OSDependent SPIRV SPVRemapper
+    MachineIndependent OGLCompiler OSDependent SPIRV SPVRemapper spirv-tools-vimsyntax
+    SPIRV-Tools-link SPIRV-Tools-lint SPIRV-Tools-opt SPIRV-Tools-reduce SPIRV-Tools-shared
+    SPIRV-Tools-static spirv-tools-build-version spirv-tools-header-DebugInfo spirv-tools-header-NonSemanticShaderDebugInfo100
+    spirv-tools-header-OpenCLDebugInfo100 spv-tools-cldi100 spv-tools-clspvreflection spv-tools-debuginfo
+    spv-tools-shdi100 spv-tools-spv-amd-gs spv-tools-spv-amd-sb spv-tools-spv-amd-sevp spv-tools-spv-amd-stm
     PROPERTIES FOLDER Dependencies)
+
+set_target_properties(add-copyright update_mappings build-version core_tables 
+    enum_string_mapping extinst_tables glad-generate-files glslc glslc_exe
+    install-headers shaderc_combined_genfile shaderc_combined-pkg-config
+    shaderc_shared shaderc_static-pkg-config shaderc_util shaderc-pkg-config
+    spirv-tools-pkg-config spirv-tools-shared-pkg-config testdata
+    glslangValidator spirv-remap HLSL glslang GenericCodeGen glslang-default-resource-limits
+    MachineIndependent OGLCompiler OSDependent SPIRV SPVRemapper spirv-tools-vimsyntax
+    SPIRV-Tools-link SPIRV-Tools-lint SPIRV-Tools-opt SPIRV-Tools-reduce SPIRV-Tools-shared
+    SPIRV-Tools-static spirv-tools-build-version spirv-tools-header-DebugInfo spirv-tools-header-NonSemanticShaderDebugInfo100
+    spirv-tools-header-OpenCLDebugInfo100 spv-tools-cldi100 spv-tools-clspvreflection spv-tools-debuginfo
+    spv-tools-shdi100 spv-tools-spv-amd-gs spv-tools-spv-amd-sb spv-tools-spv-amd-sevp spv-tools-spv-amd-stm
+    PROPERTIES EXCLUDE_FROM_ALL True)
 
 ADD_PROJECT_FILTERS(${SRC_DIR} SRC Source)
