@@ -39,6 +39,8 @@ file(GLOB_RECURSE SRC SRC_DIR
 
 add_library(Engine STATIC ${SRC} ${IMGUI})
 
+set_target_properties(Engine PROPERTIES FOLDER Pyrohax)
+
 source_group("imgui" FILES ${IMGUI})
 
 find_package(Vulkan REQUIRED)
@@ -48,13 +50,16 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "Generate docs" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "Generate examples" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "Generate tests" FORCE)
 set(GLFW_USE_HYBRID_HPG ON CACHE BOOL "Use dedicated GPU" FORCE)
+set(GLFW_INSTALL OFF CACHE BOOL "GLFW_INSTALL" FORCE)
 set(GLFW_DIR "${DEP_DIR}/glfw")
 add_subdirectory("${GLFW_DIR}" glfw)
 target_include_directories(Engine PRIVATE "${GLFW_DIR}/include")
 target_link_libraries(Engine "glfw")
+set_target_properties(glfw PROPERTIES FOLDER Dependencies)
 
 # VULKAN
 target_link_libraries(Engine Vulkan::Vulkan)
+set_target_properties(Vulkan::Vulkan PROPERTIES FOLDER Dependencies)
 
 # GLM
 set(GLM_DIR "${DEP_DIR}/glm")
@@ -69,10 +74,13 @@ set(TINYOBJ_DIR "${DEP_DIR}/tinyobjloader")
 target_include_directories(Engine PRIVATE "${TINYOBJ_DIR}")
 
 # TINYGLTF
+set(TINYGLTF_BUILD_LOADER_EXAMPLE OFF CACHE BOOL "TINYGLTF_BUILD_LOADER_EXAMPLE" FORCE)
+set(TINYGLTF_INSTALL OFF CACHE BOOL "TINYGLTF_INSTALL" FORCE)
 set(TINYGLTF_DIR "${DEP_DIR}/tinygltf")
 target_include_directories(Engine PRIVATE "${TINYGLTF_DIR}")
 
 # STDUUID
+set(UUID_BUILD_TESTS OFF CACHE BOOL "UUID_BUILD_TESTS" FORCE)
 set(STDUUID_DIR "${DEP_DIR}/stduuid")
 add_subdirectory("${STDUUID_DIR}" stuuid)
 target_include_directories(Engine PUBLIC "${STDUUID_DIR}/include")
@@ -83,16 +91,54 @@ set(GLAD_BIN_DIR "${CMAKE_CURRENT_BINARY_DIR}/glad")
 add_subdirectory("${GLAD_DIR}" glad)
 target_include_directories(Engine PRIVATE "${GLAD_BIN_DIR}/include")
 target_link_libraries(Engine "glad")
+set_target_properties(glad PROPERTIES FOLDER Dependencies)
 
 # IMGUI
 target_include_directories(Engine PRIVATE "${IMGUI_DIR}")
 
 # RAPIDJSON
+set(RAPIDJSON_BUILD_DOC OFF CACHE BOOL "RAPIDJSON_BUILD_DOC" FORCE)
+set(RAPIDJSON_BUILD_EXAMPLES OFF CACHE BOOL "RAPIDJSON_BUILD_EXAMPLES" FORCE)
+set(RAPIDJSON_BUILD_TESTS OFF CACHE BOOL "RAPIDJSON_BUILD_TESTS" FORCE)
+set(RAPIDJSON_BUILD_THIRDPARTY_GTEST OFF CACHE BOOL "RAPIDJSON_BUILD_THIRDPARTY_GTEST" FORCE)
+set(RAPIDJSON_BUILD_CXX11 OFF CACHE BOOL "RAPIDJSON_BUILD_CXX11" FORCE)
+set(RAPIDJSON_BUILD_CXX17 ON CACHE BOOL "RAPIDJSON_BUILD_CXX17" FORCE)
 set(RAPIDJSON_DIR "${DEP_DIR}/rapidjson/include")
 target_include_directories(Engine PRIVATE "${RAPIDJSON_DIR}")
 
 # ENTT
+set(ENTT_BUILD_TESTING OFF CACHE BOOL "ENTT_BUILD_TESTING" FORCE)
+set(ENTT_BUILD_DOCS OFF CACHE BOOL "ENTT_BUILD_DOCS" FORCE)
 set(ENTT_DIR "${DEP_DIR}/entt")
 target_include_directories(Engine PUBLIC "${ENTT_DIR}/src")
+
+# SHADERC
+set(SHADERC_SKIP_TESTS ON CACHE BOOL "SHADERC_SKIP_TESTS" FORCE)
+set(SHADERC_SKIP_EXAMPLES ON CACHE BOOL "SHADERC_SKIP_EXAMPLES" FORCE)
+set(SHADERC_SKIP_INSTALL ON CACHE BOOL "SHADERC_SKIP_INSTALL" FORCE)
+set(SHADERC_SKIP_COPYRIGHT_CHECK ON CACHE BOOL "SHADERC_SKIP_COPYRIGHT_CHECK" FORCE)
+set(SHADERC_ENABLE_WGSL_OUTPUT OFF CACHE BOOL "SHADERC_ENABLE_WGSL_OUTPUT" FORCE)
+set(ENABLE_HLSL ON CACHE BOOL "ENABLE_HLSL" FORCE)
+set(ENABLE_CTEST OFF CACHE BOOL "ENABLE_CTEST" FORCE)
+set(ENABLE_GLSLANG_WEBMIN OFF CACHE BOOL "ENABLE_GLSLANG_WEBMIN" FORCE)
+set(BUILD_TESTING OFF CACHE BOOL "BUILD_TESTING" FORCE)
+set(SPIRV_HEADERS_SKIP_EXAMPLES ON CACHE BOOL "SPIRV_HEADERS_SKIP_EXAMPLES" FORCE)
+set(SPIRV_HEADERS_SKIP_INSTALL ON CACHE BOOL "SPIRV_HEADERS_SKIP_INSTALL" FORCE)
+set(SKIP_SPIRV_TOOLS_INSTALL ON CACHE BOOL "SKIP_SPIRV_TOOLS_INSTALL" FORCE)
+set(SHADERC_SPIRV_TOOLS_DIR "${DEP_DIR}/SPIRV-Tools" CACHE STRING "SHADERC_SPIRV_TOOLS_DIR" FORCE)
+set(SHADERC_SPIRV_HEADERS_DIR "${DEP_DIR}/SPIRV-Headers" CACHE STRING "SHADERC_SPIRV_HEADERS_DIR" FORCE)
+set(SHADERC_GLSLANG_DIR "${DEP_DIR}/glslang" CACHE STRING "SHADERC_GLSLANG_DIR" FORCE)
+set(SHADERC_DIR "${DEP_DIR}/shaderc")
+add_subdirectory("${SHADERC_DIR}" shaderc)
+target_include_directories(Engine PUBLIC "${SHADERC_DIR}")
+target_link_libraries(Engine "shaderc")
+set_target_properties(shaderc PROPERTIES FOLDER Dependencies)
+
+set_target_properties(add-copyright update_mappings build-version core_tables 
+    enum_string_mapping extinst_tables glad-generate-files glslc glslc_exe
+    install-headers shaderc_combined_genfile shaderc_combined-pkg-config
+    shaderc_shared shaderc_static-pkg-config shaderc_util shaderc-pkg-config
+    spirv-tools-pkg-config spirv-tools-shared-pkg-config testdata
+    PROPERTIES FOLDER Dependencies)
 
 ADD_PROJECT_FILTERS(${SRC_DIR} SRC Source)

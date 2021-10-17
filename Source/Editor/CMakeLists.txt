@@ -6,5 +6,8 @@ file(GLOB SRC
     "*.h")
 
 add_executable(Editor WIN32 ${SRC})
+
+set_target_properties(Editor PROPERTIES FOLDER Pyrohax)
+
 target_link_libraries(Editor PUBLIC Engine)
 target_include_directories(Editor PUBLIC "../Engine/")
