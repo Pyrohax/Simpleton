@@ -139,6 +139,8 @@ set_target_properties(add-copyright update_mappings build-version core_tables
     install-headers shaderc_combined_genfile shaderc_combined-pkg-config
     shaderc_shared shaderc_static-pkg-config shaderc_util shaderc-pkg-config
     spirv-tools-pkg-config spirv-tools-shared-pkg-config testdata
+    glslangValidator spirv-remap HLSL glslang GenericCodeGen glslang-default-resource-limits
+    MachineIndependent OGLCompiler OSDependent SPIRV SPVRemapper
     PROPERTIES FOLDER Dependencies)
 
 ADD_PROJECT_FILTERS(${SRC_DIR} SRC Source)
