@@ -28,3 +28,15 @@
 [submodule "Dependencies/entt"]
 	path = Dependencies/entt
 	url = https://github.com/skypjack/entt.git
+[submodule "Dependencies/shaderc"]
+	path = Dependencies/shaderc
+	url = https://github.com/google/shaderc.git
+[submodule "Dependencies/glslang"]
+	path = Dependencies/glslang
+	url = https://github.com/KhronosGroup/glslang.git
+[submodule "Dependencies/SPIRV-Tools"]
+	path = Dependencies/SPIRV-Tools
+	url = https://github.com/KhronosGroup/SPIRV-Tools.git
+[submodule "Dependencies/SPIRV-Headers"]
+	path = Dependencies/SPIRV-Headers
+	url = https://github.com/KhronosGroup/SPIRV-Headers.git
