@@ -47,7 +47,7 @@ Yellowstone::Yellowstone(EngineContext* aContext)
 		}
 		case GraphicsAPI::Vulkan:
 		{
-			myRenderSurface = new VulkanRenderSurface(GraphicsAPI::OpenGL, 1280, 720);
+			myRenderSurface = new VulkanRenderSurface(GraphicsAPI::Vulkan, 1280, 720);
 			myShowConsole = true;
 			break;
 		}
