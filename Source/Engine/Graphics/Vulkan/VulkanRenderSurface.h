@@ -1,8 +1,13 @@
 #pragma once
 
 #include <optional>
+#include <vector>
+#include <vulkan/vulkan.hpp>
 
 #include "../RenderSurface.h"
+//TODO: yank out of here
+#include "../../Core/Logger.h"
+
 
 struct GLFWwindow;
 struct Texture;
@@ -15,7 +20,7 @@ public:
 	VulkanRenderSurface(const GraphicsAPI aGraphicsAPI, const int aWidth, const int aHeight);
 	~VulkanRenderSurface();
 
-	void Initialize() override;
+	bool Initialize() override;
 	void Tick(double aDeltaTime) override;
 	void Destroy() override;
 
@@ -44,13 +49,33 @@ private:
 	static void ScrollCallback(GLFWwindow* aWindow, double aXOffset, double aYOffset);
 	static void MouseButtonCallback(GLFWwindow* aWindow, int aButton, int anAction, int aModifiers);
 
-	void CreateVulkanInstance();
-	void SetupVulkanPhysicalDevice();
+	bool CreateVulkanInstance();
+	bool SetupVulkanPhysicalDevice();
+
+	bool CheckValidationLayerSupport() const;
+	std::vector<const char*> GetRequiredExtensions();
 
 	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice aPhysicalDevice) const;
 	bool IsDeviceSuitable(VkPhysicalDevice aDevice) const;
 
+
+#ifdef NDEBUG
+	const bool myEnableValidationLayers = false;
+#else
+	const bool myEnableValidationLayers = true;
+#endif
+
 private:
 	VkInstance myVulkanInstance;
 	VkPhysicalDevice myVulkanPhysicalDevice;
+
+	static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
+		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+		VkDebugUtilsMessageTypeFlagsEXT messageType,
+		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+		void* pUserData)
+	{
+		Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "Validation layer: %s", pCallbackData->pMessage);
+		return VK_FALSE;
+	}
 };

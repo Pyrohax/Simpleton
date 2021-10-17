@@ -11,7 +11,7 @@ public:
 	OpenGLRenderSurface(const GraphicsAPI aGraphicsAPI, const int aWidth, const int aHeight);
 	~OpenGLRenderSurface();
 
-	void Initialize() override;
+	bool Initialize() override;
 	void Tick(double aDeltaTime) override;
 	void Destroy() override;
 

@@ -7,6 +7,11 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+const std::vector<const char*> validationLayers =
+{
+	"VK_LAYER_KHRONOS_validation"
+};
+
 VulkanRenderSurface::VulkanRenderSurface(const GraphicsAPI aGraphicsAPI, const int aWidth, const int aHeight)
 	: RenderSurface(aGraphicsAPI, aWidth, aHeight)
 	, myVulkanInstance(nullptr)
@@ -16,7 +21,7 @@ VulkanRenderSurface::VulkanRenderSurface(const GraphicsAPI aGraphicsAPI, const i
 VulkanRenderSurface::~VulkanRenderSurface()
 {}
 
-void VulkanRenderSurface::Initialize()
+bool VulkanRenderSurface::Initialize()
 {
 	glfwSetErrorCallback(ErrorCallback);
 
@@ -24,14 +29,14 @@ void VulkanRenderSurface::Initialize()
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to initialize GLFW");
 		glfwTerminate();
-		return;
+		return false;
 	}
 
 	if (!glfwVulkanSupported())
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to use Vulkan with GLFW");
 		glfwTerminate();
-		return;
+		return false;
 	}
 
 	CreateVulkanInstance();
@@ -45,7 +50,7 @@ void VulkanRenderSurface::Initialize()
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to open a GLFW window");
 		glfwTerminate();
-		return;
+		return false;
 	}
 
 	VkSurfaceKHR vulkanSurface;
@@ -53,7 +58,7 @@ void VulkanRenderSurface::Initialize()
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to open a GLFW window");
 		glfwTerminate();
-		return;
+		return false;
 	}
 
 	glfwMakeContextCurrent(myWindow);
@@ -69,6 +74,7 @@ void VulkanRenderSurface::Initialize()
 	glfwSwapInterval(1);
 
 	PrintDebugInfo();
+	return true;
 }
 
 void VulkanRenderSurface::Tick(double aDeltaTime)
@@ -84,7 +90,7 @@ void VulkanRenderSurface::Tick(double aDeltaTime)
 		myShouldClose = true;
 
 	glfwGetFramebufferSize(myWindow, &myWidth, &myHeight);
-	glfwSwapBuffers(myWindow);
+	//glfwSwapBuffers(myWindow);
 }
 
 void VulkanRenderSurface::Destroy()
@@ -136,8 +142,13 @@ void VulkanRenderSurface::MouseButtonCallback(GLFWwindow* aWindow, int aButton, 
 	InputManager::GetInstance().OnMouseButtonAction(aButton, anAction, aModifiers);
 }
 
-void VulkanRenderSurface::CreateVulkanInstance()
+bool VulkanRenderSurface::CreateVulkanInstance()
 {
+	if (myEnableValidationLayers && !CheckValidationLayerSupport())
+	{
+		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Validation layers requested but not available!");
+		return false;
+	}
 	VkApplicationInfo appInfo = {};
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	appInfo.pApplicationName = "Simpleton Editor";
@@ -148,20 +159,26 @@ void VulkanRenderSurface::CreateVulkanInstance()
 
 	VkInstanceCreateInfo instanceCreateInfo = {};
 	instanceCreateInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-	instanceCreateInfo.pApplicationInfo = &appInfo;
-	uint32_t glfwExtensionCount = 0;
-	const char** glfwExtensions;
-	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-	instanceCreateInfo.enabledExtensionCount = glfwExtensionCount;
-	instanceCreateInfo.ppEnabledExtensionNames = glfwExtensions;
-	instanceCreateInfo.enabledLayerCount = 0;
+	instanceCreateInfo.pApplicationInfo = &appInfo;	
+	auto requiredExtensions = GetRequiredExtensions();
+	instanceCreateInfo.enabledExtensionCount = static_cast<uint32_t>(requiredExtensions.size());
+	instanceCreateInfo.ppEnabledExtensionNames = requiredExtensions.data();
+
+	if (myEnableValidationLayers)
+	{
+		instanceCreateInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+		instanceCreateInfo.ppEnabledLayerNames = validationLayers.data();
+	}
+	else 
+		instanceCreateInfo.enabledLayerCount = 0;
 
 	if (vkCreateInstance(&instanceCreateInfo, nullptr, &myVulkanInstance) != VK_SUCCESS)
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to create Vulkan instance");
 		glfwTerminate();
-		return;
+		return false;
 	}
+	return true;
 }
 
 VulkanRenderSurface::QueueFamilyIndices VulkanRenderSurface::FindQueueFamilies(VkPhysicalDevice aPhysicalDevice) const
@@ -193,7 +210,7 @@ bool VulkanRenderSurface::IsDeviceSuitable(VkPhysicalDevice aDevice) const
 	return indices.isComplete();
 }
 
-void VulkanRenderSurface::SetupVulkanPhysicalDevice()
+bool VulkanRenderSurface::SetupVulkanPhysicalDevice()
 {
 	uint32_t deviceCount = 0;
 	vkEnumeratePhysicalDevices(myVulkanInstance, &deviceCount, nullptr);
@@ -202,7 +219,7 @@ void VulkanRenderSurface::SetupVulkanPhysicalDevice()
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to find a GPU with Vulkan support");
 		glfwTerminate();
-		return;
+		return false;
 	}
 
 	std::vector<VkPhysicalDevice> devices(deviceCount);
@@ -221,6 +238,48 @@ void VulkanRenderSurface::SetupVulkanPhysicalDevice()
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to find a GPU with Vulkan support");
 		glfwTerminate();
-		return;
+		return false;
 	}
+	return true;
+}
+
+bool VulkanRenderSurface::CheckValidationLayerSupport() const
+{
+	uint32_t layerCount;
+	vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+
+	std::vector<VkLayerProperties> availableLayers(layerCount);
+	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+
+	for (const char* layerName : validationLayers)
+	{
+		bool layerFound = false;
+
+		for (const auto& layerProperties : availableLayers)
+		{
+			if (strcmp(layerName, layerProperties.layerName) == 0)
+			{
+				layerFound = true;
+				break;
+			}
+		}
+
+		if (!layerFound)
+			return false;
+	}
+	return true;
+}
+
+std::vector<const char*> VulkanRenderSurface::GetRequiredExtensions()
+{
+	uint32_t glfwExtensionCount = 0;
+	const char** glfwExtensions;
+	glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+	std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+
+	if (myEnableValidationLayers)
+		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+
+	return extensions;
 }

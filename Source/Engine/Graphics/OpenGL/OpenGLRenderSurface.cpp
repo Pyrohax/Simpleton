@@ -13,7 +13,7 @@ OpenGLRenderSurface::OpenGLRenderSurface(const GraphicsAPI aGraphicsAPI, const i
 OpenGLRenderSurface::~OpenGLRenderSurface()
 {}
 
-void OpenGLRenderSurface::Initialize()
+bool OpenGLRenderSurface::Initialize()
 {
 	glfwSetErrorCallback(ErrorCallback);
 
@@ -21,7 +21,7 @@ void OpenGLRenderSurface::Initialize()
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to initialize GLFW");
 		glfwTerminate();
-		return;
+		return false;
 	}
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
@@ -38,7 +38,7 @@ void OpenGLRenderSurface::Initialize()
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to open a GLFW window");
 		glfwTerminate();
-		return;
+		return false;
 	}
 
 	glfwMakeContextCurrent(myWindow);
@@ -54,6 +54,7 @@ void OpenGLRenderSurface::Initialize()
 	glfwSwapInterval(1);
 
 	PrintDebugInfo();
+	return true;
 }
 
 void OpenGLRenderSurface::Tick(double aDeltaTime)
