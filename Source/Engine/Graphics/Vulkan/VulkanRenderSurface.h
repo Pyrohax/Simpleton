@@ -5,9 +5,6 @@
 #include <vulkan/vulkan.hpp>
 
 #include "../RenderSurface.h"
-//TODO: yank out of here
-#include "../../Core/Logger.h"
-
 
 struct GLFWwindow;
 struct Texture;
@@ -51,31 +48,31 @@ private:
 
 	bool CreateVulkanInstance();
 	bool SetupVulkanPhysicalDevice();
+	void SetupDebugMessenger();
 
 	bool CheckValidationLayerSupport() const;
 	std::vector<const char*> GetRequiredExtensions();
+	void PopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& aCreateInfo) const;
+	VkResult CreateDebugUtilsMessengerEXT(VkInstance aInstance, const VkDebugUtilsMessengerCreateInfoEXT* aCreateInfo, const VkAllocationCallbacks* aAllocator, VkDebugUtilsMessengerEXT* aDebugMessenger);
+	void DestroyDebugUtilMessengerEXT(VkInstance aInstance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* aAllocator);
 
 	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice aPhysicalDevice) const;
 	bool IsDeviceSuitable(VkPhysicalDevice aDevice) const;
 
-
-#ifdef NDEBUG
-	const bool myEnableValidationLayers = false;
-#else
-	const bool myEnableValidationLayers = true;
-#endif
+	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
+		VkDebugUtilsMessageSeverityFlagBitsEXT aMessageSeverity,
+		VkDebugUtilsMessageTypeFlagsEXT aMessageType,
+		const VkDebugUtilsMessengerCallbackDataEXT* aCallbackData,
+		void* aUserData);
 
 private:
+#ifdef NDEBUG
+	const bool myIsValidationsLayersEnabled = false;
+#else
+	const bool myIsValidationsLayersEnabled = true;
+#endif
+
 	VkInstance myVulkanInstance;
 	VkPhysicalDevice myVulkanPhysicalDevice;
-
-	static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
-		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-		VkDebugUtilsMessageTypeFlagsEXT messageType,
-		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-		void* pUserData)
-	{
-		Log::Logger::Print(Log::Severity::Message, Log::Category::Rendering, "Validation layer: %s", pCallbackData->pMessage);
-		return VK_FALSE;
-	}
+	VkDebugUtilsMessengerEXT myDebugMessenger;
 };

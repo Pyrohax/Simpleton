@@ -67,8 +67,10 @@ void OpenGLRenderSurface::Tick(double aDeltaTime)
 	}
 
 	if (glfwWindowShouldClose(myWindow))
+	{
 		myShouldClose = true;
-
+		Destroy();
+	}
 	glfwGetFramebufferSize(myWindow, &myWidth, &myHeight);
 	glfwSwapBuffers(myWindow);
 }
