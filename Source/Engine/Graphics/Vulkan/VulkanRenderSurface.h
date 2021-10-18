@@ -59,11 +59,11 @@ private:
 	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice aPhysicalDevice) const;
 	bool IsDeviceSuitable(VkPhysicalDevice aDevice) const;
 
-	static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(
-		VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-		VkDebugUtilsMessageTypeFlagsEXT messageType,
-		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
-		void* pUserData);
+	static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
+		VkDebugUtilsMessageSeverityFlagBitsEXT aMessageSeverity,
+		VkDebugUtilsMessageTypeFlagsEXT aMessageType,
+		const VkDebugUtilsMessengerCallbackDataEXT* aCallbackData,
+		void* aUserData);
 
 private:
 #ifdef NDEBUG

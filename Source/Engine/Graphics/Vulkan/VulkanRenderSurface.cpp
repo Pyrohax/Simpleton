@@ -258,7 +258,8 @@ bool VulkanRenderSurface::SetupVulkanPhysicalDevice()
 
 void VulkanRenderSurface::SetupDebugMessenger()
 {
-	if (!myIsValidationsLayersEnabled) return;
+	if (!myIsValidationsLayersEnabled) 
+		return;
 
 	VkDebugUtilsMessengerCreateInfoEXT createInfo;
 	PopulateDebugMessengerCreateInfo(createInfo);
@@ -314,7 +315,7 @@ void VulkanRenderSurface::PopulateDebugMessengerCreateInfo(VkDebugUtilsMessenger
 	aCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 	aCreateInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
 	aCreateInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
-	aCreateInfo.pfnUserCallback = debugCallback;
+	aCreateInfo.pfnUserCallback = DebugCallback;
 	aCreateInfo.pUserData = nullptr;
 }
 
@@ -338,7 +339,7 @@ void VulkanRenderSurface::DestroyDebugUtilMessengerEXT(VkInstance aInstance, VkD
 		func(aInstance, debugMessenger, aAllocator);
 }
 
-VKAPI_ATTR VkBool32 VKAPI_CALL VulkanRenderSurface::debugCallback(
+VKAPI_ATTR VkBool32 VKAPI_CALL VulkanRenderSurface::DebugCallback(
 	VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 	VkDebugUtilsMessageTypeFlagsEXT messageType,
 	const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
