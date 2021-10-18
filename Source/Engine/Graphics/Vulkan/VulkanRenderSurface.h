@@ -14,7 +14,7 @@ typedef struct VkPhysicalDevice_T* VkPhysicalDevice;
 class VulkanRenderSurface final : public RenderSurface
 {
 public:
-	VulkanRenderSurface(const GraphicsAPI aGraphicsAPI, const int aWidth, const int aHeight);
+	VulkanRenderSurface(const int aWidth, const int aHeight);
 	~VulkanRenderSurface();
 
 	bool Initialize() override;

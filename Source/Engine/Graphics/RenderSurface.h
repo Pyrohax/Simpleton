@@ -8,9 +8,8 @@ struct Texture;
 class RenderSurface
 {
 public:
-	RenderSurface(const GraphicsAPI aGraphicsAPI, const int aWidth, const int aHeight)
+	RenderSurface(const int aWidth, const int aHeight)
 		: myWindow(nullptr)
-		, myGraphicsAPI(aGraphicsAPI)
 		, myWidth(aWidth)
 		, myHeight(aHeight)
 		, myShouldClose(false)
@@ -32,7 +31,6 @@ protected:
 	virtual void PrintDebugInfo() = 0;
 
 	GLFWwindow* myWindow;
-	GraphicsAPI myGraphicsAPI;
 	int myWidth;
 	int myHeight;
 	bool myShouldClose;

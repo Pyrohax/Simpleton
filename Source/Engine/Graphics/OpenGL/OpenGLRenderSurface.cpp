@@ -6,8 +6,8 @@
 
 #include <GLFW/glfw3.h>
 
-OpenGLRenderSurface::OpenGLRenderSurface(const GraphicsAPI aGraphicsAPI, const int aWidth, const int aHeight)
-	: RenderSurface(aGraphicsAPI, aWidth, aHeight)
+OpenGLRenderSurface::OpenGLRenderSurface(const int aWidth, const int aHeight)
+	: RenderSurface(aWidth, aHeight)
 {}
 
 OpenGLRenderSurface::~OpenGLRenderSurface()

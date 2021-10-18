@@ -37,7 +37,7 @@ Yellowstone::Yellowstone(EngineContext* aContext)
 		}
 		case GraphicsAPI::OpenGL:
 		{
-			myRenderSurface = new OpenGLRenderSurface(GraphicsAPI::OpenGL, 1280, 720);
+			myRenderSurface = new OpenGLRenderSurface(1280, 720);
 			myRenderContext = new OpenGLRenderContext();
 			myShaderLibrary = new OpenGLShaderLibrary();
 			myTextureLibrary = new OpenGLTextureLibrary();
@@ -47,7 +47,7 @@ Yellowstone::Yellowstone(EngineContext* aContext)
 		}
 		case GraphicsAPI::Vulkan:
 		{
-			myRenderSurface = new VulkanRenderSurface(GraphicsAPI::Vulkan, 1280, 720);
+			myRenderSurface = new VulkanRenderSurface(1280, 720);
 			myShowConsole = true;
 			break;
 		}
@@ -65,12 +65,11 @@ Yellowstone::~Yellowstone()
 
 void Yellowstone::Initialize()
 {
-	myRenderSurface->Initialize();
+	if (myRenderSurface)
+		myRenderSurface->Initialize();
 
 	if (myRenderContext)
-	{
 		myRenderContext->Initialize();
-	}
 
 	Engine& engine = Engine::GetInstance();
 	World& world = *engine.GetWorld();

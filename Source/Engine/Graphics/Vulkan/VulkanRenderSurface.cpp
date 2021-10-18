@@ -12,8 +12,8 @@ const std::vector<const char*> validationLayers =
 	"VK_LAYER_KHRONOS_validation"
 };
 
-VulkanRenderSurface::VulkanRenderSurface(const GraphicsAPI aGraphicsAPI, const int aWidth, const int aHeight)
-	: RenderSurface(aGraphicsAPI, aWidth, aHeight)
+VulkanRenderSurface::VulkanRenderSurface(const int aWidth, const int aHeight)
+	: RenderSurface(aWidth, aHeight)
 	, myVulkanInstance(nullptr)
 	, myVulkanPhysicalDevice(nullptr)
 {}
