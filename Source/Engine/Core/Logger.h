@@ -24,5 +24,6 @@ namespace Log
 		static std::vector<Package> myLogs;
 		static logCallback myCallback;
 		static bool myHasCallback;
+		static std::string myFilePath;
 	};
 }

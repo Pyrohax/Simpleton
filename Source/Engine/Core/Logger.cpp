@@ -10,6 +10,7 @@
 std::vector<Log::Package> Log::Logger::myLogs;
 Log::Logger::logCallback Log::Logger::myCallback;
 bool Log::Logger::myHasCallback = false;
+std::string Log::Logger::myFilePath = "";
 
 void Log::Logger::Print(Severity aSeverity, Category aCategory, const char* aFormat, ...)
 {
@@ -36,8 +37,9 @@ void Log::Logger::Print(Severity aSeverity, Category aCategory, const char* aFor
 	if (myHasCallback)
 		myCallback(package);
 
-	std::string filePath = Time::GetCurrentDate() + ".txt";
-	std::ofstream outstream(filePath.c_str(), std::ios_base::out | std::ios_base::app);
+	if(myFilePath.empty())
+		myFilePath = Time::GetCurrentDateTime() + ".txt";
+	std::ofstream outstream(myFilePath.c_str(), std::ios_base::out | std::ios_base::app);
 	outstream << time << '\t' << buffer << '\n';
 	outstream.close();
 }

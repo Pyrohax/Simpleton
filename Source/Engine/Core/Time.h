@@ -40,7 +40,7 @@ namespace Time
 		localtime_s(&timeStruct, &now);
 
 		strftime(bufferDate, sizeof(bufferDate), "%Y-%m-%d", &timeStruct);
-		strftime(bufferTime, sizeof(bufferTime), "%X", &timeStruct);
+		strftime(bufferTime, sizeof(bufferTime), "%H %M %S", &timeStruct);
 		std::string result(bufferDate);
 		result.append(" ");
 		result.append(bufferTime);
