@@ -28,20 +28,31 @@ bool VulkanRenderSurface::Initialize()
 	if (!glfwInit())
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to initialize GLFW");
-		glfwTerminate();
+		Destroy();
 		return false;
 	}
 
 	if (!glfwVulkanSupported())
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to use Vulkan with GLFW");
-		glfwTerminate();
+		Destroy();
 		return false;
 	}
 
-	CreateVulkanInstance();
+	if (!CreateVulkanInstance())
+	{
+		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to create Vulkan Instance");
+		Destroy();
+		return false;
+	}
 	SetupDebugMessenger();
-	SetupVulkanPhysicalDevice();
+
+	if (!SetupVulkanPhysicalDevice())
+	{
+		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to setup Vulkan Physical ");
+		Destroy();
+		return false;
+	}
 
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_SAMPLES, 4);
@@ -50,7 +61,7 @@ bool VulkanRenderSurface::Initialize()
 	if (!myWindow)
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to open a GLFW window");
-		glfwTerminate();
+		Destroy();
 		return false;
 	}
 
@@ -58,7 +69,7 @@ bool VulkanRenderSurface::Initialize()
 	if (glfwCreateWindowSurface(myVulkanInstance, myWindow, nullptr, &vulkanSurface) != VK_SUCCESS)
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to open a GLFW window");
-		glfwTerminate();
+		Destroy();
 		return false;
 	}
 
@@ -188,7 +199,6 @@ bool VulkanRenderSurface::CreateVulkanInstance()
 	if (vkCreateInstance(&instanceCreateInfo, nullptr, &myVulkanInstance) != VK_SUCCESS)
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to create Vulkan instance");
-		glfwTerminate();
 		return false;
 	}
 	return true;
@@ -209,7 +219,7 @@ VulkanRenderSurface::QueueFamilyIndices VulkanRenderSurface::FindQueueFamilies(V
 		if (queueFamilies[index].queueFlags & VK_QUEUE_GRAPHICS_BIT)
 			indices.myGraphicsFamily = index;
 
-		if (indices.isComplete())
+		if (indices.IsComplete())
 			break;
 	}
 
@@ -220,7 +230,7 @@ bool VulkanRenderSurface::IsDeviceSuitable(VkPhysicalDevice aDevice) const
 {
 	QueueFamilyIndices indices = FindQueueFamilies(aDevice);
 
-	return indices.isComplete();
+	return indices.IsComplete();
 }
 
 bool VulkanRenderSurface::SetupVulkanPhysicalDevice()
@@ -231,7 +241,7 @@ bool VulkanRenderSurface::SetupVulkanPhysicalDevice()
 	if (deviceCount == 0)
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to find a GPU with Vulkan support");
-		glfwTerminate();
+		Destroy();
 		return false;
 	}
 
@@ -250,7 +260,7 @@ bool VulkanRenderSurface::SetupVulkanPhysicalDevice()
 	if (!myVulkanPhysicalDevice)
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to find a GPU with Vulkan support");
-		glfwTerminate();
+		Destroy();
 		return false;
 	}
 	return true;

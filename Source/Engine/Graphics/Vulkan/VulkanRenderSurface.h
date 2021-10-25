@@ -35,7 +35,7 @@ protected:
 private:
 	struct QueueFamilyIndices
 	{
-		bool isComplete() { return myGraphicsFamily.has_value(); }
+		bool IsComplete() { return myGraphicsFamily.has_value(); }
 
 		std::optional<uint32_t> myGraphicsFamily;
 	};
