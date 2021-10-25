@@ -8,7 +8,7 @@ struct Texture;
 class OpenGLRenderSurface final : public RenderSurface
 {
 public:
-	OpenGLRenderSurface(const GraphicsAPI aGraphicsAPI, const int aWidth, const int aHeight);
+	OpenGLRenderSurface(const int aWidth, const int aHeight);
 	~OpenGLRenderSurface();
 
 	bool Initialize() override;
