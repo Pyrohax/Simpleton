@@ -9,7 +9,7 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 {
 	Editor editor;
 	editor.Initialize();
-	editor.Tick();
+	editor.Update();
 
 	return 0;
 }

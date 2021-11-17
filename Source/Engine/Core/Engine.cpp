@@ -1,9 +1,8 @@
 #include "Engine.h"
 
+#include "../ECS/Core/Coordinator.h"
 #include "../Graphics/Yellowstone.h"
-#include "../Threading/JobSystem.h"
 #include "../World/World.h"
-#include "Assert.h"
 #include "DataManager.h"
 #include "EngineContext.h"
 #include "EngineSettings.h"
@@ -12,20 +11,25 @@ Engine::Engine()
 	: myPreviousTime(0.0f)
 	, myShouldShutdown(false)
 {
-	myDataManager = new DataManager();
-	myWorld = new World();
-
-	myContext = std::make_shared<EngineContext>();
-	myContext->RegisterSubsystem<Yellowstone>(TickType::Variable);
+	myContext = std::make_unique<EngineContext>();
+	myDataManager = std::make_unique<DataManager>();
+	myCoordinator = std::make_unique<Coordinator>();
+	myWorld = std::make_unique<World>(myCoordinator.get());
 }
 
 Engine::~Engine()
 {
+	myWorld.reset();
+	myCoordinator.reset();
+	myDataManager.reset();
+	myContext.reset();
 }
 
 void Engine::Initialize(BuildType aBuildType)
 {
 	myBuildType = aBuildType;
+
+	myContext->RegisterSubsystem<Yellowstone>(TickType::Variable);
 
 	myDataManager->ReadData();
 	EngineSettings* settings = myDataManager->GetSerializableData<EngineSettings>();
@@ -33,6 +37,9 @@ void Engine::Initialize(BuildType aBuildType)
 
 	myContext->Initialize();
 
+	myCoordinator->Initialize();
+
+	myWorld->Initialize();
 	myWorld->LoadDefaultData();
 
 	myPreviousTime = std::chrono::duration<float>(std::chrono::system_clock::now().time_since_epoch()).count();
@@ -50,10 +57,4 @@ void Engine::Update()
 		myContext->Tick(TickType::Variable, 0.0167f);
 		myContext->Tick(TickType::Smooth, 0.0167f);
 	}
-}
-
-void Engine::Terminate()
-{
-	myWorld->Destroy();
-	delete myWorld;
 }

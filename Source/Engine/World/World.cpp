@@ -3,46 +3,40 @@
 #include "../Core/Engine.h"
 #include "../Core/EngineContext.h"
 #include "../Core/Logger.h"
+#include "../ECS/Core/Coordinator.h"
 #include "../Graphics/ShaderLibrary.h"
 #include "../Graphics/Texture.h"
 #include "../Graphics/TextureLibrary.h"
 #include "../Graphics/Yellowstone.h"
 #include "AssetLoader.h"
 #include "CameraComponent.h"
-#include "EntityFactory.h"
 #include "LightingComponent.h"
 #include "TransformComponent.h"
 
-World::World()
+World::World(Coordinator* aCoordinator)
 {
-	myAssetLoader = new AssetLoader();
-	myEntityFactory = new EntityFactory();
-	myLighting = myEntityFactory->CreateEntity();
-	myCamera = myEntityFactory->CreateEntity();
-
-	LightingComponent* lightingComponent = new LightingComponent();
-	myEntityFactory->AddComponent<LightingComponent>(myLighting->GetEntityHandle(), *lightingComponent);
-	
-	TransformComponent* transformComponent = new TransformComponent(glm::vec3(-5.f, -2.5f, 7.5f));
-	myEntityFactory->AddComponent<TransformComponent>(myLighting->GetEntityHandle(), *transformComponent);
-
-	CameraComponent* cameraComponent = new CameraComponent();
-	myEntityFactory->AddComponent<CameraComponent>(myCamera->GetEntityHandle(), *cameraComponent);
+	myAssetLoader = std::make_unique<AssetLoader>();
+	myLighting = std::make_unique<Entity>(aCoordinator);
+	myCamera = std::make_unique<Entity>(aCoordinator);
 }
 
 World::~World()
 {
+	myCamera.reset();
+	myLighting.reset();
+	myAssetLoader.reset();
 }
 
-void World::Update()
+void World::Initialize()
 {
-}
+	LightingComponent* lightingComponent = new LightingComponent();
+	myLighting->AddComponent<LightingComponent>(*lightingComponent);
 
-void World::Destroy()
-{
-	delete myEntityFactory;
-	delete myAssetLoader;
-	myModels.clear();
+	TransformComponent* transformComponent = new TransformComponent(glm::vec3(-5.f, -2.5f, 7.5f));
+	myLighting->AddComponent<TransformComponent>(*transformComponent);
+
+	CameraComponent* cameraComponent = new CameraComponent();
+	myCamera->AddComponent<CameraComponent>(*cameraComponent);
 }
 
 void World::LoadDefaultData()
@@ -59,7 +53,7 @@ void World::LoadAndAddModel(const std::string& aPath)
 		return;
 	}
 
-	TextureLibrary* textureLibrary = Engine::GetInstance().GetContext()->GetSubsystem<Yellowstone>()->GetTextureLibrary();
+	TextureLibrary* textureLibrary = Engine::GetInstance().GetContext().GetSubsystem<Yellowstone>()->GetTextureLibrary();
 	if (!textureLibrary)
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Failed to access Texture Library");
@@ -95,7 +89,7 @@ void World::LoadAndAddShaders(const std::string& aVertexShaderPath, const std::s
 		return;
 	}
 
-	ShaderLibrary* shaderLibrary = Engine::GetInstance().GetContext()->GetSubsystem<Yellowstone>()->GetShaderLibrary();
+	ShaderLibrary* shaderLibrary = Engine::GetInstance().GetContext().GetSubsystem<Yellowstone>()->GetShaderLibrary();
 	if (!shaderLibrary)
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::World, "Failed to access Shader Library");

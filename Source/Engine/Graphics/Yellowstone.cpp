@@ -10,8 +10,6 @@
 #include "../Graphics/Vulkan/VulkanRenderSurface.h"
 #include "../World/AssetLoader.h"
 #include "../World/CameraComponent.h"
-#include "../World/Entity.h"
-#include "../World/EntityFactory.h"
 #include "../World/World.h"
 
 Yellowstone::Yellowstone(EngineContext* aContext)
@@ -72,7 +70,7 @@ void Yellowstone::Initialize()
 		myRenderContext->Initialize();
 
 	Engine& engine = Engine::GetInstance();
-	World& world = *engine.GetWorld();
+	World& world = engine.GetWorld();
 
 	if (Texture* icon = world.GetAssetLoader().LoadTexture("../../../Data/Icons/Editor.png"))
 	{
@@ -81,25 +79,19 @@ void Yellowstone::Initialize()
 	}
 
 	if (myGraphicsAPI == GraphicsAPI::OpenGL)
-	{
 		myShaderLibrary->CreateProgram();
-	}
 
-	if (myImguiWrapper)
-	{
+	if (myImguiWrapper && myRenderSurface)
 		myImguiWrapper->Initialize(myRenderSurface->GetWindow());
-	}
 }
 
 void Yellowstone::Update(float aDeltaTime)
 {
 	Engine& engine = Engine::GetInstance();
-	World& world = *engine.GetWorld();
+	World& world = engine.GetWorld();
 
 	if (world.GetModels().size() > 0)
-	{
 		myShaderLibrary->BindShaders();
-	}
 
 	if (myRenderContext)
 	{
@@ -116,15 +108,13 @@ void Yellowstone::Update(float aDeltaTime)
 	myRenderSurface->Tick(aDeltaTime);
 
 	if (HasClosedWindow())
-	{
 		engine.SetShouldShutdown(true);
-	}
 }
 
 void Yellowstone::Terminate()
 {
 	Engine& engine = Engine::GetInstance();
-	World& world = *engine.GetWorld();
+	World& world = engine.GetWorld();
 	myRenderContext->Destroy(world.GetModels());
 	myRenderSurface->Destroy();
 	myImguiWrapper->Destroy();
@@ -133,9 +123,7 @@ void Yellowstone::Terminate()
 void Yellowstone::CreateAssetBuffers(std::vector<Model>& aModels)
 {
 	if (myRenderContext)
-	{
 		myRenderContext->CreateBuffers(aModels);
-	}
 }
 
 bool Yellowstone::HasClosedWindow() const

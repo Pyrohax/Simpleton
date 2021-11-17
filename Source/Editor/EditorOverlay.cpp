@@ -4,44 +4,32 @@
 #include "Core/EngineContext.h"
 #include "Graphics/Yellowstone.h"
 #include "World/AssetLoader.h"
-#include "World/CameraComponent.h"
-#include "World/Entity.h"
-#include "World/EntityFactory.h"
 #include "World/LightingComponent.h"
-#include "World/MeshComponent.h"
 #include "World/TransformComponent.h"
 #include "World/World.h"
-
-#include <entt/entt.hpp>
 
 #include <filesystem>
 #include <vector>
 
 EditorOverlay::EditorOverlay()
 	: Overlay(true)
-{
-}
+{}
 
 EditorOverlay::~EditorOverlay()
-{
-}
+{}
 
 void EditorOverlay::Tick()
 {
 	Engine& engine = Engine::GetInstance();
-	World* world = engine.GetWorld();
-	EntityFactory& entityFactory = world->GetEntityFactory();
-
-	Entity& lighting = world->GetLighting();
+	World& world = engine.GetWorld();
+	Entity& lighting = world.GetLighting();
 	TransformComponent& lightingTransformComponent = lighting.GetComponent<TransformComponent>();
 	ImGui::InputFloat3("Lighting Transform", lightingTransformComponent.GetRawPosition());
 	LightingComponent& lightingComponent = lighting.GetComponent<LightingComponent>();
 	ImGui::InputFloat3("Lighting Color", lightingComponent.GetRawColor());
 
 	if (ImGui::Button("Add Entity"))
-	{
-		entityFactory.CreateEntity();
-	}
+		engine.GetCoordinator().CreateEntity();
 
 	const std::string dataPath = std::filesystem::current_path().string().substr(0, std::filesystem::current_path().string().length() - 23) + "Data\\";
 
@@ -82,16 +70,16 @@ void EditorOverlay::Tick()
 				{
 					if (isTexture)
 					{
-						world->GetAssetLoader().LoadTexture(fullEntryPath);
+						world.GetAssetLoader().LoadTexture(fullEntryPath);
 					}
 					else if (isModel)
 					{
-						world->LoadAndAddModel(fullEntryPath);
+						world.LoadAndAddModel(fullEntryPath);
 
-						EngineContext* engineContext = engine.GetContext();
-						if (Yellowstone* yellowstone = engineContext->GetSubsystem<Yellowstone>())
+						EngineContext& engineContext = engine.GetContext();
+						if (Yellowstone* yellowstone = engineContext.GetSubsystem<Yellowstone>())
 						{
-							yellowstone->CreateAssetBuffers(world->GetModels());
+							yellowstone->CreateAssetBuffers(world.GetModels());
 						}
 					}
 				}
@@ -136,7 +124,7 @@ void EditorOverlay::Tick()
 			{
 				if (ImGui::Button(foundShaderPair[index].second.c_str()))
 				{
-					world->LoadAndAddShaders(foundShaderPair[index + 1].first, foundShaderPair[index].first);
+					world.LoadAndAddShaders(foundShaderPair[index + 1].first, foundShaderPair[index].first);
 				}
 			}
 		}

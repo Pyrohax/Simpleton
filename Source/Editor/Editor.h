@@ -7,5 +7,5 @@ public:
 	~Editor();
 
 	void Initialize();
-	void Tick();
+	void Update();
 };

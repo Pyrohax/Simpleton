@@ -14,8 +14,5 @@ namespace UI
         CameraWidget(ImguiWrapper* aWrapper, const std::string& aTitle);
 
         void Tick() override;
-
-    private:
-        std::string myTitle;
     };
 }
