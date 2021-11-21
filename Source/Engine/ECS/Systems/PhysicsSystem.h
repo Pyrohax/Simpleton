@@ -5,5 +5,5 @@
 class PhysicsSystem : public SystemBase
 {
 public:
-	void Update(float aDeltaTime);
+	void Update() override;
 };

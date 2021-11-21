@@ -5,13 +5,13 @@
 
 extern Coordinator gCoordinator;
 
-void PhysicsSystem::Update(float aDeltaTime)
+void PhysicsSystem::Update()
 {
-	for (auto const& entity : myEntities)
+	/*for (auto const& entity : myEntities)
 	{
 		auto& transform = gCoordinator.GetComponent<TransformComponent>(entity);
 		glm::vec3 position = transform.GetPosition();
 		position += 1.0f * aDeltaTime;
 		transform.SetPosition(position);
-	}
+	}*/
 }
