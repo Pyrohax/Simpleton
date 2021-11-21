@@ -10,6 +10,8 @@
 class SystemManager
 {
 public:
+	void Update();
+
 	template<typename T>
 	std::shared_ptr<T> RegisterSystem()
 	{

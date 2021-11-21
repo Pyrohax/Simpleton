@@ -7,5 +7,7 @@
 class SystemBase
 {
 public:
+	virtual void Update() = 0;
+
 	std::set<UID> myEntities;
 };
