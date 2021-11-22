@@ -6,12 +6,15 @@
 #include <cassert>
 #include <queue>
 
+class Entity;
+class Coordinator;
+
 class EntityManager
 {
 public:
 	EntityManager();
 
-	UID CreateEntity();
+	Entity* CreateEntity(Coordinator* aCoordinator);
 	void DestroyEntity(UID anEntityUID);
 	void SetSignature(UID anEntityUID, Signature aSignature);
 	Signature GetSignature(UID anEntityUID) const;

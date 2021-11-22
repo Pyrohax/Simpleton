@@ -7,6 +7,8 @@
 #include "World/LightingComponent.h"
 #include "World/TransformComponent.h"
 #include "World/World.h"
+#include "ECS/Core/Coordinator.h"
+#include "ECS/Core/Entity.h"
 
 #include <filesystem>
 #include <vector>

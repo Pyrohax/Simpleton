@@ -34,9 +34,9 @@ void Coordinator::Initialize()
 	SetSystemSignature<PhysicsSystem>(signature);
 }
 
-UID Coordinator::CreateEntity()
+Entity* Coordinator::CreateEntity()
 {
-	return myEntityManager->CreateEntity();
+	return myEntityManager->CreateEntity(this);
 }
 
 void Coordinator::DestroyEntity(UID anEntityUID)

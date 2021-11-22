@@ -1,5 +1,8 @@
 #include "EntityManager.h"
 
+#include "Coordinator.h"
+#include "Entity.h"
+
 EntityManager::EntityManager()
 	: myLivingEntitiesCount(0)
 {
@@ -7,13 +10,13 @@ EntityManager::EntityManager()
 		myAvailableEntities.push(entity);
 }
 
-UID EntityManager::CreateEntity()
+Entity* EntityManager::CreateEntity(Coordinator* aCoordinator)
 {
 	assert(myLivingEntitiesCount < MAX_ENTITIES && "Too many entities in existence.");
 	UID uid = myAvailableEntities.front();
 	myAvailableEntities.pop();
 	++myLivingEntitiesCount;
-	return uid;
+	return new Entity(uid, aCoordinator);
 }
 
 void EntityManager::DestroyEntity(UID anEntityUID)

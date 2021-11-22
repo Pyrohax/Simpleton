@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../ECS/Core/Entity.h"
 #include "../Graphics/Model.h"
 
 #include <vector>
 
 class AssetLoader;
 class Coordinator;
+class Entity;
 
 class World
 {
@@ -21,8 +21,8 @@ public:
 	void LoadAndAddShaders(const std::string& aVertexShaderPath, const std::string& aFragmentShaderPath);
 
 	AssetLoader& GetAssetLoader() { return *myAssetLoader.get(); }
-	Entity& GetCamera() { return *myCamera.get(); }
-	Entity& GetLighting() { return *myLighting.get(); }
+	Entity& GetCamera() { return *myCamera; }
+	Entity& GetLighting() { return *myLighting; }
 
 	const std::vector<Model>& GetModels() const { return myModels; }
 	std::vector<Model>& GetModels() { return myModels; }
@@ -30,6 +30,6 @@ public:
 private:
 	std::vector<Model> myModels;
 	std::unique_ptr<AssetLoader> myAssetLoader;
-	std::unique_ptr<Entity> myLighting;
-	std::unique_ptr<Entity> myCamera;
+	Entity* myLighting;
+	Entity* myCamera;
 };

@@ -1,12 +1,8 @@
 #include "Entity.h"
 
-Entity::Entity(Coordinator* aCoordinator)
-	: myCoordinator(aCoordinator)
-{
-	myUID = myCoordinator->CreateEntity();
-}
+#include "Coordinator.h"
 
-Entity::~Entity()
-{
-	delete myCoordinator;
-}
+Entity::Entity(const UID aUID, Coordinator* aCoordinator)
+	: myCoordinator(aCoordinator)
+	, myUID(aUID)
+{}

@@ -6,6 +6,8 @@
 
 #include <memory>
 
+class Entity;
+
 class Coordinator
 {
 public:
@@ -14,7 +16,7 @@ public:
 
 	void Initialize();
 
-	UID CreateEntity();
+	Entity* CreateEntity();
 	void DestroyEntity(UID anEntityUID);
 
 	template<typename ComponentTemplate>

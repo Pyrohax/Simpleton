@@ -12,18 +12,19 @@
 #include "CameraComponent.h"
 #include "LightingComponent.h"
 #include "TransformComponent.h"
+#include "../ECS/Core/Entity.h"
 
 World::World(Coordinator* aCoordinator)
 {
 	myAssetLoader = std::make_unique<AssetLoader>();
-	myLighting = std::make_unique<Entity>(aCoordinator);
-	myCamera = std::make_unique<Entity>(aCoordinator);
+	myLighting = aCoordinator->CreateEntity();
+	myCamera = aCoordinator->CreateEntity();
 }
 
 World::~World()
 {
-	myCamera.reset();
-	myLighting.reset();
+	delete myCamera;
+	delete myLighting;
 	myAssetLoader.reset();
 }
 

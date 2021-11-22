@@ -1,12 +1,12 @@
 #pragma once
 
+#include "Types.h"
 #include "Coordinator.h"
 
 class Entity
 {
 public:
-	Entity(Coordinator* aCoordinator);
-	~Entity();
+	Entity(const UID aUID, Coordinator* aCoordinator);
 
 	template<typename ComponentTemplate>
 	void AddComponent(ComponentTemplate aComponent)

@@ -11,6 +11,7 @@
 #include "../World/AssetLoader.h"
 #include "../World/CameraComponent.h"
 #include "../World/World.h"
+#include "../ECS/Core/Entity.h"
 
 Yellowstone::Yellowstone(EngineContext* aContext)
 	: Subsystem(aContext)
