@@ -1,8 +1,8 @@
 #include "EntityManager.h"
 
 #include "../../Core/Assert.h"
-#include "Coordinator.h"
 #include "Entity.h"
+#include "EntityComponentSystem.h"
 
 EntityManager::EntityManager()
 	: myLivingEntitiesCount(0)
@@ -11,13 +11,13 @@ EntityManager::EntityManager()
 		myAvailableEntities.push(entity);
 }
 
-Entity* EntityManager::CreateEntity(Coordinator* aCoordinator)
+Entity* EntityManager::CreateEntity(EntityComponentSystem* aEntityComponentSystem)
 {
 	Assert(myLivingEntitiesCount > MAX_ENTITIES, "Too many entities in existence.");
 	UID uid = myAvailableEntities.front();
 	myAvailableEntities.pop();
 	++myLivingEntitiesCount;
-	return new Entity(uid, aCoordinator);
+	return new Entity(uid, aEntityComponentSystem);
 }
 
 void EntityManager::DestroyEntity(const UID anEntityUID)
@@ -28,13 +28,13 @@ void EntityManager::DestroyEntity(const UID anEntityUID)
 	--myLivingEntitiesCount;
 }
 
-void EntityManager::SetSignature(const UID anEntityUID, Signature aSignature)
+void EntityManager::SetSignature(const UID anEntityUID, const EntitySignature aSignature)
 {
 	Assert(anEntityUID > MAX_ENTITIES, "Entity out of range.");
 	mySignatures[anEntityUID] = aSignature;
 }
 
-Signature EntityManager::GetSignature(const UID anEntityUID) const
+EntitySignature EntityManager::GetSignature(const UID anEntityUID) const
 {
 	Assert(anEntityUID > MAX_ENTITIES, "Entity out of range.");
 	return mySignatures[anEntityUID];

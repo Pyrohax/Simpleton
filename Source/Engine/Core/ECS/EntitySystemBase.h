@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Types.h"
+#include "../EngineDefines.h"
 
 #include <set>
 
-class SystemBase
+class EntitySystemBase
 {
 public:
 	virtual void Update() = 0;

@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../EngineDefines.h"
 #include "ComponentArray.h"
-#include "Types.h"
 
 #include <any>
 #include <memory>

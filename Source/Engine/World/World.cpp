@@ -3,7 +3,8 @@
 #include "../Core/Engine.h"
 #include "../Core/EngineContext.h"
 #include "../Core/Logger.h"
-#include "../ECS/Core/Coordinator.h"
+#include "../ECS/Core/Entity.h"
+#include "../ECS/Core/EntityComponentSystem.h"
 #include "../Graphics/ShaderLibrary.h"
 #include "../Graphics/Texture.h"
 #include "../Graphics/TextureLibrary.h"
@@ -12,13 +13,12 @@
 #include "CameraComponent.h"
 #include "LightingComponent.h"
 #include "TransformComponent.h"
-#include "../ECS/Core/Entity.h"
 
-World::World(Coordinator* aCoordinator)
+World::World(EntityComponentSystem* aEntityComponentSystem)
 {
 	myAssetLoader = std::make_unique<AssetLoader>();
-	myLighting = aCoordinator->CreateEntity();
-	myCamera = aCoordinator->CreateEntity();
+	myLighting = aEntityComponentSystem->CreateEntity();
+	myCamera = aEntityComponentSystem->CreateEntity();
 }
 
 World::~World()

@@ -2,17 +2,17 @@
 
 #include "ComponentManager.h"
 #include "EntityManager.h"
-#include "SystemManager.h"
+#include "EntitySystemManager.h"
 
 #include <memory>
 
 class Entity;
 
-class Coordinator
+class EntityComponentSystem
 {
 public:
-	Coordinator();
-	~Coordinator();
+	EntityComponentSystem();
+	~EntityComponentSystem();
 
 	void Initialize();
 
@@ -64,7 +64,7 @@ public:
 	}
 
 	template<typename SystemSignatureTemplate>
-	void SetSystemSignature(Signature aSignature)
+	void SetSystemSignature(EntitySignature aSignature)
 	{
 		mySystemManager->SetSignature<SystemSignatureTemplate>(aSignature);
 	}
@@ -72,5 +72,5 @@ public:
 private:
 	std::unique_ptr<ComponentManager> myComponentManager;
 	std::unique_ptr<EntityManager> myEntityManager;
-	std::unique_ptr<SystemManager> mySystemManager;
+	std::unique_ptr<EntitySystemManager> mySystemManager;
 };

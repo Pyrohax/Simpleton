@@ -5,13 +5,13 @@
 #include <vector>
 
 class AssetLoader;
-class Coordinator;
 class Entity;
+class EntityComponentSystem;
 
 class World
 {
 public:
-	World(Coordinator* aCoordinator);
+	World(EntityComponentSystem* aEntityComponentSystem);
 	~World();
 
 	void Initialize();

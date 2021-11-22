@@ -1,6 +1,6 @@
 #include "Engine.h"
 
-#include "../ECS/Core/Coordinator.h"
+#include "../ECS/Core/EntityComponentSystem.h"
 #include "../Graphics/Yellowstone.h"
 #include "../World/World.h"
 #include "DataManager.h"
@@ -13,14 +13,14 @@ Engine::Engine()
 {
 	myContext = std::make_unique<EngineContext>();
 	myDataManager = std::make_unique<DataManager>();
-	myCoordinator = std::make_unique<Coordinator>();
-	myWorld = std::make_unique<World>(myCoordinator.get());
+	myEntityComponentSystem = std::make_unique<EntityComponentSystem>();
+	myWorld = std::make_unique<World>(myEntityComponentSystem.get());
 }
 
 Engine::~Engine()
 {
 	myWorld.reset();
-	myCoordinator.reset();
+	myEntityComponentSystem.reset();
 	myDataManager.reset();
 	myContext.reset();
 }
@@ -37,7 +37,7 @@ void Engine::Initialize(BuildType aBuildType)
 
 	myContext->Initialize();
 
-	myCoordinator->Initialize();
+	myEntityComponentSystem->Initialize();
 
 	myWorld->Initialize();
 	myWorld->LoadDefaultData();

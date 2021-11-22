@@ -2,9 +2,9 @@
 
 #include "Model.h"
 
-#include "../World/LightingComponent.h"
-#include "../World/CameraComponent.h"
-#include "../World/TransformComponent.h"
+#include "../Core/ECS/CameraComponent.h"
+#include "../Core/ECS/LightingComponent.h"
+#include "../Core/ECS/TransformComponent.h"
 
 class ShaderLibrary;
 class TextureLibrary;

@@ -1,45 +1,38 @@
-#include "Coordinator.h"
+#include "EntityComponentSystem.h"
 
 #include "../../World/CameraComponent.h"
 #include "../../World/LightingComponent.h"
 #include "../../World/MeshComponent.h"
 #include "../../World/TransformComponent.h"
-#include "../Systems/PhysicsSystem.h"
 
-Coordinator::Coordinator()
+EntityComponentSystem::EntityComponentSystem()
 {
 	myComponentManager = std::make_unique<ComponentManager>();
 	myEntityManager = std::make_unique<EntityManager>();
-	mySystemManager = std::make_unique<SystemManager>();
+	mySystemManager = std::make_unique<EntitySystemManager>();
 }
 
-Coordinator::~Coordinator()
+EntityComponentSystem::~EntityComponentSystem()
 {
 	mySystemManager.reset();
 	myEntityManager.reset();
 	myComponentManager.reset();
 }
 
-void Coordinator::Initialize()
+void EntityComponentSystem::Initialize()
 {
 	RegisterComponent<TransformComponent>();
 	RegisterComponent<CameraComponent>();
 	RegisterComponent<LightingComponent>();
 	RegisterComponent<MeshComponent>();
-
-	auto physicsSystem = RegisterSystem<PhysicsSystem>();
-
-	Signature signature;
-	signature.set(GetComponentType<TransformComponent>());
-	SetSystemSignature<PhysicsSystem>(signature);
 }
 
-Entity* Coordinator::CreateEntity()
+Entity* EntityComponentSystem::CreateEntity()
 {
 	return myEntityManager->CreateEntity(this);
 }
 
-void Coordinator::DestroyEntity(const UID anEntityUID)
+void EntityComponentSystem::DestroyEntity(const UID anEntityUID)
 {
 	myEntityManager->DestroyEntity(anEntityUID);
 	myComponentManager->EntityDestroyed(anEntityUID);

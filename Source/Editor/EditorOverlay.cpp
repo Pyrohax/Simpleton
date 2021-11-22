@@ -1,23 +1,20 @@
 #include "EditorOverlay.h"
 
+#include "Core/ECS/Entity.h"
+#include "Core/ECS/EntityComponentSystem.h"
+#include "Core/ECS/LightingComponent.h"
+#include "Core/ECS/TransformComponent.h"
 #include "Core/Engine.h"
 #include "Core/EngineContext.h"
 #include "Graphics/Yellowstone.h"
 #include "World/AssetLoader.h"
-#include "World/LightingComponent.h"
-#include "World/TransformComponent.h"
 #include "World/World.h"
-#include "ECS/Core/Coordinator.h"
-#include "ECS/Core/Entity.h"
 
 #include <filesystem>
 #include <vector>
 
 EditorOverlay::EditorOverlay()
 	: Overlay(true)
-{}
-
-EditorOverlay::~EditorOverlay()
 {}
 
 void EditorOverlay::Tick()
@@ -31,7 +28,7 @@ void EditorOverlay::Tick()
 	ImGui::InputFloat3("Lighting Color", lightingComponent.GetRawColor());
 
 	if (ImGui::Button("Add Entity"))
-		engine.GetCoordinator().CreateEntity();
+		engine.GetEntityComponentSystem().CreateEntity();
 
 	const std::string dataPath = std::filesystem::current_path().string().substr(0, std::filesystem::current_path().string().length() - 23) + "Data\\";
 

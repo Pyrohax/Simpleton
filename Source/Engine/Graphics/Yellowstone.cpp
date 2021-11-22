@@ -1,5 +1,7 @@
 #include "Yellowstone.h"
 
+#include "../Core/ECS/CameraComponent.h"
+#include "../Core/ECS/Entity.h"
 #include "../Core/Engine.h"
 #include "../Graphics/OpenGL/OpenGLRenderContext.h"
 #include "../Graphics/OpenGL/OpenGLRenderSurface.h"
@@ -9,9 +11,7 @@
 #include "../Graphics/UI/ImguiWrapper.h"
 #include "../Graphics/Vulkan/VulkanRenderSurface.h"
 #include "../World/AssetLoader.h"
-#include "../World/CameraComponent.h"
 #include "../World/World.h"
-#include "../ECS/Core/Entity.h"
 
 Yellowstone::Yellowstone(EngineContext* aContext)
 	: Subsystem(aContext)
@@ -55,11 +55,11 @@ Yellowstone::Yellowstone(EngineContext* aContext)
 
 Yellowstone::~Yellowstone()
 {
+	delete myImguiWrapper;
+	delete myTextureLibrary;
+	delete myShaderLibrary;
 	delete myRenderContext;
 	delete myRenderSurface;
-	delete myShaderLibrary;
-	delete myTextureLibrary;
-	delete myImguiWrapper;
 }
 
 void Yellowstone::Initialize()

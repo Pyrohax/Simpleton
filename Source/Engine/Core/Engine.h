@@ -7,7 +7,7 @@
 class DataManager;
 class EngineContext;
 class World;
-class Coordinator;
+class EntityComponentSystem;
 
 enum class BuildType
 {
@@ -35,7 +35,7 @@ public:
 	constexpr bool GetShouldShutdown() { return myShouldShutdown; }
 
 	World& GetWorld() const { return *myWorld.get(); }
-	Coordinator& GetCoordinator() const { return *myCoordinator.get(); }
+	EntityComponentSystem& GetEntityComponentSystem() const { return *myEntityComponentSystem.get(); }
 	EngineContext& GetContext() const { return *myContext.get(); }
 	const BuildType GetBuildType() const { return myBuildType; }
 	const std::string& GetVersion() const { return myVersion; }
@@ -47,7 +47,7 @@ private:
 private:
 	std::unique_ptr<EngineContext> myContext;
 	std::unique_ptr<DataManager> myDataManager;
-	std::unique_ptr<Coordinator> myCoordinator;
+	std::unique_ptr<EntityComponentSystem> myEntityComponentSystem;
 	std::unique_ptr<World> myWorld;
 	std::string myVersion;
 	BuildType myBuildType;

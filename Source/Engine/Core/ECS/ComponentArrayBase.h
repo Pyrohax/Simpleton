@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Types.h"
+#include "../EngineDefines.h"
 
 class ComponentArrayBase
 {
