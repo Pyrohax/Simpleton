@@ -5,8 +5,6 @@
 #include <stdexcept>
 #include <cstdarg>
 
-#undef assert
-
 static inline void Assert(bool aBehaviorIsFaulty, const char* aFormat, ...)
 {
 	if (!aBehaviorIsFaulty)
