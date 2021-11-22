@@ -15,8 +15,8 @@ public:
 	{
 		const char* typeName = typeid(ComponentTemplate).name();
 		Assert(myComponentTypes.find(typeName) != myComponentTypes.end(), "Registering component type more than once.");
-		myComponentTypes.insert({typeName, myNextComponentType});
-		myComponentArrays.insert({typeName, std::make_shared<ComponentArray<ComponentTemplate>>()});
+		myComponentTypes.insert({ typeName, myNextComponentType });
+		myComponentArrays.insert({ typeName, std::make_shared<ComponentArray<ComponentTemplate>>() });
 		++myNextComponentType;
 	}
 
