@@ -7,6 +7,7 @@ class Entity
 {
 public:
 	Entity(const UID aUID, Coordinator* aCoordinator);
+	~Entity();
 
 	template<typename ComponentTemplate>
 	void AddComponent(ComponentTemplate aComponent)
