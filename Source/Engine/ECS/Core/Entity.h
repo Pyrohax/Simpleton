@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Types.h"
 #include "Coordinator.h"
+#include "Types.h"
 
 class Entity
 {

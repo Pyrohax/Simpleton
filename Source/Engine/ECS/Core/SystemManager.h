@@ -1,9 +1,9 @@
 #pragma once
 
+#include "../../Core/Assert.h"
 #include "System.h"
 #include "Types.h"
 
-#include <cassert>
 #include <memory>
 #include <unordered_map>
 
@@ -12,21 +12,21 @@ class SystemManager
 public:
 	void Update();
 
-	template<typename T>
-	std::shared_ptr<T> RegisterSystem()
+	template<typename SystemTemplate>
+	std::shared_ptr<SystemTemplate> RegisterSystem()
 	{
-		const char* typeName = typeid(T).name();
-		assert(mySystems.find(typeName) == mySystems.end() && "Registering system more than once.");
-		auto system = std::make_shared<T>();
+		const char* typeName = typeid(SystemTemplate).name();
+		Assert(mySystems.find(typeName) != mySystems.end(), "Registering system more than once.");
+		auto system = std::make_shared<SystemTemplate>();
 		mySystems.insert({typeName, system});
 		return system;
 	}
 
-	template<typename T>
+	template<typename SignatureTemplate>
 	void SetSignature(Signature aSignature)
 	{
-		const char* typeName = typeid(T).name();
-		assert(mySystems.find(typeName) != mySystems.end() && "System used before registered.");
+		const char* typeName = typeid(SignatureTemplate).name();
+		Assert(mySystems.find(typeName) == mySystems.end(), "System used before registered.");
 		mySignatures.insert({typeName, aSignature });
 	}
 

@@ -1,25 +1,18 @@
 #pragma once
 
-#include "Types.h"
+#include "../../Core/Assert.h"
+#include "ComponentArrayBase.h"
 
 #include <array>
-#include <cassert>
 #include <unordered_map>
 
-class IComponentArray
-{
-public:
-	virtual ~IComponentArray() = default;
-	virtual void EntityDestroyed(UID anEntityUID) = 0;
-};
-
 template<typename ComponentTemplate>
-class ComponentArray : public IComponentArray
+class ComponentArray final : public ComponentArrayBase
 {
 public:
-	void InsertData(UID anEntityUID, ComponentTemplate aComponent)
+	void InsertData(const UID anEntityUID, ComponentTemplate aComponent)
 	{
-		assert(myEntityToIndexMap.find(anEntityUID) == myEntityToIndexMap.end() && "Component added to same entity more than once.");
+		Assert(myEntityToIndexMap.find(anEntityUID) != myEntityToIndexMap.end(), "Component added to same entity more than once.");
 		size_t newIndex = mySize;
 		myEntityToIndexMap[anEntityUID] = newIndex;
 		myIndexToEntityMap[newIndex] = anEntityUID;
@@ -27,9 +20,9 @@ public:
 		++mySize;
 	}
 
-	void RemoveData(UID anEntityUID)
+	void RemoveData(const UID anEntityUID)
 	{
-		assert(myEntityToIndexMap.find(anEntityUID) != myEntityToIndexMap.end() && "Removing non-existent component.");
+		Assert(myEntityToIndexMap.find(anEntityUID) == myEntityToIndexMap.end(), "Removing non-existent component.");
 		size_t indexOfRemovedEntity = myEntityToIndexMap[anEntityUID];
 		size_t indexOfLastElement = mySize - 1;
 		myComponentArray[indexOfRemovedEntity] = myComponentArray[indexOfLastElement];
@@ -41,13 +34,13 @@ public:
 		--mySize;
 	}
 
-	ComponentTemplate& GetData(UID anEntityUID)
+	ComponentTemplate& GetData(const UID anEntityUID)
 	{
-		assert(myEntityToIndexMap.find(anEntityUID) != myEntityToIndexMap.end() && "Retrieving non-existent component.");
+		Assert(myEntityToIndexMap.find(anEntityUID) == myEntityToIndexMap.end(), "Retrieving non-existent component.");
 		return myComponentArray[myEntityToIndexMap[anEntityUID]];
 	}
 
-	void EntityDestroyed(UID anEntityUID) override
+	void EntityDestroyed(const UID anEntityUID) override
 	{
 		if (myEntityToIndexMap.find(anEntityUID) != myEntityToIndexMap.end())
 			RemoveData(anEntityUID);

@@ -1,8 +1,8 @@
 #include "ComponentManager.h"
 
-void ComponentManager::EntityDestroyed(UID anEntityUID)
+void ComponentManager::EntityDestroyed(const UID anEntityUID)
 {
-	for (auto const& pair : myComponentArrays)
+	for (const std::pair<const char*, std::shared_ptr<ComponentArrayBase>>& pair : myComponentArrays)
 	{
 		auto const& component = pair.second;
 		component->EntityDestroyed(anEntityUID);

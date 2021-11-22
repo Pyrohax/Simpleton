@@ -2,7 +2,7 @@
 
 #include "../Core/System.h"
 
-class PhysicsSystem : public SystemBase
+class PhysicsSystem final : public SystemBase
 {
 public:
 	void Update() override;

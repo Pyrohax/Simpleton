@@ -3,7 +3,6 @@
 #include "Types.h"
 
 #include <array>
-#include <cassert>
 #include <queue>
 
 class Entity;
@@ -15,9 +14,9 @@ public:
 	EntityManager();
 
 	Entity* CreateEntity(Coordinator* aCoordinator);
-	void DestroyEntity(UID anEntityUID);
-	void SetSignature(UID anEntityUID, Signature aSignature);
-	Signature GetSignature(UID anEntityUID) const;
+	void DestroyEntity(const UID anEntityUID);
+	void SetSignature(const UID anEntityUID, Signature aSignature);
+	Signature GetSignature(const UID anEntityUID) const;
 
 private:
 	std::queue<UID> myAvailableEntities;

@@ -39,7 +39,7 @@ Entity* Coordinator::CreateEntity()
 	return myEntityManager->CreateEntity(this);
 }
 
-void Coordinator::DestroyEntity(UID anEntityUID)
+void Coordinator::DestroyEntity(const UID anEntityUID)
 {
 	myEntityManager->DestroyEntity(anEntityUID);
 	myComponentManager->EntityDestroyed(anEntityUID);

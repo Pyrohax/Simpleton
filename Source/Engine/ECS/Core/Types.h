@@ -3,7 +3,6 @@
 #include <bitset>
 #include <uuid.h>
 
-// ECS
 using UID = uuids::uuid::value_type;
 const int MAX_ENTITIES = 100;
 using ComponentType = std::uint8_t;

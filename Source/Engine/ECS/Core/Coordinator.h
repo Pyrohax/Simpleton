@@ -17,7 +17,7 @@ public:
 	void Initialize();
 
 	Entity* CreateEntity();
-	void DestroyEntity(UID anEntityUID);
+	void DestroyEntity(const UID anEntityUID);
 
 	template<typename ComponentTemplate>
 	void RegisterComponent()
@@ -26,7 +26,7 @@ public:
 	}
 
 	template<typename ComponentTemplate>
-	void AddComponent(UID anEntityUID, ComponentTemplate aComponent)
+	void AddComponent(const UID anEntityUID, ComponentTemplate aComponent)
 	{
 		myComponentManager->AddComponent<ComponentTemplate>(anEntityUID, aComponent);
 		auto signature = myEntityManager->GetSignature(anEntityUID);
@@ -36,7 +36,7 @@ public:
 	}
 
 	template<typename ComponentTemplate>
-	void RemoveComponent(UID anEntityUID)
+	void RemoveComponent(const UID anEntityUID)
 	{
 		myComponentManager->RemoveComponent<ComponentTemplate>(anEntityUID);
 		auto signature = myEntityManager->GetSignature(anEntityUID);
@@ -46,7 +46,7 @@ public:
 	}
 
 	template<typename ComponentTemplate>
-	ComponentTemplate& GetComponent(UID anEntityUID)
+	ComponentTemplate& GetComponent(const UID anEntityUID)
 	{
 		return myComponentManager->GetComponent<ComponentTemplate>(anEntityUID);
 	}
