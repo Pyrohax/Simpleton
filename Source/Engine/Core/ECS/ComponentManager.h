@@ -46,6 +46,12 @@ public:
 		return GetComponentArray<ComponentTemplate>()->GetData(anEntityUID);
 	}
 
+	template<typename ComponentTemplate>
+	bool HasComponent(const UID anEntityUID) const
+	{
+		return GetComponentArray<ComponentTemplate>()->HasData(anEntityUID);
+	}
+
 	void EntityDestroyed(const UID anEntityUID);
 
 private:

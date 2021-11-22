@@ -69,6 +69,12 @@ public:
 		mySystemManager->SetSignature<SystemSignatureTemplate>(aSignature);
 	}
 
+	template<typename ComponentTemplate>
+	bool HasComponent(const UID anEntityUID) const
+	{
+		return myComponentManager->GetComponent<ComponentTemplate>(anEntityUID);
+	}
+
 private:
 	std::unique_ptr<ComponentManager> myComponentManager;
 	std::unique_ptr<EntityManager> myEntityManager;

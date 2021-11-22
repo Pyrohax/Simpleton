@@ -22,7 +22,7 @@ public:
 
 	void RemoveData(const UID anEntityUID)
 	{
-		Assert(myEntityToIndexMap.find(anEntityUID) == myEntityToIndexMap.end(), "Removing non-existent component.");
+		Assert(!HasData(anEntityUID), "Removing non-existent component.");
 		size_t indexOfRemovedEntity = myEntityToIndexMap[anEntityUID];
 		size_t indexOfLastElement = mySize - 1;
 		myComponentArray[indexOfRemovedEntity] = myComponentArray[indexOfLastElement];
@@ -36,7 +36,7 @@ public:
 
 	ComponentTemplate& GetData(const UID anEntityUID)
 	{
-		Assert(myEntityToIndexMap.find(anEntityUID) == myEntityToIndexMap.end(), "Retrieving non-existent component.");
+		Assert(!HasData(anEntityUID), "Retrieving non-existent component.");
 		return myComponentArray[myEntityToIndexMap[anEntityUID]];
 	}
 
@@ -44,6 +44,11 @@ public:
 	{
 		if (myEntityToIndexMap.find(anEntityUID) != myEntityToIndexMap.end())
 			RemoveData(anEntityUID);
+	}
+
+	bool HasData(const UID anEntityUID) const
+	{
+		return myEntityToIndexMap.find(anEntityUID) != myEntityToIndexMap.end();
 	}
 
 private:

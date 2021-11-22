@@ -1,8 +1,8 @@
 #include "CameraWidget.h"
 
+#include "../../Core/ECS/CameraComponent.h"
 #include "../../Core/ECS/Entity.h"
 #include "../../Core/Engine.h"
-#include "../../World/CameraComponent.h"
 #include "../../World/World.h"
 
 UI::CameraWidget::CameraWidget(ImguiWrapper* aWrapper, const std::string& aTitle)

@@ -1,9 +1,9 @@
 #include "EntityComponentSystem.h"
 
-#include "../../World/CameraComponent.h"
-#include "../../World/LightingComponent.h"
-#include "../../World/MeshComponent.h"
-#include "../../World/TransformComponent.h"
+#include "CameraComponent.h"
+#include "LightingComponent.h"
+#include "MeshComponent.h"
+#include "TransformComponent.h"
 
 EntityComponentSystem::EntityComponentSystem()
 {

@@ -27,6 +27,12 @@ public:
 		return myEntityComponentSystem->GetComponent<ComponentTemplate>(myUID);
 	}
 
+	template<typename ComponentTemplate>
+	bool HasComponent() const
+	{
+		return myEntityComponentSystem->HasComponent<ComponentTemplate>(myUID);
+	}
+
 	const UID GetUID() const { return myUID; }
 
 private:
