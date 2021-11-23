@@ -74,13 +74,10 @@ set(TINYOBJ_DIR "${DEP_DIR}/tinyobjloader")
 target_include_directories(Engine PRIVATE "${TINYOBJ_DIR}")
 
 # TINYGLTF
-set(TINYGLTF_BUILD_LOADER_EXAMPLE OFF CACHE BOOL "TINYGLTF_BUILD_LOADER_EXAMPLE" FORCE)
-set(TINYGLTF_INSTALL OFF CACHE BOOL "TINYGLTF_INSTALL" FORCE)
 set(TINYGLTF_DIR "${DEP_DIR}/tinygltf")
 target_include_directories(Engine PRIVATE "${TINYGLTF_DIR}")
 
 # STDUUID
-set(UUID_BUILD_TESTS OFF CACHE BOOL "UUID_BUILD_TESTS" FORCE)
 set(STDUUID_DIR "${DEP_DIR}/stduuid")
 target_include_directories(Engine PUBLIC "${STDUUID_DIR}/include")
 
