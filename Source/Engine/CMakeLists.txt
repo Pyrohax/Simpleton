@@ -82,7 +82,6 @@ target_include_directories(Engine PRIVATE "${TINYGLTF_DIR}")
 # STDUUID
 set(UUID_BUILD_TESTS OFF CACHE BOOL "UUID_BUILD_TESTS" FORCE)
 set(STDUUID_DIR "${DEP_DIR}/stduuid")
-add_subdirectory("${STDUUID_DIR}" stuuid)
 target_include_directories(Engine PUBLIC "${STDUUID_DIR}/include")
 
 # GLAD
