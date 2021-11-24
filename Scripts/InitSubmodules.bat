@@ -5,7 +5,7 @@ echo "Generating GLFW (2/6)"
 cd Dependencies
 mkdir GLFW
 cd ..
-cmake -DGLFW_INSTALL=ON -S Submodules/glfw -B Dependencies/GLFW
+cmake -DGLFW_USE_HYBRID_HPG=ON -DGLFW_BUILD_TESTS=OFF -DGLFW_BUILD_TESTS=OFF -DGLFW_INSTALL=OFF -DGLFW_BUILD_DOCS=OFF -DGLFW_BUILD_EXAMPLES=OFF -S Submodules/glfw -B Dependencies/GLFW
 echo "Building GLFW (3/6)"
 cmake --build Dependencies/GLFW --target glfw --config Debug
 echo "Generating GLAD (4/6)"
