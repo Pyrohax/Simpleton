@@ -364,6 +364,7 @@ FodyWeavers.xsd
 ## Project-specific files and folders
 [Bb]in/
 [Bb]uild/
+[Dd]ependencies/
 [Gg]enerated/
 [Oo]utput/
 ![Dd]ata/**
