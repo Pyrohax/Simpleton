@@ -1,41 +1,35 @@
 #pragma once
 
 #include "../Graphics/Model.h"
-#include "../Graphics/UI/WidgetIconType.h"
-#include "../World/Entity.h"
 
 #include <vector>
 
 class AssetLoader;
-class EntityFactory;
+class Entity;
+class EntityComponentSystem;
 
 class World
 {
 public:
-	World();
+	World(EntityComponentSystem* aEntityComponentSystem);
 	~World();
 
-	void Update();
-	void Destroy();
+	void Initialize();
 
 	void LoadDefaultData();
 	void LoadAndAddModel(const std::string& aPath);
 	void LoadAndAddShaders(const std::string& aVertexShaderPath, const std::string& aFragmentShaderPath);
 
-	AssetLoader& GetAssetLoader() { return *myAssetLoader; }
+	AssetLoader& GetAssetLoader() { return *myAssetLoader.get(); }
 	Entity& GetCamera() { return *myCamera; }
-	EntityFactory& GetEntityFactory() { return *myEntityFactory; }
 	Entity& GetLighting() { return *myLighting; }
 
-	const std::vector<Entity>& GetEntities() const { return myEntities; }
 	const std::vector<Model>& GetModels() const { return myModels; }
 	std::vector<Model>& GetModels() { return myModels; }
 
 private:
-	std::vector<Entity> myEntities;
 	std::vector<Model> myModels;
-	AssetLoader* myAssetLoader;
-	EntityFactory* myEntityFactory;
+	std::unique_ptr<AssetLoader> myAssetLoader;
 	Entity* myLighting;
 	Entity* myCamera;
 };

@@ -1,10 +1,9 @@
 #include "OpenGLRenderContext.h"
 
+#include "../../Core/ECS/CameraComponent.h"
+#include "../../Core/ECS/LightingComponent.h"
+#include "../../Core/ECS/TransformComponent.h"
 #include "../../Core/InputManager.h"
-#include "../../World/CameraComponent.h"
-#include "../../World/EntityFactory.h"
-#include "../../World/LightingComponent.h"
-#include "../../World/TransformComponent.h"
 #include "../Mesh.h"
 #include "../Texture.h"
 #include "../Vertex.h"
@@ -12,16 +11,12 @@
 #include "OpenGLShaderLibrary.h"
 #include "OpenGLTextureLibrary.h"
 
-#include <entt/entt.hpp>
-#include <cstddef>
-
-OpenGLRenderContext::OpenGLRenderContext() : RenderContext()
-{
-}
+OpenGLRenderContext::OpenGLRenderContext()
+	: RenderContext()
+{}
 
 OpenGLRenderContext::~OpenGLRenderContext()
-{
-}
+{}
 
 void OpenGLRenderContext::PrintDebugInfo()
 {

@@ -1,20 +1,18 @@
 #include "CameraWidget.h"
 
+#include "../../Core/ECS/CameraComponent.h"
+#include "../../Core/ECS/Entity.h"
 #include "../../Core/Engine.h"
-#include "../../World/Entity.h"
 #include "../../World/World.h"
-#include "../../World/CameraComponent.h"
 
 UI::CameraWidget::CameraWidget(ImguiWrapper* aWrapper, const std::string& aTitle)
 	: Widget(aWrapper, aTitle)
-	, myTitle(aTitle)
-{
-}
+{}
 
 void UI::CameraWidget::Tick()
 {
 	Engine& engine = Engine::GetInstance();
-	World& world = *engine.GetWorld();
+	World& world = engine.GetWorld();
 	Entity& camera = world.GetCamera();
 	CameraComponent& cameraComponent = camera.GetComponent<CameraComponent>();
 

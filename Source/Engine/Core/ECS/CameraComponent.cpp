@@ -1,6 +1,6 @@
 #include "CameraComponent.h"
 
-#include "../Core/InputManager.h"
+#include "../InputManager.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
@@ -24,8 +24,7 @@ CameraComponent::CameraComponent()
 }
 
 CameraComponent::~CameraComponent()
-{
-}
+{}
 
 void CameraComponent::Update(float aDeltaTime)
 {

@@ -7,19 +7,16 @@
 #include "Graphics/Yellowstone.h"
 
 Editor::Editor()
-{
-}
+{}
 
 Editor::~Editor()
-{
-}
+{}
 
 void Editor::Initialize()
 {
 	Engine& engine = Engine::GetInstance();
 	engine.Initialize(BuildType::Editor);
-
-	Yellowstone* yellowstone = engine.GetContext()->GetSubsystem<Yellowstone>();
+	Yellowstone* yellowstone = engine.GetContext().GetSubsystem<Yellowstone>();
 	if (!yellowstone)
 		return;
 
@@ -30,7 +27,7 @@ void Editor::Initialize()
 	yellowstone->GetImguiWrapper()->AddOverlay(std::make_shared<EditorOverlay>());
 }
 
-void Editor::Tick()
+void Editor::Update()
 {
 	Engine& engine = Engine::GetInstance();
 	engine.Update();

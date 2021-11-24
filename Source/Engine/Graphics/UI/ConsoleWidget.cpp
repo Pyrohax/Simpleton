@@ -5,7 +5,6 @@
 
 UI::ConsoleWidget::ConsoleWidget(ImguiWrapper* aWrapper, const std::string& aTitle)
     : Widget(aWrapper, aTitle)
-    , myTitle(aTitle)
 {
     ClearLog();
     memset(myInputBuffer, 0, sizeof(myInputBuffer));

@@ -91,7 +91,4 @@ target_include_directories(Engine PRIVATE "${IMGUI_DIR}")
 # RapidJSON
 target_include_directories(Engine PRIVATE "${SUBMODULES_DIR}/RapidJSON/include")
 
-# ENTT
-target_include_directories(Engine PUBLIC "${SUBMODULES_DIR}/ENTT/src")
-
 ADD_PROJECT_FILTERS(${SRC_DIR} SRC Source)

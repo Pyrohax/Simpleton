@@ -33,7 +33,6 @@ namespace UI
 		std::vector<Log::Package> myItems;
 		std::vector<const char*> myCommands;
 		std::vector<char*> myHistory;
-		std::string myTitle;
 		int myHistoryPosition;    // -1: new line, 0..History.Size-1 browsing history.
 		ImGuiTextFilter* myFilter;
 		bool myAutoScroll;

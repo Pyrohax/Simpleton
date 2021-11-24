@@ -7,6 +7,7 @@
 class DataManager;
 class EngineContext;
 class World;
+class EntityComponentSystem;
 
 enum class BuildType
 {
@@ -29,13 +30,13 @@ public:
 
 	void Initialize(BuildType aBuildType);
 	void Update();
-	void Terminate();
 
 	void SetShouldShutdown(bool aShouldShutdown) { myShouldShutdown = aShouldShutdown; }
 	constexpr bool GetShouldShutdown() { return myShouldShutdown; }
 
-	World* GetWorld() const { return myWorld; }
-	auto GetContext() const { return myContext.get(); }
+	World& GetWorld() const { return *myWorld.get(); }
+	EntityComponentSystem& GetEntityComponentSystem() const { return *myEntityComponentSystem.get(); }
+	EngineContext& GetContext() const { return *myContext.get(); }
 	const BuildType GetBuildType() const { return myBuildType; }
 	const std::string& GetVersion() const { return myVersion; }
 
@@ -44,10 +45,11 @@ private:
 	~Engine();
 
 private:
-	std::shared_ptr<EngineContext> myContext;
+	std::unique_ptr<EngineContext> myContext;
+	std::unique_ptr<DataManager> myDataManager;
+	std::unique_ptr<EntityComponentSystem> myEntityComponentSystem;
+	std::unique_ptr<World> myWorld;
 	std::string myVersion;
-	DataManager* myDataManager;
-	World* myWorld;
 	BuildType myBuildType;
 	float myPreviousTime;
 	bool myShouldShutdown;

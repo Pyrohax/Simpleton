@@ -6,7 +6,6 @@ class EditorOverlay : public UI::Overlay
 {
 public:
 	EditorOverlay();
-	~EditorOverlay();
 
 	void Tick() override;
 };
