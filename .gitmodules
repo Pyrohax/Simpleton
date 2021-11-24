@@ -28,15 +28,3 @@
 [submodule "Submodules/TinyOBJLoader"]
 	path = Submodules/TinyOBJLoader
 	url = https://github.com/tinyobjloader/tinyobjloader.git
-[submodule "Submodules/GLSLLang"]
-	path = Submodules/GLSLLang
-	url = https://github.com/KhronosGroup/glslang.git
-[submodule "Submodules/SPIRVHeaders"]
-	path = Submodules/SPIRVHeaders
-	url = https://github.com/KhronosGroup/SPIRV-Headers.git
-[submodule "Submodules/SPIRVTools"]
-	path = Submodules/SPIRVTools
-	url = https://github.com/KhronosGroup/SPIRV-Tools.git
-[submodule "Submodules/Shaderc"]
-	path = Submodules/Shaderc
-	url = https://github.com/google/shaderc.git
