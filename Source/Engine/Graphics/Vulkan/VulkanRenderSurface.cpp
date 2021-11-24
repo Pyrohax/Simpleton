@@ -7,6 +7,15 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
+namespace VulkanRenderSurface_Priv
+{
+#ifdef NDEBUG
+	static constexpr bool locIsValidationsLayersEnabled = false;
+#else
+	static constexpr bool locIsValidationsLayersEnabled = true;
+#endif
+}
+
 const std::vector<const char*> validationLayers =
 {
 	"VK_LAYER_KHRONOS_validation"
@@ -109,7 +118,7 @@ void VulkanRenderSurface::Tick(double aDeltaTime)
 
 void VulkanRenderSurface::Destroy()
 {
-	if (myIsValidationsLayersEnabled)
+	if (VulkanRenderSurface_Priv::locIsValidationsLayersEnabled)
 		DestroyDebugUtilMessengerEXT(myVulkanInstance, myDebugMessenger, nullptr);
 
 	vkDestroyInstance(myVulkanInstance, nullptr);
@@ -161,7 +170,7 @@ void VulkanRenderSurface::MouseButtonCallback(GLFWwindow* aWindow, int aButton, 
 
 bool VulkanRenderSurface::CreateVulkanInstance()
 {
-	if (myIsValidationsLayersEnabled && !CheckValidationLayerSupport())
+	if (VulkanRenderSurface_Priv::locIsValidationsLayersEnabled && !CheckValidationLayerSupport())
 	{
 		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Validation layers requested but not available!");
 		return false;
@@ -182,7 +191,7 @@ bool VulkanRenderSurface::CreateVulkanInstance()
 	instanceCreateInfo.ppEnabledExtensionNames = requiredExtensions.data();
 
 	VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
-	if (myIsValidationsLayersEnabled)
+	if (VulkanRenderSurface_Priv::locIsValidationsLayersEnabled)
 	{
 		instanceCreateInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
 		instanceCreateInfo.ppEnabledLayerNames = validationLayers.data();
@@ -268,7 +277,7 @@ bool VulkanRenderSurface::SetupVulkanPhysicalDevice()
 
 void VulkanRenderSurface::SetupDebugMessenger()
 {
-	if (!myIsValidationsLayersEnabled) 
+	if (!VulkanRenderSurface_Priv::locIsValidationsLayersEnabled)
 		return;
 
 	VkDebugUtilsMessengerCreateInfoEXT createInfo;
@@ -313,7 +322,7 @@ std::vector<const char*> VulkanRenderSurface::GetRequiredExtensions()
 
 	std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
 
-	if (myIsValidationsLayersEnabled)
+	if (VulkanRenderSurface_Priv::locIsValidationsLayersEnabled)
 		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
 	return extensions;

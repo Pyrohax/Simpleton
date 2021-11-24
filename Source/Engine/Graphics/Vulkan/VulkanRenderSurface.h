@@ -1,10 +1,10 @@
 #pragma once
 
+#include "../RenderSurface.h"
+
 #include <optional>
 #include <vector>
 #include <vulkan/vulkan.hpp>
-
-#include "../RenderSurface.h"
 
 struct GLFWwindow;
 struct Texture;
@@ -25,7 +25,7 @@ public:
 
 	int GetScreenWidth() const { return myWidth; }
 	int GetScreenHeight() const { return myHeight; }
-	float GetScreenRatio() const { return myWidth / (float)myHeight; }
+	float GetScreenRatio() const { return myWidth / static_cast<float>(myHeight); }
 	GLFWwindow* GetWindow() const { return myWindow; }
 	bool GetShouldClose() const { return myShouldClose; }
 
@@ -66,12 +66,6 @@ private:
 		void* aUserData);
 
 private:
-#ifdef NDEBUG
-	const bool myIsValidationsLayersEnabled = false;
-#else
-	const bool myIsValidationsLayersEnabled = true;
-#endif
-
 	VkInstance myVulkanInstance;
 	VkPhysicalDevice myVulkanPhysicalDevice;
 	VkDebugUtilsMessengerEXT myDebugMessenger;
