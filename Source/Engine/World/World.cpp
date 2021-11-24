@@ -1,18 +1,18 @@
 #include "World.h"
 
+#include "../Core/ECS/CameraComponent.h"
+#include "../Core/ECS/Entity.h"
+#include "../Core/ECS/EntityComponentSystem.h"
+#include "../Core/ECS/LightingComponent.h"
+#include "../Core/ECS/TransformComponent.h"
 #include "../Core/Engine.h"
 #include "../Core/EngineContext.h"
 #include "../Core/Logger.h"
-#include "../ECS/Core/Entity.h"
-#include "../ECS/Core/EntityComponentSystem.h"
 #include "../Graphics/ShaderLibrary.h"
 #include "../Graphics/Texture.h"
 #include "../Graphics/TextureLibrary.h"
 #include "../Graphics/Yellowstone.h"
 #include "AssetLoader.h"
-#include "CameraComponent.h"
-#include "LightingComponent.h"
-#include "TransformComponent.h"
 
 World::World(EntityComponentSystem* aEntityComponentSystem)
 {
