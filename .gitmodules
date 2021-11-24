@@ -1,39 +1,30 @@
-[submodule "Dependencies/glm"]
-	path = Dependencies/glm
+[submodule "Submodules/GLM"]
+	path = Submodules/GLM
 	url = https://github.com/g-truc/glm.git
-[submodule "Dependencies/glfw"]
-	path = Dependencies/glfw
+[submodule "Submodules/ENTT"]
+	path = Submodules/ENTT
+	url = https://github.com/skypjack/entt.git
+[submodule "Submodules/GLFW"]
+	path = Submodules/GLFW
 	url = https://github.com/glfw/glfw.git
-[submodule "Dependencies/tinyobjloader"]
-	path = Dependencies/tinyobjloader
-	url = https://github.com/tinyobjloader/tinyobjloader.git
-[submodule "Dependencies/stb"]
-	path = Dependencies/stb
-	url = https://github.com/nothings/stb.git
-[submodule "Dependencies/glad"]
-	path = Dependencies/glad
+[submodule "Submodules/GLAD"]
+	path = Submodules/GLAD
 	url = https://github.com/Dav1dde/glad.git
-[submodule "Dependencies/imgui"]
-	path = Dependencies/imgui
+[submodule "Submodules/IMGUI"]
+	path = Submodules/IMGUI
 	url = https://github.com/ocornut/imgui.git
-[submodule "Dependencies/rapidjson"]
-	path = Dependencies/rapidjson
+[submodule "Submodules/RapidJSON"]
+	path = Submodules/RapidJSON
 	url = https://github.com/Tencent/rapidjson.git
-[submodule "Dependencies/tinygltf"]
-	path = Dependencies/tinygltf
-	url = https://github.com/syoyo/tinygltf.git
-[submodule "Dependencies/stduuid"]
-	path = Dependencies/stduuid
+[submodule "Submodules/STB"]
+	path = Submodules/STB
+	url = https://github.com/nothings/stb.git
+[submodule "Submodules/STDUUID"]
+	path = Submodules/STDUUID
 	url = https://github.com/mariusbancila/stduuid.git
-[submodule "Dependencies/shaderc"]
-	path = Dependencies/shaderc
-	url = https://github.com/google/shaderc.git
-[submodule "Dependencies/glslang"]
-	path = Dependencies/glslang
-	url = https://github.com/KhronosGroup/glslang.git
-[submodule "Dependencies/SPIRV-Tools"]
-	path = Dependencies/SPIRV-Tools
-	url = https://github.com/KhronosGroup/SPIRV-Tools.git
-[submodule "Dependencies/SPIRV-Headers"]
-	path = Dependencies/SPIRV-Headers
-	url = https://github.com/KhronosGroup/SPIRV-Headers.git
+[submodule "Submodules/TinyGLTF"]
+	path = Submodules/TinyGLTF
+	url = https://github.com/syoyo/tinygltf.git
+[submodule "Submodules/TinyOBJLoader"]
+	path = Submodules/TinyOBJLoader
+	url = https://github.com/tinyobjloader/tinyobjloader.git

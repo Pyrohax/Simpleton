@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Dependencies/imgui/imgui.h"
+#include "../../Submodules/imgui/imgui.h"
 
 #include <string>
 
