@@ -1,9 +1,6 @@
 [submodule "Submodules/GLM"]
 	path = Submodules/GLM
 	url = https://github.com/g-truc/glm.git
-[submodule "Submodules/ENTT"]
-	path = Submodules/ENTT
-	url = https://github.com/skypjack/entt.git
 [submodule "Submodules/GLFW"]
 	path = Submodules/GLFW
 	url = https://github.com/glfw/glfw.git
