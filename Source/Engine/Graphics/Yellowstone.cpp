@@ -10,6 +10,7 @@
 #include "../Graphics/RenderSurface.h"
 #include "../Graphics/UI/ImguiWrapper.h"
 #include "../Graphics/Vulkan/VulkanRenderSurface.h"
+#include "../Graphics/Vulkan/VulkanShaderLibrary.h"
 #include "../World/AssetLoader.h"
 #include "../World/World.h"
 
@@ -47,6 +48,7 @@ Yellowstone::Yellowstone(EngineContext* aContext)
 		case GraphicsAPI::Vulkan:
 		{
 			myRenderSurface = new VulkanRenderSurface(1280, 720);
+			myShaderLibrary = new VulkanShaderLibrary();
 			myShowConsole = true;
 			break;
 		}
@@ -82,8 +84,7 @@ void Yellowstone::Initialize()
 		free(icon);
 	}
 
-	if (myGraphicsAPI == GraphicsAPI::OpenGL)
-		myShaderLibrary->CreateProgram();
+	myShaderLibrary->CreateProgram();
 
 	if (myImguiWrapper && myRenderSurface)
 		myImguiWrapper->Initialize(myRenderSurface->GetWindow());
