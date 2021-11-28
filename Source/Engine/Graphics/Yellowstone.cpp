@@ -22,17 +22,12 @@ Yellowstone::Yellowstone(EngineContext* aContext)
 	, myShaderLibrary(nullptr)
 	, myTextureLibrary(nullptr)
 	, myImguiWrapper(nullptr)
-	, myShowConsole(false)
 {
 	switch (myGraphicsAPI)
 	{
 		case GraphicsAPI::None:
-		{
-			break;
-		}
 		case GraphicsAPI::DirectX12:
 		{
-			myShowConsole = true;
 			break;
 		}
 		case GraphicsAPI::OpenGL:
@@ -42,14 +37,12 @@ Yellowstone::Yellowstone(EngineContext* aContext)
 			myShaderLibrary = new OpenGLShaderLibrary();
 			myTextureLibrary = new OpenGLTextureLibrary();
 			myImguiWrapper = new UI::ImguiWrapper();
-			myShowConsole = true;
 			break;
 		}
 		case GraphicsAPI::Vulkan:
 		{
 			myRenderSurface = new VulkanRenderSurface(1280, 720);
 			myShaderLibrary = new VulkanShaderLibrary();
-			myShowConsole = true;
 			break;
 		}
 	}

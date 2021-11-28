@@ -42,5 +42,4 @@ private:
 	ShaderLibrary* myShaderLibrary;
 	TextureLibrary* myTextureLibrary;
 	GraphicsAPI myGraphicsAPI;
-	bool myShowConsole;
 };
