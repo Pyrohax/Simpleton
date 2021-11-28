@@ -7,7 +7,7 @@
 
 #include <vector>
 
-class OpenGLShaderLibrary : public ShaderLibrary
+class OpenGLShaderLibrary final : public ShaderLibrary
 {
 public:
 	OpenGLShaderLibrary();

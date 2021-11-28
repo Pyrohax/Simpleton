@@ -3,9 +3,7 @@
 EngineContext::~EngineContext()
 {
 	for (auto& subsystem : mySubsystems)
-	{
 		subsystem.myPointer.reset();
-	}
 
 	mySubsystems.clear();
 }
@@ -13,12 +11,10 @@ EngineContext::~EngineContext()
 void EngineContext::Initialize()
 {
 	for (const auto& subsystem : mySubsystems)
-	{
 		subsystem.myPointer->Initialize();
-	}
 }
 
-void EngineContext::Tick(TickType aTickGroup, float aDeltaTime)
+void EngineContext::Update(const TickType aTickGroup, const float aDeltaTime)
 {
 	for (const auto& subsystem : mySubsystems)
 	{
@@ -27,4 +23,10 @@ void EngineContext::Tick(TickType aTickGroup, float aDeltaTime)
 
 		subsystem.myPointer->Update(aDeltaTime);
 	}
+}
+
+void EngineContext::Terminate()
+{
+	for (const auto& subsystem : mySubsystems)
+		subsystem.myPointer->Terminate();
 }

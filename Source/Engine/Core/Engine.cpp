@@ -54,7 +54,12 @@ void Engine::Update()
 		myPreviousTime = currentTime;
 
 		// TODO: fix timer and use corresponding deltatime
-		myContext->Tick(TickType::Variable, 0.0167f);
-		myContext->Tick(TickType::Smooth, 0.0167f);
+		myContext->Update(TickType::Variable, 0.0167f);
+		myContext->Update(TickType::Smooth, 0.0167f);
 	}
+}
+
+void Engine::Shutdown()
+{
+	myContext->Terminate();
 }

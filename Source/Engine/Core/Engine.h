@@ -30,6 +30,7 @@ public:
 
 	void Initialize(BuildType aBuildType);
 	void Update();
+	void Shutdown();
 
 	void SetShouldShutdown(bool aShouldShutdown) { myShouldShutdown = aShouldShutdown; }
 	constexpr bool GetShouldShutdown() { return myShouldShutdown; }

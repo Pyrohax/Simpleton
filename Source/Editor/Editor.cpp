@@ -32,3 +32,9 @@ void Editor::Update()
 	Engine& engine = Engine::GetInstance();
 	engine.Update();
 }
+
+void Editor::Terminate()
+{
+	Engine& engine = Engine::GetInstance();
+	engine.Shutdown();
+}

@@ -4,7 +4,7 @@
 
 #include <vector>
 
-class OpenGLTextureLibrary : public TextureLibrary
+class OpenGLTextureLibrary final : public TextureLibrary
 {
 public:
 	OpenGLTextureLibrary();

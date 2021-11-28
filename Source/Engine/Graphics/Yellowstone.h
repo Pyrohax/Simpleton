@@ -15,11 +15,11 @@ class RenderSurface;
 class ShaderLibrary;
 class TextureLibrary;
 
-class Yellowstone : public Subsystem
+class Yellowstone final : public Subsystem
 {
 public:
 	Yellowstone(EngineContext* aContext);
-	~Yellowstone();
+	~Yellowstone() override;
 
 	void Initialize() override;
 	void Update(float aDeltaTime) override;

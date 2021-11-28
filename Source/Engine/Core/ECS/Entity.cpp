@@ -8,5 +8,4 @@ Entity::Entity(const UID aUID, EntityComponentSystem* aEntityComponentSystem)
 Entity::~Entity()
 {
 	myEntityComponentSystem->DestroyEntity(myUID);
-	delete myEntityComponentSystem;
 }

@@ -103,15 +103,11 @@ void VulkanRenderSurface::Tick(double aDeltaTime)
 	glfwPollEvents();
 
 	if (InputManager::GetInstance().GetIsKeyDown(Keys::Escape))
-	{
 		glfwSetWindowShouldClose(myWindow, true);
-	}
 
 	if (glfwWindowShouldClose(myWindow))
-	{
 		myShouldClose = true;
-		Destroy();
-	}
+
 	glfwGetFramebufferSize(myWindow, &myWidth, &myHeight);
 	//glfwSwapBuffers(myWindow);
 }

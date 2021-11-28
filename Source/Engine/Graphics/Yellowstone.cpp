@@ -65,7 +65,10 @@ Yellowstone::~Yellowstone()
 void Yellowstone::Initialize()
 {
 	if (myRenderSurface)
-		myRenderSurface->Initialize();
+	{
+		if (!myRenderSurface->Initialize())
+			Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to initialize Render Surface");
+	}
 
 	if (myRenderContext)
 		myRenderContext->Initialize();
@@ -116,9 +119,13 @@ void Yellowstone::Terminate()
 {
 	Engine& engine = Engine::GetInstance();
 	World& world = engine.GetWorld();
-	myRenderContext->Destroy(world.GetModels());
+	if (myRenderContext)
+		myRenderContext->Destroy(world.GetModels());
+
 	myRenderSurface->Destroy();
-	myImguiWrapper->Destroy();
+
+	if (myImguiWrapper)
+		myImguiWrapper->Destroy();
 }
 
 void Yellowstone::CreateAssetBuffers(std::vector<Model>& aModels)

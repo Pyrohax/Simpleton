@@ -29,7 +29,8 @@ public:
 	~EngineContext();
 
 	void Initialize();
-	void Tick(TickType aTickGroup, float aDeltaTime = 0.0f);
+	void Update(const TickType aTickGroup, const float aDeltaTime = 0.0f);
+	void Terminate();
 
 	template <class Type>
 	void RegisterSubsystem(TickType aTickGroup)
