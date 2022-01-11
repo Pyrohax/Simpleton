@@ -63,6 +63,13 @@ bool VulkanRenderSurface::Initialize()
 		return false;
 	}
 
+	if (!SetupVulkanLogicalDevice())
+	{
+		Log::Logger::Print(Log::Severity::Error, Log::Category::Rendering, "Failed to create logical Vulkan Device");
+		Destroy();
+		return false;
+	}
+
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
@@ -117,6 +124,7 @@ void VulkanRenderSurface::Destroy()
 	if (VulkanRenderSurface_Priv::locIsValidationsLayersEnabled)
 		DestroyDebugUtilMessengerEXT(myVulkanInstance, myDebugMessenger, nullptr);
 
+	vkDestroyDevice(myVulkanLogicalDevice, nullptr);
 	vkDestroyInstance(myVulkanInstance, nullptr);
 	glfwDestroyWindow(myWindow);
 	glfwTerminate();
@@ -268,6 +276,43 @@ bool VulkanRenderSurface::SetupVulkanPhysicalDevice()
 		Destroy();
 		return false;
 	}
+	return true;
+}
+
+bool VulkanRenderSurface::SetupVulkanLogicalDevice()
+{
+	QueueFamilyIndices indeces = FindQueueFamilies(myVulkanPhysicalDevice);
+
+	VkDeviceQueueCreateInfo queueCreateInfo{};
+	queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+	queueCreateInfo.queueFamilyIndex = indeces.myGraphicsFamily.value();
+	queueCreateInfo.queueCount = 1;
+	float queuePriority = 1.0f;
+	queueCreateInfo.pQueuePriorities = &queuePriority;
+
+
+	VkPhysicalDeviceFeatures deviceFeatures{};
+
+	VkDeviceCreateInfo createInfo{};
+	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+	createInfo.pQueueCreateInfos = &queueCreateInfo;
+	createInfo.queueCreateInfoCount = 1;
+
+	createInfo.pEnabledFeatures = &deviceFeatures;
+
+	if (VulkanRenderSurface_Priv::locIsValidationsLayersEnabled)
+	{
+		createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+		createInfo.ppEnabledLayerNames = validationLayers.data();
+	}
+	else
+		createInfo.enabledLayerCount = 0;
+
+	if (vkCreateDevice(myVulkanPhysicalDevice, &createInfo, nullptr, &myVulkanLogicalDevice) != VK_SUCCESS)
+		return false;
+
+	vkGetDeviceQueue(myVulkanLogicalDevice, indeces.myGraphicsFamily.value(), 0, &myVulkanGraphicsQueue);
+
 	return true;
 }
 

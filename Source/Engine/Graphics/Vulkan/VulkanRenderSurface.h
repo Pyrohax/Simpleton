@@ -48,6 +48,7 @@ private:
 
 	bool CreateVulkanInstance();
 	bool SetupVulkanPhysicalDevice();
+	bool SetupVulkanLogicalDevice();
 	void SetupDebugMessenger();
 
 	bool CheckValidationLayerSupport() const;
@@ -68,5 +69,7 @@ private:
 private:
 	VkInstance myVulkanInstance;
 	VkPhysicalDevice myVulkanPhysicalDevice;
+	VkDevice myVulkanLogicalDevice;
+	VkQueue myVulkanGraphicsQueue;
 	VkDebugUtilsMessengerEXT myDebugMessenger;
 };
