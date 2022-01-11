@@ -12,7 +12,7 @@ public:
 	~OpenGLRenderSurface();
 
 	bool Initialize() override;
-	void Tick(double aDeltaTime) override;
+	void Tick(const float aDeltaTime) override;
 	void Destroy() override;
 
 	void SetWindowIcon(const Texture& aTexture) override;

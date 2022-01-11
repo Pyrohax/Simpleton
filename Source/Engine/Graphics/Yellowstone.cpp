@@ -68,7 +68,7 @@ void Yellowstone::Initialize()
 	if (myRenderContext)
 		myRenderContext->Initialize();
 
-	Engine& engine = Engine::GetInstance();
+	const Engine& engine = Engine::GetInstance();
 	World& world = engine.GetWorld();
 
 	if (Texture* icon = world.GetAssetLoader().LoadTexture("../../../Data/Icons/Editor.png"))
@@ -83,22 +83,22 @@ void Yellowstone::Initialize()
 		myImguiWrapper->Initialize(myRenderSurface->GetWindow());
 }
 
-void Yellowstone::Update(float aDeltaTime)
+void Yellowstone::Update(const float aDeltaTime)
 {
 	Engine& engine = Engine::GetInstance();
 	World& world = engine.GetWorld();
 
-	if (world.GetModels().size() > 0)
+	if (!world.GetModels().empty())
 		myShaderLibrary->BindShaders();
 
 	if (myRenderContext)
 	{
 		myImguiWrapper->CreateFrame();
-		myImguiWrapper->Render(aDeltaTime);
-		CameraComponent& cameraComponent = world.GetCamera().GetComponent<CameraComponent>();
+		myImguiWrapper->Render();
+		auto& cameraComponent = world.GetCamera().GetComponent<CameraComponent>();
 		cameraComponent.Update(aDeltaTime);
-		LightingComponent& lightingComponent = world.GetLighting().GetComponent<LightingComponent>();
-		TransformComponent& lightingTransformComponent = world.GetLighting().GetComponent<TransformComponent>();
+		auto& lightingComponent = world.GetLighting().GetComponent<LightingComponent>();
+		auto& lightingTransformComponent = world.GetLighting().GetComponent<TransformComponent>();
 		myRenderContext->Render(world.GetModels(), *myTextureLibrary, *myShaderLibrary, cameraComponent, lightingComponent, lightingTransformComponent, myRenderSurface->GetScreenWidth(), myRenderSurface->GetScreenHeight(), aDeltaTime);
 		myImguiWrapper->Draw();
 	}
@@ -111,8 +111,8 @@ void Yellowstone::Update(float aDeltaTime)
 
 void Yellowstone::Terminate()
 {
-	Engine& engine = Engine::GetInstance();
-	World& world = engine.GetWorld();
+	const Engine& engine = Engine::GetInstance();
+	const World& world = engine.GetWorld();
 	if (myRenderContext)
 		myRenderContext->Destroy(world.GetModels());
 

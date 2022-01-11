@@ -6,9 +6,9 @@ class CameraComponent
 {
 public:
 	CameraComponent();
-	~CameraComponent();
+	~CameraComponent() = default;
 
-	void Update(float aDeltaTime);
+	void Update(const float aDeltaTime);
 
 	const glm::mat4x4& GetProjectionMatrix() const { return myProjection; }
 	const glm::mat4x4& GetViewMatrix() const { return myView; }

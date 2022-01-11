@@ -23,15 +23,11 @@ CameraComponent::CameraComponent()
 	myDirection = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
-CameraComponent::~CameraComponent()
-{}
-
-void CameraComponent::Update(float aDeltaTime)
+void CameraComponent::Update(const float aDeltaTime)
 {
-	InputManager& inputManager = InputManager::GetInstance();
-
 	float movementSpeed = myKeySpeed;
 
+	const InputManager& inputManager = InputManager::GetInstance();
 	if (inputManager.GetIsKeyDown(Keys::LeftShift))
 		movementSpeed *= myKeyBoostMultiplier;
 

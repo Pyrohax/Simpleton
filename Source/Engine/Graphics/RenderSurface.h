@@ -16,7 +16,7 @@ public:
 	{}
 
 	virtual bool Initialize() = 0;
-	virtual void Tick(double aDeltaTime) = 0;
+	virtual void Tick(const float aDeltaTime) = 0;
 	virtual void Destroy() = 0;
 
 	virtual void SetWindowIcon(const Texture& aTexture) = 0;

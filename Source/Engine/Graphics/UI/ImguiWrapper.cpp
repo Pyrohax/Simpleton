@@ -46,7 +46,7 @@ void UI::ImguiWrapper::CreateFrame()
     ImGui::NewFrame();
 }
 
-void UI::ImguiWrapper::Render(double aDeltaTime)
+void UI::ImguiWrapper::Render()
 {
     for (auto& widget : myWidgets)
     {

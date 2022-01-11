@@ -22,15 +22,15 @@ public:
 	~Yellowstone() override;
 
 	void Initialize() override;
-	void Update(float aDeltaTime) override;
+	void Update(const float aDeltaTime) override;
 	void Terminate() override;
 
 	void CreateAssetBuffers(std::vector<Model>& aModels);
 
 	bool HasClosedWindow() const;
 
-	ShaderLibrary* GetShaderLibrary() { return myShaderLibrary; }
-	TextureLibrary* GetTextureLibrary() { return myTextureLibrary; }
+	ShaderLibrary* GetShaderLibrary() const { return myShaderLibrary; }
+	TextureLibrary* GetTextureLibrary() const { return myTextureLibrary; }
 
 	GraphicsAPI GetGraphicsAPI() const { return myGraphicsAPI; }
 	UI::ImguiWrapper* GetImguiWrapper() const { return myImguiWrapper; }

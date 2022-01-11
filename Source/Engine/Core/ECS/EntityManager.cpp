@@ -14,7 +14,7 @@ EntityManager::EntityManager()
 Entity* EntityManager::CreateEntity(EntityComponentSystem* aEntityComponentSystem)
 {
 	Assert(myLivingEntitiesCount > MAX_ENTITIES, "Too many entities in existence.");
-	UID uid = myAvailableEntities.front();
+	const UID& uid = myAvailableEntities.front();
 	myAvailableEntities.pop();
 	++myLivingEntitiesCount;
 	return new Entity(uid, aEntityComponentSystem);

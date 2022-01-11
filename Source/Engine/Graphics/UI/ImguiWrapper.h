@@ -20,7 +20,7 @@ namespace UI
 		void Initialize(GLFWwindow* aWindow);
 		void AddOverlay(const std::shared_ptr<UI::Overlay>& anOverlay);
 		void CreateFrame();
-		void Render(double aDeltaTime);
+		void Render();
 		void Draw();
 		void Destroy();
 

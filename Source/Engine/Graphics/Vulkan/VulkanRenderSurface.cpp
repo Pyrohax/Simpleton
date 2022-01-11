@@ -98,7 +98,7 @@ bool VulkanRenderSurface::Initialize()
 	return true;
 }
 
-void VulkanRenderSurface::Tick(double aDeltaTime)
+void VulkanRenderSurface::Tick(const float /*aDeltaTime*/)
 {
 	glfwPollEvents();
 

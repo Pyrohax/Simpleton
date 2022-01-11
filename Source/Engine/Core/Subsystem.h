@@ -10,7 +10,7 @@ public:
 	Subsystem(EngineContext* aContext) { myContext = aContext; }
 	virtual ~Subsystem() = default;
 	virtual void Initialize() = 0;
-	virtual void Update(float aDeltaTime) = 0;
+	virtual void Update(const float aDeltaTime) = 0;
 	virtual void Terminate() = 0;
 
 	template<typename Type>

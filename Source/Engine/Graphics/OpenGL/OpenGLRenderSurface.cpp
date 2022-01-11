@@ -57,7 +57,7 @@ bool OpenGLRenderSurface::Initialize()
 	return true;
 }
 
-void OpenGLRenderSurface::Tick(double aDeltaTime)
+void OpenGLRenderSurface::Tick(const float aDeltaTime)
 {
 	glfwPollEvents();
 
